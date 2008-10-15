@@ -52,30 +52,54 @@ Parser.prototype.get = function() {
     return this.enc[this.pos++];
 }
 
-function ASN1(parser, header, length, type, sub) {
+function ASN1(parser, header, length, tag, sub) {
     this.parser = parser;
     this.header = header;
     this.length = length;
-    this.type = type;
+    this.tag = tag;
     this.sub = sub;
 }
 ASN1.prototype.typeName = function() {
-    if (this.type == undefined)
+    if (this.tag == undefined)
 	return "unknown";
-    switch (this.type) {
-    case 0x01: return "BOOLEAN";
-    case 0x02: return "INTEGER";
-    case 0x03: return "BIT_STRING";
-    case 0x04: return "OCTET_STRING";
-    case 0x05: return "NULL";
-    case 0x06: return "OBJECT_IDENTIFIER";
-    case 0x13: return "TeletexString";
-    case 0x14: return "IA5String";
-    case 0x16: return "UTCTime";
-    case 0x17: return "TeletexString";
-    case 0x30: return "SEQUENCE";
-    case 0x31: return "SET";
-    default: return "0x" + this.type.toString(16);
+    var tagClass = this.tag >> 6;
+    var tagConstructed = (this.tag >> 5) & 1;
+    var tagNumber = this.tag & 0x1F;
+    switch (tagClass) {
+    case 0: // universal
+	switch (tagNumber) {
+	case 0x00: return "EOC";
+	case 0x01: return "BOOLEAN";
+	case 0x02: return "INTEGER";
+	case 0x03: return "BIT_STRING";
+	case 0x04: return "OCTET_STRING";
+	case 0x05: return "NULL";
+	case 0x06: return "OBJECT_IDENTIFIER";
+	case 0x07: return "ObjectDescriptor";
+	case 0x08: return "EXTERNAL";
+	case 0x09: return "REAL";
+	case 0x0A: return "ENUMERATED";
+	case 0x0B: return "EMBEDDED_PDV";
+	case 0x0C: return "UTF8String";
+	case 0x10: return "SEQUENCE";
+	case 0x11: return "SET";
+	case 0x12: return "NumericString";
+	case 0x13: return "PrintableString"; // ASCII subset
+	case 0x14: return "TeletexString"; // aka T61String
+	case 0x15: return "VideotexString";
+	case 0x16: return "IA5String"; // ASCII
+	case 0x17: return "UTCTime";
+	case 0x18: return "GeneralizedTime";
+	case 0x19: return "GraphicString";
+	case 0x1A: return "VisibleString"; // ASCII subset
+	case 0x1B: return "GeneralString";
+	case 0x1C: return "UniversalString";
+	case 0x1E: return "BMPString";
+	default: return "Universal_" + tagNumber.toString(16);
+	}
+    case 1: return "Application_" + tagNumber.toString(16);
+    case 2: return "[" + tagNumber + "]"; // Context
+    case 3: return "Private_" + tagNumber.toString(16);
     }
 }
 ASN1.prototype.toString = function() {
@@ -92,7 +116,15 @@ ASN1.prototype.print = function(indent) {
 }
 ASN1.prototype.toPrettyString = function(indent) {
     if (indent == undefined) indent = '';
-    var s = indent + this + "\n";
+    var s = indent + this.typeName() + " @" + this.parser.pos;
+    if (this.length >= 0)
+	s += "+";
+    s += this.length;
+    if (this.tag & 0x20)
+	s += " (constructed)";
+    else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
+	s += " (encapsulates)";
+    s += "\n";
     if (this.sub != null) {
         indent += '  ';
         for (var i = 0, max = this.sub.length; i < max; ++i)
@@ -108,28 +140,65 @@ function decodeLength(parser) {
         return len;
     if (len > 3)
         throw "Length over 24 bits not supported at position " + (parser.pos - 1);
+    if (len == 0)
+	return -1; // undefined
     buf = 0;
     for (var i = 0; i < len; ++i)
         buf = (buf << 8) | parser.get();
     return buf;
 }
 
+function hasContent(tag, len, parser) {
+    if (tag & 0x20) // constructed
+	return true;
+    if ((tag < 0x03) || (tag > 0x04))
+	return false;
+    var p = new Parser(parser);
+    if (tag == 0x03) p.get(); // BitString unused bits, must be in [0, 7]
+    var subTag = p.get();
+    if ((subTag >> 6) & 0x01) // not (universal or context)
+	return false;
+    try {
+	var subLength = decodeLength(p);
+	return ((p.pos - parser.pos) + subLength == len);
+    } catch (exception) {
+	return false;
+    }
+}
+
 function decodeASN1(parser) {
     if (!(parser instanceof Parser))
         parser = new Parser(parser, 0);
     var parserStart = new Parser(parser);
-    var type = parser.get();
+    var tag = parser.get();
     var len = decodeLength(parser);
     var header = parser.pos - parserStart.pos;
     var sub = null;
-    if ((type == 0x30) || (type == 0x31)) {
+    if (hasContent(tag, len, parser)) {
+	var start = parser.pos;
+	// it's constructed, so we have to decode content
+	if (tag == 0x03) parser.get(); // BitString unused bits, must be in [0, 7]
         sub = [];
-        var end = parser.pos + len;
-        while (parser.pos < end)
-            sub[sub.length] = decodeASN1(parser);
+	if (len >= 0) {
+	    // definite length
+	    var end = start + len;
+	    while (parser.pos < end)
+		sub[sub.length] = decodeASN1(parser);
+	    if (parser.pos != end)
+		throw "Content overflowed the constructed container";
+	} else {
+	    // undefined length
+	    for (;;) {
+		var s = decodeASN1(parser);
+		if (s.tag == 0)
+		    break;
+		sub[sub.length] = s;
+	    }
+	    len = start - parser.pos;
+	}
     } else
         parser.pos += len; // skip content
-    return new ASN1(parserStart, header, len, type, sub);
+    return new ASN1(parserStart, header, len, tag, sub);
 }
 
 function test() {
