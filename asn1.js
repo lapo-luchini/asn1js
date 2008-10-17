@@ -1,5 +1,5 @@
-function Parser(enc, pos) {
-    if (enc instanceof Parser) {
+function Stream(enc, pos) {
+    if (enc instanceof Stream) {
         this.enc = enc.enc;
         this.pos = enc.pos;
     } else {
@@ -7,12 +7,12 @@ function Parser(enc, pos) {
         this.pos = pos;
     }
 }
-Parser.prototype.get = function() {
+Stream.prototype.get = function() {
     return this.enc[this.pos++];
 }
 
-function ASN1(parser, header, length, tag, sub) {
-    this.parser = parser;
+function ASN1(stream, header, length, tag, sub) {
+    this.stream = stream;
     this.header = header;
     this.length = length;
     this.tag = tag;
@@ -62,7 +62,7 @@ ASN1.prototype.typeName = function() {
     }
 }
 ASN1.prototype.toString = function() {
-    return this.typeName() + "@" + this.parser.pos + "[header:" + this.header + ",length:" + this.length + ",sub:" + (this.sub == null ? 'null' : this.sub.length) + "]";
+    return this.typeName() + "@" + this.stream.pos + "[header:" + this.header + ",length:" + this.length + ",sub:" + (this.sub == null ? 'null' : this.sub.length) + "]";
 }
 ASN1.prototype.print = function(indent) {
     if (indent == undefined) indent = '';
@@ -75,7 +75,7 @@ ASN1.prototype.print = function(indent) {
 }
 ASN1.prototype.toPrettyString = function(indent) {
     if (indent == undefined) indent = '';
-    var s = indent + this.typeName() + " @" + this.parser.pos;
+    var s = indent + this.typeName() + " @" + this.stream.pos;
     if (this.length >= 0)
 	s += "+";
     s += this.length;
@@ -91,18 +91,13 @@ ASN1.prototype.toPrettyString = function(indent) {
     }
     return s;
 }
-function switchSize() {
-    var style = this.switchNode.style;
-    //style.visibility = (style.visibility == "hidden") ? "visible" : "hidden";
-    style.display = (style.display == "none") ? "block" : "none";
-}
 ASN1.prototype.toDOM = function() {
     var node = document.createElement("div");
     node.className = "node";
     node.asn1 = this;
     var head = document.createElement("div");
     head.className = "head";
-    var s = this.typeName() + " @" + this.parser.pos;
+    var s = this.typeName() + " @" + this.stream.pos;
     if (this.length >= 0)
 	s += "+";
     s += this.length;
@@ -120,80 +115,79 @@ ASN1.prototype.toDOM = function() {
             sub.appendChild(this.sub[i].toDOM());
     }
     node.appendChild(sub);
-    head.onclick = switchSize;
     head.switchNode = sub;
+    head.onclick = function() {
+	var style = this.switchNode.style;
+	style.display = (style.display == "none") ? "block" : "none";
+    };
     return node;
 }
-
-function decodeLength(parser) {
-    var buf = parser.get();
+ASN1.decodeLength = function(stream) {
+    var buf = stream.get();
     var len = buf & 0x7F;
     if (len == buf)
         return len;
     if (len > 3)
-        throw "Length over 24 bits not supported at position " + (parser.pos - 1);
+        throw "Length over 24 bits not supported at position " + (stream.pos - 1);
     if (len == 0)
 	return -1; // undefined
     buf = 0;
     for (var i = 0; i < len; ++i)
-        buf = (buf << 8) | parser.get();
+        buf = (buf << 8) | stream.get();
     return buf;
 }
-
-function hasContent(tag, len, parser) {
+ASN1.hasContent = function(tag, len, stream) {
     if (tag & 0x20) // constructed
 	return true;
     if ((tag < 0x03) || (tag > 0x04))
 	return false;
-    var p = new Parser(parser);
+    var p = new Stream(stream);
     if (tag == 0x03) p.get(); // BitString unused bits, must be in [0, 7]
     var subTag = p.get();
     if ((subTag >> 6) & 0x01) // not (universal or context)
 	return false;
     try {
-	var subLength = decodeLength(p);
-	return ((p.pos - parser.pos) + subLength == len);
+	var subLength = ASN1.decodeLength(p);
+	return ((p.pos - stream.pos) + subLength == len);
     } catch (exception) {
 	return false;
     }
 }
-
-function decodeASN1(parser) {
-    if (!(parser instanceof Parser))
-        parser = new Parser(parser, 0);
-    var parserStart = new Parser(parser);
-    var tag = parser.get();
-    var len = decodeLength(parser);
-    var header = parser.pos - parserStart.pos;
+ASN1.decode = function(stream) {
+    if (!(stream instanceof Stream))
+        stream = new Stream(stream, 0);
+    var streamStart = new Stream(stream);
+    var tag = stream.get();
+    var len = ASN1.decodeLength(stream);
+    var header = stream.pos - streamStart.pos;
     var sub = null;
-    if (hasContent(tag, len, parser)) {
-	var start = parser.pos;
+    if (ASN1.hasContent(tag, len, stream)) {
+	var start = stream.pos;
 	// it's constructed, so we have to decode content
-	if (tag == 0x03) parser.get(); // BitString unused bits, must be in [0, 7]
+	if (tag == 0x03) stream.get(); // BitString unused bits, must be in [0, 7]
         sub = [];
 	if (len >= 0) {
 	    // definite length
 	    var end = start + len;
-	    while (parser.pos < end)
-		sub[sub.length] = decodeASN1(parser);
-	    if (parser.pos != end)
+	    while (stream.pos < end)
+		sub[sub.length] = ASN1.decode(stream);
+	    if (stream.pos != end)
 		throw "Content overflowed the constructed container";
 	} else {
 	    // undefined length
 	    for (;;) {
-		var s = decodeASN1(parser);
+		var s = ASN1.decode(stream);
 		if (s.tag == 0)
 		    break;
 		sub[sub.length] = s;
 	    }
-	    len = start - parser.pos;
+	    len = start - stream.pos;
 	}
     } else
-        parser.pos += len; // skip content
-    return new ASN1(parserStart, header, len, tag, sub);
+        stream.pos += len; // skip content
+    return new ASN1(streamStart, header, len, tag, sub);
 }
-
-function test() {
+ASN1.test = function() {
     var test = [
         { value: [0x27],                   expected: 0x27     },
         { value: [0x81, 0xC9],             expected: 0xC9     },
@@ -201,8 +195,8 @@ function test() {
     ];
     for (var i = 0, max = test.length; i < max; ++i) {
         var pos = 0;
-        var parser = new Parser(test[i].value, 0);
-        var res = decodeLength(parser);
+        var stream = new Stream(test[i].value, 0);
+        var res = ASN1.decodeLength(stream);
         if (res != test[i].expected)
             document.write("In test[" + i + "] expected " + test[i].expected + " got " + res + "\n");
     }

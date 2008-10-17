@@ -1,4 +1,6 @@
-function unarmor(a) {
+Base64 = {};
+
+Base64.unarmor = function(a) {
     var out = [];
     var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     var dec = [];
@@ -6,15 +8,14 @@ function unarmor(a) {
 	dec[b64[i]] = i;
     var bits = 0, char_count = 0;
     for (var i = 0; i < a.length; ++i) {
-	var c = a[i];
+	var c = a.charAt(i);
 	if (c == '=')
             break;
 	c = dec[c];
 	if (c == undefined)
             continue;
 	bits |= c;
-	++char_count;
-	if (char_count == 4) {
+	if (++char_count >= 4) {
 	    out[out.length] = (bits >> 16);
 	    out[out.length] = (bits >> 8) & 0xFF;
 	    out[out.length] = bits & 0xFF;

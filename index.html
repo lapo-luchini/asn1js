@@ -2,14 +2,20 @@
 <head>
   <title>ASN.1 JavaScript Parser</title>
   <link rel="stylesheet" href="main.css" type="text/css">
+  <script type="text/javascript" src="base64.js"></script>
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript">
     function decode() {
-      var pem = document.getElementById('pem');
       var out = document.getElementById('out');
-      var asn1 = decodeASN1(unarmor(pem.value));
-      out.innerHTML = "";
-      out.appendChild(asn1.toDOM());
+      try {
+        var pem = document.getElementById('pem').value;
+        var der = Base64.unarmor(pem)
+        var asn1 = ASN1.decode(der);
+        out.innerHTML = "";
+        out.appendChild(asn1.toDOM());
+      } catch (e) {
+        out.innerHTML = e;
+      }
       return false;
     }
   </script>
