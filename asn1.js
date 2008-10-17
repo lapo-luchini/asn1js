@@ -132,6 +132,39 @@ ASN1.prototype.toPrettyString = function(indent) {
     }
     return s;
 }
+function switchSize() {
+    var style = this.switchNode.style;
+    //style.visibility = (style.visibility == "hidden") ? "visible" : "hidden";
+    style.display = (style.display == "none") ? "block" : "none";
+}
+ASN1.prototype.toDOM = function() {
+    var node = document.createElement("div");
+    node.className = "node";
+    node.asn1 = this;
+    var head = document.createElement("div");
+    head.className = "head";
+    var s = this.typeName() + " @" + this.parser.pos;
+    if (this.length >= 0)
+	s += "+";
+    s += this.length;
+    if (this.tag & 0x20)
+	s += " (constructed)";
+    else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
+	s += " (encapsulates)";
+    s += "\n";
+    head.innerHTML = s;
+    node.appendChild(head);
+    var sub = document.createElement("div");
+    sub.className = "sub";
+    if (this.sub != null) {
+        for (var i = 0, max = this.sub.length; i < max; ++i)
+            sub.appendChild(this.sub[i].toDOM());
+    }
+    node.appendChild(sub);
+    head.onclick = switchSize;
+    head.switchNode = sub;
+    return node;
+}
 
 function decodeLength(parser) {
     var buf = parser.get();

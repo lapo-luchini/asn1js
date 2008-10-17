@@ -1,0 +1,13 @@
+body {
+    background-color: #C0C0C0;
+}
+.node {
+    font-family: monospace;
+}
+.sub {
+    padding-left: 1em;
+    border-left: solid 1px #E0E0E0;
+}
+.node:hover > .head {
+    color: blue;
+}

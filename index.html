@@ -1,13 +1,24 @@
 <html>
 <head>
   <title>ASN.1 JavaScript Parser</title>
+  <link rel="stylesheet" href="main.css" type="text/css">
   <script type="text/javascript" src="asn1.js"></script>
+  <script type="text/javascript">
+    function decode() {
+      var pem = document.getElementById('pem');
+      var out = document.getElementById('out');
+      var asn1 = decodeASN1(unarmor(pem.value));
+      out.innerHTML = "";
+      out.appendChild(asn1.toDOM());
+      return false;
+    }
+  </script>
 </head>
 <body>
 <form>
   <textarea id="pem" style="width: 100%;" rows="10">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
-  <input type="button" value="decode" onclick="document.getElementById('out').innerHTML = decodeASN1(unarmor(document.getElementById('pem').value)).toPrettyString(); return false;">
+  <input type="button" value="decode" onclick="decode();">
 </form>
-<pre id="out"></pre>
+<div id="out"></div>
 </body>
 </html>
