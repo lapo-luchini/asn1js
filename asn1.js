@@ -10,6 +10,13 @@ function Stream(enc, pos) {
 Stream.prototype.get = function() {
     return this.enc[this.pos++];
 }
+Stream.prototype.hexDigits = "0123456789ABCDEF";
+Stream.prototype.hexDump = function(start, end) {
+    var s = "";
+    for (var i = start; i < end; ++i)
+	s += this.hexDigits.charAt(this.enc[i] >> 4) + this.hexDigits.charAt(this.enc[i] & 0xF) + " ";
+    return s;
+}
 
 function ASN1(stream, header, length, tag, sub) {
     this.stream = stream;
@@ -97,7 +104,7 @@ ASN1.prototype.toDOM = function() {
     node.asn1 = this;
     var head = document.createElement("div");
     head.className = "head";
-    var s = this.typeName() + " @" + this.stream.pos;
+    var s = this.typeName() + " @" + this.stream.pos + "+" + this.header;
     if (this.length >= 0)
 	s += "+";
     s += this.length;
@@ -108,6 +115,7 @@ ASN1.prototype.toDOM = function() {
     s += "\n";
     head.innerHTML = s;
     node.appendChild(head);
+    this.head = head;
     var sub = document.createElement("div");
     sub.className = "sub";
     if (this.sub != null) {
@@ -116,10 +124,51 @@ ASN1.prototype.toDOM = function() {
     }
     node.appendChild(sub);
     head.switchNode = sub;
-    head.onclick = function() {
+    head.ondblclick = function() {
 	var style = this.switchNode.style;
 	style.display = (style.display == "none") ? "block" : "none";
     };
+    return node;
+}
+ASN1.prototype.posStart = function() {
+    return this.stream.pos;
+}
+ASN1.prototype.posContent = function() {
+    return this.stream.pos + this.header;
+}
+ASN1.prototype.posEnd = function() {
+    return this.stream.pos + this.header + Math.abs(this.length);
+}
+ASN1.prototype.toHexDOM = function() {
+    var node = document.createElement("span");
+    this.head.hexNode = node;
+    this.head.onmouseover = function() { this.hexNode.className = 'hexCurrent'; }
+    this.head.onmouseout  = function() { this.hexNode.className = ''; }
+    var head = document.createElement("span");
+    head.className = "head";
+    head.appendChild(document.createTextNode(
+	this.stream.hexDump(this.posStart(), this.posContent())));
+    node.appendChild(head);
+    if (this.sub == null)
+	node.appendChild(document.createTextNode(
+	    this.stream.hexDump(this.posContent(), this.posEnd())));
+    else {
+	function opt(className, stream, start, end) {
+	    if (start >= end)
+		return;
+	    var sub = document.createElement("span");
+	    sub.className = className;
+	    sub.appendChild(document.createTextNode(
+		stream.hexDump(start, end)));
+	    node.appendChild(sub);
+	};
+	var first = this.sub[0];
+	var last = this.sub[this.sub.length - 1];
+	opt("intro", this.stream, this.posContent(), first.posStart());
+	for (var i = 0, max = this.sub.length; i < max; ++i)
+	    node.appendChild(this.sub[i].toHexDOM());
+	opt("outro", this.stream, last.posEnd(), this.posEnd());
+    }
     return node;
 }
 ASN1.decodeLength = function(stream) {

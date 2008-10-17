@@ -5,9 +5,25 @@ body {
     font-family: monospace;
 }
 .sub {
-    padding-left: 1em;
+    padding-left: 1.5em;
     border-left: solid 1px #E0E0E0;
 }
 .node:hover > .head {
     color: blue;
+}
+#dump {
+    font-family: monospace;
+    width: 30em;
+}
+#dump .hexCurrent > .head {
+    color: blue;
+}
+#dump .hexCurrent > .intro {
+    color: green;
+}
+#dump .hexCurrent > .outro {
+    color: green;
+}
+#dump .hexCurrent {
+    background-color: #E0E0E0;
 }

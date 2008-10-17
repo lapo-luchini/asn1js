@@ -6,15 +6,18 @@
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript">
     function decode() {
-      var out = document.getElementById('out');
+      var tree = document.getElementById('tree');
+      var dump = document.getElementById('dump');
       try {
         var pem = document.getElementById('pem').value;
-        var der = Base64.unarmor(pem)
+        var der = Base64.unarmor(pem);
         var asn1 = ASN1.decode(der);
-        out.innerHTML = "";
-        out.appendChild(asn1.toDOM());
+        tree.innerHTML = "";
+        tree.appendChild(asn1.toDOM());
+        dump.innerHTML = "";
+        dump.appendChild(asn1.toHexDOM());
       } catch (e) {
-        out.innerHTML = e;
+        tree.innerHTML = e;
       }
       return false;
     }
@@ -22,9 +25,12 @@
 </head>
 <body>
 <form>
-  <textarea id="pem" style="width: 100%;" rows="10">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
+  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
   <input type="button" value="decode" onclick="decode();">
 </form>
-<div id="out"></div>
+<div style="position: relative;">
+  <div id="tree"></div>
+  <div id="dump" style="position: absolute; top: 0px; right: 0px;"></div>
+</div>
 </body>
 </html>
