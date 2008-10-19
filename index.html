@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ASN.1 JavaScript Parser</title>
+  <title>ASN.1 JavaScript decoder</title>
   <link rel="stylesheet" href="main.css" type="text/css">
   <script type="text/javascript" src="base64.js"></script>
   <script type="text/javascript" src="asn1.js"></script>
@@ -9,13 +9,13 @@
     function decode() {
       var tree = document.getElementById('tree');
       var dump = document.getElementById('dump');
+      tree.innerHTML = "";
+      dump.innerHTML = "";
       try {
         var pem = document.getElementById('pem').value;
         var der = Base64.unarmor(pem);
         var asn1 = ASN1.decode(der);
-        tree.innerHTML = "";
         tree.appendChild(asn1.toDOM());
-        dump.innerHTML = "";
         dump.appendChild(asn1.toHexDOM());
       } catch (e) {
         tree.innerHTML = e;
@@ -25,6 +25,7 @@
   </script>
 </head>
 <body>
+<h1>ASN.1 JavaScript decoder</h1>
 <form>
   <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
   <input type="button" value="decode" onclick="decode();">
