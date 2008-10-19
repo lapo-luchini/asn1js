@@ -1,5 +1,6 @@
-body {
+html, body {
     background-color: #C0C0C0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 .node {
     font-family: monospace;

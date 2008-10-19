@@ -34,5 +34,10 @@
   <div id="tree"></div>
   <div id="dump" style="position: absolute; top: 0px; right: 0px;"></div>
 </div>
+<h2>Instructions</h2>
+<p>This page contains a JavaScript generic ASN.1 parser that can decode any valid PEM ASN.1 structure (Base64-encoded DER or BER), though right now the <tt>"-----"</tt>-delimited header and footer of PEM format must be omitted. </p>
+<p>On the left of the page a tree representing the structure will be printed, on the right side an hex dump. <br/>
+Hovering on the tree highlight its ancestry (the hovered node and all it's ancestors get colored), ion the meantime the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
+Double-clicking a node in the tree will hide its sub-nodes.</p>
 </body>
 </html>
