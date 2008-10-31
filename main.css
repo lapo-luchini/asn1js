@@ -12,6 +12,12 @@ html, body {
 .node:hover > .head {
     color: blue;
 }
+.node.collapsed {
+    font-weight: bold;
+}
+.node.collapsed > .sub {
+    display: none;
+}
 #dump {
     font-family: monospace;
     width: 30em;

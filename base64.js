@@ -15,6 +15,8 @@
 
 Base64 = {};
 
+Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+\/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+\/=\s]+)====/
+
 Base64.unarmor = function(a) {
     if (Base64.decoder == undefined) {
 	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -22,6 +24,11 @@ Base64.unarmor = function(a) {
 	for (var i = 0; i < 64; ++i)
 	    dec[b64.charAt(i)] = i;
 	Base64.decoder = dec;
+    }
+    var m = Base64.re.exec(a);
+    if (m) {
+	if (m[1]) a = m[1];
+	else if (m[2]) a = m[2];
     }
     var out = [];
     var bits = 0, char_count = 0;

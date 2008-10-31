@@ -7,6 +7,7 @@
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript">
     function decode() {
+      document.getElementById('help').style.display = 'none';
       var tree = document.getElementById('tree');
       var dump = document.getElementById('dump');
       tree.innerHTML = "";
@@ -22,6 +23,11 @@
       }
       return false;
     }
+    function help() {
+      document.getElementById('tree').innerHTML = "";
+      document.getElementById('dump').innerHTML = "";
+      document.getElementById('help').style.display = 'block';
+    }
   </script>
 </head>
 <body>
@@ -29,15 +35,18 @@
 <form>
   <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
   <input type="button" value="decode" onclick="decode();">
+  <input type="button" value="help" onclick="help();">
 </form>
-<div style="position: relative;">
+<div id="help">
+  <h2>Instructions</h2>
+  <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid Base64-encoded ASN.1 DER or BER structure (both PEM armoring or <tt>begin-base64</tt>). </p>
+  <p>On the left of the page a tree representing the structure will be printed, on the right side an hex dump. <br/>
+  Hovering on the tree highlight its ancestry (the hovered node and all it's ancestors get colored), ion the meantime the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
+  Clicking a node in the tree will hide its sub-nodes.</p>
+</div>
+<div style="position: relative; padding-top: 1em;">
   <div id="tree"></div>
   <div id="dump" style="position: absolute; top: 0px; right: 0px;"></div>
 </div>
-<h2>Instructions</h2>
-<p>This page contains a JavaScript generic ASN.1 parser that can decode any valid PEM ASN.1 structure (Base64-encoded DER or BER), though right now the <tt>"-----"</tt>-delimited header and footer of PEM format must be omitted. </p>
-<p>On the left of the page a tree representing the structure will be printed, on the right side an hex dump. <br/>
-Hovering on the tree highlight its ancestry (the hovered node and all it's ancestors get colored), ion the meantime the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
-Double-clicking a node in the tree will hide its sub-nodes.</p>
 </body>
 </html>

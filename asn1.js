@@ -138,10 +138,10 @@ ASN1.prototype.toDOM = function() {
             sub.appendChild(this.sub[i].toDOM());
     }
     node.appendChild(sub);
-    head.switchNode = sub;
-    head.ondblclick = function() {
-	var style = this.switchNode.style;
-	style.display = (style.display == "none") ? "block" : "none";
+    head.switchNode = node;
+    head.onclick = function() {
+	var node = this.switchNode;
+	node.className = (node.className == "node collapsed") ? "node" : "node collapsed";
     };
     return node;
 }
