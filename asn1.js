@@ -32,6 +32,38 @@ Stream.prototype.hexDump = function(start, end) {
 	s += this.hexDigits.charAt(this.enc[i] >> 4) + this.hexDigits.charAt(this.enc[i] & 0xF) + " ";
     return s;
 }
+Stream.prototype.parseStringISO = function(start, end) {
+    var s = "";
+    for (var i = start; i < end; ++i)
+	s += String.fromCharCode(this.enc[i]);
+    return s;
+}
+Stream.prototype.parseInteger = function(start, end) {
+    if ((end - start) > 4)
+	return undefined;
+    //TODO support negative numbers
+    var n = 0;
+    for (var i = start; i < end; ++i)
+	n = (n << 8) | this.enc[i];
+    return n;
+}
+Stream.prototype.parseOID = function(start, end) {
+    var s, n = 0, bits = 0;
+    for (var i = start; i < end; ++i) {
+	var v = this.enc[i];
+	n = (n << 7) | (v & 0x7F);
+	bits += 7;
+	if (!(v & 0x80)) { // finished
+	    if (s == undefined)
+		s = parseInt(n / 40) + "." + (n % 40);
+	    else
+		s += "." + ((bits >= 31) ? "big" : n);
+	    n = bits = 0;
+	}
+	s += String.fromCharCode();
+    }
+    return s;
+}
 
 function ASN1(stream, header, length, tag, sub) {
     this.stream = stream;
@@ -83,6 +115,49 @@ ASN1.prototype.typeName = function() {
     case 3: return "Private_" + tagNumber.toString(16);
     }
 }
+ASN1.prototype.content = function() {
+    if (this.tag == undefined)
+	return null;
+    var tagClass = this.tag >> 6;
+    if (tagClass != 0) // universal
+	return null;
+    var tagNumber = this.tag & 0x1F;
+    var content = this.posContent();
+    var len = Math.abs(this.length);
+    switch (tagNumber) {
+    case 0x01: // BOOLEAN
+	return (this.stream.enc[content] == 0) ? "false" : "true";
+    case 0x02: // INTEGER
+	return this.stream.parseInteger(content, content + len);
+    //case 0x03: // BIT_STRING
+    //case 0x04: // OCTET_STRING
+    //case 0x05: // NULL
+    case 0x06: // OBJECT_IDENTIFIER
+	return this.stream.parseOID(content, content + len);
+    //case 0x07: // ObjectDescriptor
+    //case 0x08: // EXTERNAL
+    //case 0x09: // REAL
+    //case 0x0A: // ENUMERATED
+    //case 0x0B: // EMBEDDED_PDV
+    //case 0x10: // SEQUENCE
+    //case 0x11: // SET
+    //case 0x0C: // UTF8String
+    case 0x12: // NumericString
+    case 0x13: // PrintableString
+    case 0x14: // TeletexString
+    case 0x15: // VideotexString
+    case 0x16: // IA5String
+    case 0x17: // UTCTime
+    case 0x18: // GeneralizedTime
+    //case 0x19: // GraphicString
+    case 0x1A: // VisibleString
+    //case 0x1B: // GeneralString
+    //case 0x1C: // UniversalString
+    //case 0x1E: // BMPString
+	return this.stream.parseStringISO(content, content + len);
+    }
+    return null;
+}
 ASN1.prototype.toString = function() {
     return this.typeName() + "@" + this.stream.pos + "[header:" + this.header + ",length:" + this.length + ",sub:" + (this.sub == null ? 'null' : this.sub.length) + "]";
 }
@@ -117,6 +192,12 @@ ASN1.prototype.toDOM = function() {
     var node = document.createElement("div");
     node.className = "node";
     node.asn1 = this;
+    var content = this.content();
+    if (content != null) {
+	var s = String(content);
+	if (s.length < 100)
+	    node.title = s;
+    }
     var head = document.createElement("div");
     head.className = "head";
     var s = this.typeName() + " @" + this.stream.pos + "+" + this.header;
