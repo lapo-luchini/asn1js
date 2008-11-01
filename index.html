@@ -43,10 +43,11 @@
 </form>
 <div id="help">
   <h2>Instructions</h2>
-  <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure wether Base64-encoded (raw base64, PEM armoring and <tt>begin-base64</tt> are recognized) or Hex-encoded. </p>
-  <p>On the left of the page a tree representing the structure will be printed, on the right side an hex dump. <br/>
-  Hovering on the tree highlight its ancestry (the hovered node and all it's ancestors get colored), ion the meantime the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
-  Clicking a node in the tree will hide its sub-nodes.</p>
+  <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <tt>begin-base64</tt> are recognized) or Hex-encoded. </p>
+  <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><tt>http://lapo.it/asn1js/</tt></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <tt>index.html</tt> in a browser</p>
+  <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br/>
+  Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
+  Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become bold).</p>
 </div>
 <div style="position: relative; padding-top: 1em;">
   <div id="tree"></div>
