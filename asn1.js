@@ -44,17 +44,12 @@ Stream.prototype.parseStringUTF = function(start, end) {
     var s = "", c = 0;
     for (var i = start; i < end; ) {
 	var c = this.enc[i++];
-	if (c < 128) {
+	if (c < 128)
 	    s += String.fromCharCode(c);
-	    i++;
-	} else if ((c > 191) && (c < 224)) {
-	    c2 = this.enc[i++];
-	    string += String.fromCharCode(((c & 0x1F) << 6) | (c2 & 0x3F));
-	} else {
-	    c2 = this.enc[i++];
-	    c3 = this.enc[i++];
-	    string += String.fromCharCode(((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F));
-	}
+	else if ((c > 191) && (c < 224))
+	    s += String.fromCharCode(((c & 0x1F) << 6) | (this.enc[i++] & 0x3F));
+	else
+	    s += String.fromCharCode(((c & 0x0F) << 12) | ((this.enc[i++] & 0x3F) << 6) | (this.enc[i++] & 0x3F));
     }
     return s;
 }
@@ -269,7 +264,7 @@ ASN1.prototype.toHexDOM = function() {
     if (this.sub == null)
 	node.appendChild(document.createTextNode(
 	    this.stream.hexDump(this.posContent(), this.posEnd())));
-    else {
+    else if (this.sub.length > 0) {
 	function opt(className, stream, start, end) {
 	    if (start >= end)
 		return;
@@ -328,9 +323,9 @@ ASN1.decode = function(stream) {
     var header = stream.pos - streamStart.pos;
     var sub = null;
     if (ASN1.hasContent(tag, len, stream)) {
+	// it has content, so we decode it
 	var start = stream.pos;
-	// it's constructed, so we have to decode content
-	if (tag == 0x03) stream.get(); // BitString unused bits, must be in [0, 7]
+	if (tag == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
         sub = [];
 	if (len >= 0) {
 	    // definite length
@@ -338,16 +333,20 @@ ASN1.decode = function(stream) {
 	    while (stream.pos < end)
 		sub[sub.length] = ASN1.decode(stream);
 	    if (stream.pos != end)
-		throw "Content overflowed the constructed container";
+		throw "Content size is not correct for container starting at offset " + start;
 	} else {
 	    // undefined length
-	    for (;;) {
-		var s = ASN1.decode(stream);
-		if (s.tag == 0)
-		    break;
-		sub[sub.length] = s;
+	    try {
+		for (;;) {
+		    var s = ASN1.decode(stream);
+		    if (s.tag == 0)
+			break;
+		    sub[sub.length] = s;
+		}
+		len = start - stream.pos;
+	    } catch (e) {
+		throw "Exception while decoding undefined length content: " + e;
 	    }
-	    len = start - stream.pos;
 	}
     } else
         stream.pos += len; // skip content
