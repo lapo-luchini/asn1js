@@ -22,34 +22,37 @@ function Stream(enc, pos) {
         this.pos = pos;
     }
 }
-Stream.prototype.get = function() {
-    if (this.pos >= this.enc.length)
-	throw 'Requesting byte offset ' + this.pos + ' on a stream of length ' + this.enc.length;
-    return this.enc[this.pos++];
+Stream.prototype.get = function(pos) {
+    if (pos == undefined)
+	pos = this.pos++;
+    if (pos >= this.enc.length)
+	throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
+    return this.enc[pos];
 }
 Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexDump = function(start, end) {
     var s = "";
     for (var i = start; i < end; ++i)
-	s += this.hexDigits.charAt(this.enc[i] >> 4) + this.hexDigits.charAt(this.enc[i] & 0xF) + " ";
+	s += this.hexDigits.charAt(this.get(i) >> 4) + this.hexDigits.charAt(this.get(i) & 0xF) + " ";
     return s;
 }
 Stream.prototype.parseStringISO = function(start, end) {
     var s = "";
     for (var i = start; i < end; ++i)
-	s += String.fromCharCode(this.enc[i]);
+	s += String.fromCharCode(this.get(i));
     return s;
 }
 Stream.prototype.parseStringUTF = function(start, end) {
     var s = "", c = 0;
     for (var i = start; i < end; ) {
-	var c = this.enc[i++];
+	var c = this.get(i++);
 	if (c < 128)
 	    s += String.fromCharCode(c);
 	else if ((c > 191) && (c < 224))
-	    s += String.fromCharCode(((c & 0x1F) << 6) | (this.enc[i++] & 0x3F));
+	    s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
 	else
-	    s += String.fromCharCode(((c & 0x0F) << 12) | ((this.enc[i++] & 0x3F) << 6) | (this.enc[i++] & 0x3F));
+	    s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
+	//TODO: this doesn't check properly 'end', some char could begin before and end after
     }
     return s;
 }
@@ -59,13 +62,13 @@ Stream.prototype.parseInteger = function(start, end) {
     //TODO support negative numbers
     var n = 0;
     for (var i = start; i < end; ++i)
-	n = (n << 8) | this.enc[i];
+	n = (n << 8) | this.get(i);
     return n;
 }
 Stream.prototype.parseOID = function(start, end) {
     var s, n = 0, bits = 0;
     for (var i = start; i < end; ++i) {
-	var v = this.enc[i];
+	var v = this.get(i);
 	n = (n << 7) | (v & 0x7F);
 	bits += 7;
 	if (!(v & 0x80)) { // finished
@@ -141,7 +144,7 @@ ASN1.prototype.content = function() {
     var len = Math.abs(this.length);
     switch (tagNumber) {
     case 0x01: // BOOLEAN
-	return (this.stream.enc[content] == 0) ? "false" : "true";
+	return (this.stream.get(content) == 0) ? "false" : "true";
     case 0x02: // INTEGER
 	return this.stream.parseInteger(content, content + len);
     //case 0x03: // BIT_STRING
