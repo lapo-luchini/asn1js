@@ -1,4 +1,4 @@
-// Base64 JavaScript decoder
+// Hex JavaScript decoder
 // Copyright (c) 2008 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
@@ -13,18 +13,21 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Base64 = {};
+Hex = {};
 
-Base64.decode = function(a) {
-    if (Base64.decoder == undefined) {
-	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	var allow = "= \f\n\r\t\u00A0\u2028\u2029";
+Hex.decode = function(a) {
+    if (Hex.decoder == undefined) {
+	var hex = "0123456789ABCDEF";
+	var allow = " \f\n\r\t\u00A0\u2028\u2029";
 	var dec = [];
-	for (var i = 0; i < 64; ++i)
-	    dec[b64.charAt(i)] = i;
+	for (var i = 0; i < 16; ++i)
+	    dec[hex.charAt(i)] = i;
+	hex = hex.toLowerCase();
+	for (var i = 10; i < 16; ++i)
+	    dec[hex.charAt(i)] = i;
 	for (var i = 0; i < allow.length; ++i)
-	    dec[b64.charAt(i)] = -1;
-	Base64.decoder = dec;
+	    dec[hex.charAt(i)] = -1;
+	Hex.decoder = dec;
     }
     var out = [];
     var bits = 0, char_count = 0;
@@ -32,45 +35,21 @@ Base64.decode = function(a) {
 	var c = a.charAt(i);
 	if (c == '=')
             break;
-	c = Base64.decoder[c];
+	c = Hex.decoder[c];
 	if (c == -1)
             continue;
 	if (c == undefined)
 	    throw 'Illegal character at offset ' + i;
 	bits |= c;
-	if (++char_count >= 4) {
-	    out[out.length] = (bits >> 16);
-	    out[out.length] = (bits >> 8) & 0xFF;
-	    out[out.length] = bits & 0xFF;
+	if (++char_count >= 2) {
+	    out[out.length] = bits;
 	    bits = 0;
 	    char_count = 0;
 	} else {
-	    bits <<= 6;
+	    bits <<= 4;
 	}
     }
-    switch (char_count) {
-      case 1:
-	throw "Base64 encoding incomplete: at least 2 bits missing";
-	break;
-      case 2:
-	out[out.length] = (bits >> 10);
-	break;
-      case 3:
-	out[out.length] = (bits >> 16);
-	out[out.length] = (bits >> 8) & 0xFF;
-	break;
-    }
+    if (char_count)
+	throw "Hex encoding incomplete: 4 bits missing";
     return out;
-}
-
-Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+\/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+\/=\s]+)====/
-Base64.unarmor = function(a) {
-    var m = Base64.re.exec(a);
-    if (m) {
-	if (m[1])
-	    a = m[1];
-	else if (m[2])
-	    a = m[2];
-    }
-    return Base64.decode(a);
 }
