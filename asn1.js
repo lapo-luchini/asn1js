@@ -23,6 +23,8 @@ function Stream(enc, pos) {
     }
 }
 Stream.prototype.get = function() {
+    if (this.pos >= this.enc.length)
+	throw 'Requesting byte offset ' + this.pos + ' on a stream of length ' + this.enc.length;
     return this.enc[this.pos++];
 }
 Stream.prototype.hexDigits = "0123456789ABCDEF";

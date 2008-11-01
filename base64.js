@@ -23,7 +23,7 @@ Base64.decode = function(a) {
 	for (var i = 0; i < 64; ++i)
 	    dec[b64.charAt(i)] = i;
 	for (var i = 0; i < allow.length; ++i)
-	    dec[b64.charAt(i)] = -1;
+	    dec[allow.charAt(i)] = -1;
 	Base64.decoder = dec;
     }
     var out = [];

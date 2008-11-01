@@ -26,7 +26,7 @@ Hex.decode = function(a) {
 	for (var i = 10; i < 16; ++i)
 	    dec[hex.charAt(i)] = i;
 	for (var i = 0; i < allow.length; ++i)
-	    dec[hex.charAt(i)] = -1;
+	    dec[allow.charAt(i)] = -1;
 	Hex.decoder = dec;
     }
     var out = [];
