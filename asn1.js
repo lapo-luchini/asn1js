@@ -56,6 +56,31 @@ Stream.prototype.parseStringUTF = function(start, end) {
     }
     return s;
 }
+Stream.prototype.reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
+Stream.prototype.parseTime = function(start, end) {
+    var s = this.parseStringISO(start, end);
+    var m = this.reTime.exec(s);
+    if (!m)
+	return "Unrecognized time: " + s;
+    s = m[1] + "-" + m[2] + "-" + m[3] + " " + m[4];
+    if (m[5]) {
+	s += ":" + m[5];
+	if (m[6]) {
+	    s += ":" + m[6];
+	    if (m[7])
+		s += "." + m[7];
+	}
+    }
+    if (m[8]) {
+	s += " UTC";
+	if (m[8] != 'Z') {
+	    s += m[8];
+	    if (m[9])
+		s += ":" + m[9];
+	}
+    }
+    return s;
+}
 Stream.prototype.parseInteger = function(start, end) {
     if ((end - start) > 4)
 	return undefined;
@@ -166,14 +191,15 @@ ASN1.prototype.content = function() {
     case 0x14: // TeletexString
     case 0x15: // VideotexString
     case 0x16: // IA5String
-    case 0x17: // UTCTime
-    case 0x18: // GeneralizedTime
     //case 0x19: // GraphicString
     case 0x1A: // VisibleString
     //case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
     //case 0x1E: // BMPString
 	return this.stream.parseStringISO(content, content + len);
+    case 0x17: // UTCTime
+    case 0x18: // GeneralizedTime
+	return this.stream.parseTime(content, content + len);
     }
     return null;
 }
