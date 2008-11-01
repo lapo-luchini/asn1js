@@ -38,6 +38,24 @@ Stream.prototype.parseStringISO = function(start, end) {
 	s += String.fromCharCode(this.enc[i]);
     return s;
 }
+Stream.prototype.parseStringUTF = function(start, end) {
+    var s = "", c = 0;
+    for (var i = start; i < end; ) {
+	var c = this.enc[i++];
+	if (c < 128) {
+	    s += String.fromCharCode(c);
+	    i++;
+	} else if ((c > 191) && (c < 224)) {
+	    c2 = this.enc[i++];
+	    string += String.fromCharCode(((c & 0x1F) << 6) | (c2 & 0x3F));
+	} else {
+	    c2 = this.enc[i++];
+	    c3 = this.enc[i++];
+	    string += String.fromCharCode(((c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F));
+	}
+    }
+    return s;
+}
 Stream.prototype.parseInteger = function(start, end) {
     if ((end - start) > 4)
 	return undefined;
@@ -141,7 +159,8 @@ ASN1.prototype.content = function() {
     //case 0x0B: // EMBEDDED_PDV
     //case 0x10: // SEQUENCE
     //case 0x11: // SET
-    //case 0x0C: // UTF8String
+    case 0x0C: // UTF8String
+	return this.stream.parseStringUTF(content, content + len);
     case 0x12: // NumericString
     case 0x13: // PrintableString
     case 0x14: // TeletexString
