@@ -9,14 +9,18 @@ html, body {
     padding-left: 1.5em;
     border-left: solid 1px #E0E0E0;
 }
+.head {
+    height: 1em;
+}
 .node:hover > .head {
     color: darkblue;
+    font-weight: bold;
 }
 .node:hover > .head:hover {
     color: blue;
 }
 .node.collapsed {
-    font-weight: bold;
+    font-style: italic;
 }
 .node.collapsed > .sub {
     display: none;
