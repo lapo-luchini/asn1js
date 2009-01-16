@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2009 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -237,26 +237,37 @@ ASN1.prototype.toDOM = function() {
     var node = document.createElement("div");
     node.className = "node";
     node.asn1 = this;
-    var content = this.content();
-    if (content != null) {
-	var s = String(content);
-	if (s.length < 100)
-	    node.title = s;
-    }
     var head = document.createElement("div");
     head.className = "head";
-    var s = this.typeName() + " @" + this.stream.pos + "+" + this.header;
-    if (this.length >= 0)
-	s += "+";
-    s += this.length;
-    if (this.tag & 0x20)
-	s += " (constructed)";
-    else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
-	s += " (encapsulates)";
-    s += "\n";
+    var s = this.typeName();
     head.innerHTML = s;
     node.appendChild(head);
     this.head = head;
+    var value = document.createElement("div");
+    value.className = "value";
+    s = "Offset: " + this.stream.pos + "<br/>";
+    s += "Length: " + this.header + "+";
+    if (this.length >= 0)
+	s += this.length;
+    else
+	s += (-this.length) + " (undefined)";
+    if (this.tag & 0x20)
+	s += "<br/>(constructed)";
+    else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
+	s += "<br/>(encapsulates)";
+    var content = this.content();
+    if (content != null) {
+	s += "<br/>Value:<br/><b>" + content + "</b>";
+	if ((typeof(oids) == 'object') && (this.tag == 0x06)) {
+	    var oid = oids[content];
+	    if (oid) {
+		if (oid.d) s += "<br/>" + oid.d;
+		if (oid.c) s += "<br/>" + oid.c;
+	    }
+	}
+    }
+    value.innerHTML = s;
+    node.appendChild(value);
     var sub = document.createElement("div");
     sub.className = "sub";
     if (this.sub != null) {
@@ -312,6 +323,11 @@ ASN1.prototype.toHexDOM = function() {
     }
     return node;
 }
+/*
+ASN1.prototype.getValue = function() {
+    TODO
+}
+*/
 ASN1.decodeLength = function(stream) {
     var buf = stream.get();
     var len = buf & 0x7F;

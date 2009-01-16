@@ -4,6 +4,7 @@ html, body {
 }
 .node {
     font-family: monospace;
+    position: relative;
 }
 .sub {
     padding-left: 1.5em;
@@ -24,6 +25,18 @@ html, body {
 }
 .node.collapsed > .sub {
     display: none;
+}
+.value {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    top: 1.2em;
+    left: 0;
+    background-color: #D0D0D0;
+    border: solid 1px white;
+}
+.head:hover + .value {
+    display: block;
 }
 #dump {
     font-family: monospace;
