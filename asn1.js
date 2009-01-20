@@ -263,6 +263,7 @@ ASN1.prototype.toDOM = function() {
 	    if (oid) {
 		if (oid.d) s += "<br/>" + oid.d;
 		if (oid.c) s += "<br/>" + oid.c;
+		if (oid.w) s += "<br/>(warning!)";
 	    }
 	}
     }
