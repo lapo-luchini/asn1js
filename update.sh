@@ -17,8 +17,12 @@ awk '
     }
     BEGIN {
 	FS = "= *";
+	apos = sprintf("%c", 39);
 	clean();
 	print "// Converted from: http://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg";
+	print "// which is made by Peter Gutmann and whose license states:";
+	print "//   You can use this code in whatever way you want,";
+	print "//   as long as you don" apos "t try to claim you wrote it.";
 	print "oids = {";
     }
     /^OID/         { oid = $2; }
