@@ -42,15 +42,10 @@ html, body {
     font-family: monospace;
     width: 30em;
 }
-#dump .hexCurrent > .head {
-    color: blue;
-}
-#dump .hexCurrent > .intro {
-    color: green;
-}
-#dump .hexCurrent > .outro {
-    color: green;
-}
-#dump .hexCurrent {
-    background-color: #E0E0E0;
-}
+#dump .tag             { color: blue; }
+#dump .dlen            { color: darkcyan; }
+#dump .ulen            { color: darkgreen; }
+#dump .intro           { color: blue; }
+#dump .outro           { color: darkgreen; }
+#dump .hexCurrent      { background-color: #808080; }
+#dump .hexCurrent .hex { background-color: #A0A0A0; }

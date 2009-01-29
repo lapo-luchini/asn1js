@@ -204,7 +204,7 @@ ASN1.prototype.content = function() {
     return null;
 }
 ASN1.prototype.toString = function() {
-    return this.typeName() + "@" + this.stream.pos + "[header:" + this.header + ",length:" + this.length + ",sub:" + (this.sub == null ? 'null' : this.sub.length) + "]";
+    return this.typeName() + "@" + this.stream.pos + "[header:" + this.header + ",length:" + this.length + ",sub:" + ((this.sub == null) ? 'null' : this.sub.length) + "]";
 }
 ASN1.prototype.print = function(indent) {
     if (indent == undefined) indent = '';
@@ -292,35 +292,33 @@ ASN1.prototype.posContent = function() {
 ASN1.prototype.posEnd = function() {
     return this.stream.pos + this.header + Math.abs(this.length);
 }
+ASN1.prototype.toHexDOM_sub = function(node, className, stream, start, end) {
+    if (start >= end)
+	return;
+    var sub = document.createElement("span");
+    sub.className = className;
+    sub.appendChild(document.createTextNode(
+	stream.hexDump(start, end)));
+    node.appendChild(sub);
+}
 ASN1.prototype.toHexDOM = function() {
     var node = document.createElement("span");
+    node.className = 'hex';
     this.head.hexNode = node;
     this.head.onmouseover = function() { this.hexNode.className = 'hexCurrent'; }
-    this.head.onmouseout  = function() { this.hexNode.className = ''; }
-    var head = document.createElement("span");
-    head.className = "head";
-    head.appendChild(document.createTextNode(
-	this.stream.hexDump(this.posStart(), this.posContent())));
-    node.appendChild(head);
+    this.head.onmouseout  = function() { this.hexNode.className = 'hex'; }
+    this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
+    this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub == null)
 	node.appendChild(document.createTextNode(
 	    this.stream.hexDump(this.posContent(), this.posEnd())));
     else if (this.sub.length > 0) {
-	function opt(className, stream, start, end) {
-	    if (start >= end)
-		return;
-	    var sub = document.createElement("span");
-	    sub.className = className;
-	    sub.appendChild(document.createTextNode(
-		stream.hexDump(start, end)));
-	    node.appendChild(sub);
-	};
 	var first = this.sub[0];
 	var last = this.sub[this.sub.length - 1];
-	opt("intro", this.stream, this.posContent(), first.posStart());
+	this.toHexDOM_sub(node, "intro", this.stream, this.posContent(), first.posStart());
 	for (var i = 0, max = this.sub.length; i < max; ++i)
 	    node.appendChild(this.sub[i].toHexDOM());
-	opt("outro", this.stream, last.posEnd(), this.posEnd());
+	this.toHexDOM_sub(node, "outro", this.stream, last.posEnd(), this.posEnd());
     }
     return node;
 }
