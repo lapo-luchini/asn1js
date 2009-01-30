@@ -32,8 +32,13 @@ Stream.prototype.get = function(pos) {
 Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexDump = function(start, end) {
     var s = "";
-    for (var i = start; i < end; ++i)
-	s += this.hexDigits.charAt(this.get(i) >> 4) + this.hexDigits.charAt(this.get(i) & 0xF) + " ";
+    for (var i = start; i < end; ++i) {
+	var h = this.get(i);
+	s += this.hexDigits.charAt(h >> 4) + this.hexDigits.charAt(h & 0xF);
+	if ((i & 0xF) == 0x7)
+	    s += ' ';
+	s += ((i & 0xF) == 0xF) ? '\n' : ' ';
+    }
     return s;
 }
 Stream.prototype.parseStringISO = function(start, end) {
