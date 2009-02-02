@@ -3,7 +3,6 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
 }
 .node {
-    font-family: monospace;
     position: relative;
 }
 .sub {
@@ -38,9 +37,13 @@ html, body {
 .head:hover + .value {
     display: block;
 }
+#tree {
+    font-family: monospace;
+    margin-right: 32em; /* this is approximate, TODO: find a way to know the exact width of #dump */
+}
 #dump {
     font-family: monospace;
-    width: 30em;
+    white-space: pre;
 }
 #dump .tag             { color: blue; }
 #dump .dlen            { color: darkcyan; }
