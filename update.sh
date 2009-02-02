@@ -8,6 +8,8 @@ elif [ ! -r dumpasn1.cfg ]; then
   echo Please download $URL in this directory.
   exit 1
 fi
+cat dumpasn1.cfg | \
+tr -d '\r' | \
 awk '
     function clean() {
 	oid = "";
@@ -41,5 +43,5 @@ awk '
     END {
 	print "};"
     }
-' <dumpasn1.cfg >oids.js
+' >oids.js
 echo Conversion completed.
