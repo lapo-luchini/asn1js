@@ -12,7 +12,7 @@ html, body {
 .head {
     height: 1em;
 }
-.node:hover > .head {
+.node:hover > .head, .node.hover > .head {
     color: darkblue;
     font-weight: bold;
 }

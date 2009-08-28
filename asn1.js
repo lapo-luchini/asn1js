@@ -247,6 +247,7 @@ ASN1.prototype.toDOM = function() {
     var s = this.typeName();
     head.innerHTML = s;
     node.appendChild(head);
+    this.node = node;
     this.head = head;
     var value = document.createElement("div");
     value.className = "value";
@@ -312,6 +313,9 @@ ASN1.prototype.toHexDOM = function() {
     this.head.hexNode = node;
     this.head.onmouseover = function() { this.hexNode.className = 'hexCurrent'; }
     this.head.onmouseout  = function() { this.hexNode.className = 'hex'; }
+    node.asn1 = this;
+    node.onmouseover = function() { this.asn1.node.className = 'node hover'; }
+    node.onmouseout  = function() { this.asn1.node.className = 'node';       }
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub == null)
