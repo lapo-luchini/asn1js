@@ -246,6 +246,13 @@ ASN1.prototype.toDOM = function() {
     head.className = "head";
     var s = this.typeName();
     head.innerHTML = s;
+    var content = this.content(); //TODO: escape HTML
+    if (content != null) {
+    	var preview = document.createElement("span");
+    	preview.className = "preview";
+    	preview.innerHTML = content;
+    	head.appendChild(preview);
+    }
     node.appendChild(head);
     this.node = node;
     this.head = head;
@@ -261,7 +268,6 @@ ASN1.prototype.toDOM = function() {
 	s += "<br/>(constructed)";
     else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
 	s += "<br/>(encapsulates)";
-    var content = this.content();
     if (content != null) {
 	s += "<br/>Value:<br/><b>" + content + "</b>";
 	if ((typeof(oids) == 'object') && (this.tag == 0x06)) {

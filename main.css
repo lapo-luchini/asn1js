@@ -11,6 +11,7 @@ html, body {
 }
 .head {
     height: 1em;
+    overflow: hidden;
 }
 .node:hover > .head, .node.hover > .head {
     color: darkblue;
@@ -36,6 +37,11 @@ html, body {
 }
 .head:hover + .value {
     display: block;
+}
+.preview {
+    margin-left: 1em;
+    color: #404040;
+    font-weight: normal;
 }
 #tree {
     font-family: monospace;
