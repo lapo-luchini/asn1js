@@ -24,40 +24,40 @@ function Stream(enc, pos) {
 }
 Stream.prototype.get = function(pos) {
     if (pos == undefined)
-	pos = this.pos++;
+        pos = this.pos++;
     if (pos >= this.enc.length)
-	throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
+        throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
     return this.enc[pos];
 }
 Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexDump = function(start, end) {
     var s = "";
     for (var i = start; i < end; ++i) {
-	var h = this.get(i);
-	s += this.hexDigits.charAt(h >> 4) + this.hexDigits.charAt(h & 0xF);
-	if ((i & 0xF) == 0x7)
-	    s += ' ';
-	s += ((i & 0xF) == 0xF) ? '\n' : ' ';
+        var h = this.get(i);
+        s += this.hexDigits.charAt(h >> 4) + this.hexDigits.charAt(h & 0xF);
+        if ((i & 0xF) == 0x7)
+            s += ' ';
+        s += ((i & 0xF) == 0xF) ? '\n' : ' ';
     }
     return s;
 }
 Stream.prototype.parseStringISO = function(start, end) {
     var s = "";
     for (var i = start; i < end; ++i)
-	s += String.fromCharCode(this.get(i));
+        s += String.fromCharCode(this.get(i));
     return s;
 }
 Stream.prototype.parseStringUTF = function(start, end) {
     var s = "", c = 0;
     for (var i = start; i < end; ) {
-	var c = this.get(i++);
-	if (c < 128)
-	    s += String.fromCharCode(c);
-	else if ((c > 191) && (c < 224))
-	    s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
-	else
-	    s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
-	//TODO: this doesn't check properly 'end', some char could begin before and end after
+        var c = this.get(i++);
+        if (c < 128)
+            s += String.fromCharCode(c);
+        else if ((c > 191) && (c < 224))
+            s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
+        else
+            s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
+        //TODO: this doesn't check properly 'end', some char could begin before and end after
     }
     return s;
 }
@@ -66,23 +66,23 @@ Stream.prototype.parseTime = function(start, end) {
     var s = this.parseStringISO(start, end);
     var m = this.reTime.exec(s);
     if (!m)
-	return "Unrecognized time: " + s;
+        return "Unrecognized time: " + s;
     s = m[1] + "-" + m[2] + "-" + m[3] + " " + m[4];
     if (m[5]) {
-	s += ":" + m[5];
-	if (m[6]) {
-	    s += ":" + m[6];
-	    if (m[7])
-		s += "." + m[7];
-	}
+        s += ":" + m[5];
+        if (m[6]) {
+            s += ":" + m[6];
+            if (m[7])
+                s += "." + m[7];
+        }
     }
     if (m[8]) {
-	s += " UTC";
-	if (m[8] != 'Z') {
-	    s += m[8];
-	    if (m[9])
-		s += ":" + m[9];
-	}
+        s += " UTC";
+        if (m[8] != 'Z') {
+            s += m[8];
+            if (m[9])
+                s += ":" + m[9];
+        }
     }
     return s;
 }
@@ -90,36 +90,36 @@ Stream.prototype.parseInteger = function(start, end) {
     //TODO support negative numbers
     var len = end - start;
     if (len > 4) {
-    	len <<= 3;
-    	var s = this.get(start);
-    	if (s == 0)
-    	    len -= 8;
-    	else
-    	    while (s < 128) {
-    	    	s <<= 1;
-    	    	--len;
-    	    }
-	return "(" + len + " bit)";
+        len <<= 3;
+        var s = this.get(start);
+        if (s == 0)
+            len -= 8;
+        else
+            while (s < 128) {
+                s <<= 1;
+                --len;
+            }
+        return "(" + len + " bit)";
     }
     var n = 0;
     for (var i = start; i < end; ++i)
-	n = (n << 8) | this.get(i);
+        n = (n << 8) | this.get(i);
     return n;
 }
 Stream.prototype.parseOID = function(start, end) {
     var s, n = 0, bits = 0;
     for (var i = start; i < end; ++i) {
-	var v = this.get(i);
-	n = (n << 7) | (v & 0x7F);
-	bits += 7;
-	if (!(v & 0x80)) { // finished
-	    if (s == undefined)
-		s = parseInt(n / 40) + "." + (n % 40);
-	    else
-		s += "." + ((bits >= 31) ? "bigint" : n);
-	    n = bits = 0;
-	}
-	s += String.fromCharCode();
+        var v = this.get(i);
+        n = (n << 7) | (v & 0x7F);
+        bits += 7;
+        if (!(v & 0x80)) { // finished
+            if (s == undefined)
+                s = parseInt(n / 40) + "." + (n % 40);
+            else
+                s += "." + ((bits >= 31) ? "bigint" : n);
+            n = bits = 0;
+        }
+        s += String.fromCharCode();
     }
     return s;
 }
@@ -133,42 +133,42 @@ function ASN1(stream, header, length, tag, sub) {
 }
 ASN1.prototype.typeName = function() {
     if (this.tag == undefined)
-	return "unknown";
+        return "unknown";
     var tagClass = this.tag >> 6;
     var tagConstructed = (this.tag >> 5) & 1;
     var tagNumber = this.tag & 0x1F;
     switch (tagClass) {
     case 0: // universal
-	switch (tagNumber) {
-	case 0x00: return "EOC";
-	case 0x01: return "BOOLEAN";
-	case 0x02: return "INTEGER";
-	case 0x03: return "BIT_STRING";
-	case 0x04: return "OCTET_STRING";
-	case 0x05: return "NULL";
-	case 0x06: return "OBJECT_IDENTIFIER";
-	case 0x07: return "ObjectDescriptor";
-	case 0x08: return "EXTERNAL";
-	case 0x09: return "REAL";
-	case 0x0A: return "ENUMERATED";
-	case 0x0B: return "EMBEDDED_PDV";
-	case 0x0C: return "UTF8String";
-	case 0x10: return "SEQUENCE";
-	case 0x11: return "SET";
-	case 0x12: return "NumericString";
-	case 0x13: return "PrintableString"; // ASCII subset
-	case 0x14: return "TeletexString"; // aka T61String
-	case 0x15: return "VideotexString";
-	case 0x16: return "IA5String"; // ASCII
-	case 0x17: return "UTCTime";
-	case 0x18: return "GeneralizedTime";
-	case 0x19: return "GraphicString";
-	case 0x1A: return "VisibleString"; // ASCII subset
-	case 0x1B: return "GeneralString";
-	case 0x1C: return "UniversalString";
-	case 0x1E: return "BMPString";
-	default: return "Universal_" + tagNumber.toString(16);
-	}
+        switch (tagNumber) {
+        case 0x00: return "EOC";
+        case 0x01: return "BOOLEAN";
+        case 0x02: return "INTEGER";
+        case 0x03: return "BIT_STRING";
+        case 0x04: return "OCTET_STRING";
+        case 0x05: return "NULL";
+        case 0x06: return "OBJECT_IDENTIFIER";
+        case 0x07: return "ObjectDescriptor";
+        case 0x08: return "EXTERNAL";
+        case 0x09: return "REAL";
+        case 0x0A: return "ENUMERATED";
+        case 0x0B: return "EMBEDDED_PDV";
+        case 0x0C: return "UTF8String";
+        case 0x10: return "SEQUENCE";
+        case 0x11: return "SET";
+        case 0x12: return "NumericString";
+        case 0x13: return "PrintableString"; // ASCII subset
+        case 0x14: return "TeletexString"; // aka T61String
+        case 0x15: return "VideotexString";
+        case 0x16: return "IA5String"; // ASCII
+        case 0x17: return "UTCTime";
+        case 0x18: return "GeneralizedTime";
+        case 0x19: return "GraphicString";
+        case 0x1A: return "VisibleString"; // ASCII subset
+        case 0x1B: return "GeneralString";
+        case 0x1C: return "UniversalString";
+        case 0x1E: return "BMPString";
+        default: return "Universal_" + tagNumber.toString(16);
+        }
     case 1: return "Application_" + tagNumber.toString(16);
     case 2: return "[" + tagNumber + "]"; // Context
     case 3: return "Private_" + tagNumber.toString(16);
@@ -176,25 +176,25 @@ ASN1.prototype.typeName = function() {
 }
 ASN1.prototype.content = function() {
     if (this.tag == undefined)
-	return null;
+        return null;
     var tagClass = this.tag >> 6;
     if (tagClass != 0) // universal
-    	return (this.sub == null) ? null : "(" + this.sub.length + ")";
+        return (this.sub == null) ? null : "(" + this.sub.length + ")";
     var tagNumber = this.tag & 0x1F;
     var content = this.posContent();
     var len = Math.abs(this.length);
     switch (tagNumber) {
     case 0x01: // BOOLEAN
-	return (this.stream.get(content) == 0) ? "false" : "true";
+        return (this.stream.get(content) == 0) ? "false" : "true";
     case 0x02: // INTEGER
-	return this.stream.parseInteger(content, content + len);
+        return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
-    	return "(" + (((len - 1) << 3) - this.stream.get(content)) + " bit)";
+        return "(" + (((len - 1) << 3) - this.stream.get(content)) + " bit)";
     case 0x04: // OCTET_STRING
-    	return "(" + len + " byte)";
+        return "(" + len + " byte)";
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
-	return this.stream.parseOID(content, content + len);
+        return this.stream.parseOID(content, content + len);
     //case 0x07: // ObjectDescriptor
     //case 0x08: // EXTERNAL
     //case 0x09: // REAL
@@ -202,9 +202,9 @@ ASN1.prototype.content = function() {
     //case 0x0B: // EMBEDDED_PDV
     case 0x10: // SEQUENCE
     case 0x11: // SET
-    	return "(" + this.sub.length + ")";
+        return "(" + this.sub.length + ")";
     case 0x0C: // UTF8String
-	return this.stream.parseStringUTF(content, content + len);
+        return this.stream.parseStringUTF(content, content + len);
     case 0x12: // NumericString
     case 0x13: // PrintableString
     case 0x14: // TeletexString
@@ -215,10 +215,10 @@ ASN1.prototype.content = function() {
     //case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
     //case 0x1E: // BMPString
-	return this.stream.parseStringISO(content, content + len);
+        return this.stream.parseStringISO(content, content + len);
     case 0x17: // UTCTime
     case 0x18: // GeneralizedTime
-	return this.stream.parseTime(content, content + len);
+        return this.stream.parseTime(content, content + len);
     }
     return null;
 }
@@ -238,12 +238,12 @@ ASN1.prototype.toPrettyString = function(indent) {
     if (indent == undefined) indent = '';
     var s = indent + this.typeName() + " @" + this.stream.pos;
     if (this.length >= 0)
-	s += "+";
+        s += "+";
     s += this.length;
     if (this.tag & 0x20)
-	s += " (constructed)";
+        s += " (constructed)";
     else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
-	s += " (encapsulates)";
+        s += " (encapsulates)";
     s += "\n";
     if (this.sub != null) {
         indent += '  ';
@@ -262,10 +262,10 @@ ASN1.prototype.toDOM = function() {
     head.innerHTML = s;
     var content = this.content(); //TODO: escape HTML
     if (content != null) {
-    	var preview = document.createElement("span");
-    	preview.className = "preview";
-    	preview.innerHTML = content;
-    	head.appendChild(preview);
+        var preview = document.createElement("span");
+        preview.className = "preview";
+        preview.innerHTML = content;
+        head.appendChild(preview);
     }
     node.appendChild(head);
     this.node = node;
@@ -275,24 +275,24 @@ ASN1.prototype.toDOM = function() {
     s = "Offset: " + this.stream.pos + "<br/>";
     s += "Length: " + this.header + "+";
     if (this.length >= 0)
-	s += this.length;
+        s += this.length;
     else
-	s += (-this.length) + " (undefined)";
+        s += (-this.length) + " (undefined)";
     if (this.tag & 0x20)
-	s += "<br/>(constructed)";
+        s += "<br/>(constructed)";
     else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
-	s += "<br/>(encapsulates)";
+        s += "<br/>(encapsulates)";
     //TODO if (this.tag == 0x03) s += "Unused bits: "
     if (content != null) {
-	s += "<br/>Value:<br/><b>" + content + "</b>";
-	if ((typeof(oids) == 'object') && (this.tag == 0x06)) {
-	    var oid = oids[content];
-	    if (oid) {
-		if (oid.d) s += "<br/>" + oid.d;
-		if (oid.c) s += "<br/>" + oid.c;
-		if (oid.w) s += "<br/>(warning!)";
-	    }
-	}
+        s += "<br/>Value:<br/><b>" + content + "</b>";
+        if ((typeof(oids) == 'object') && (this.tag == 0x06)) {
+            var oid = oids[content];
+            if (oid) {
+                if (oid.d) s += "<br/>" + oid.d;
+                if (oid.c) s += "<br/>" + oid.c;
+                if (oid.w) s += "<br/>(warning!)";
+            }
+        }
     }
     value.innerHTML = s;
     node.appendChild(value);
@@ -305,8 +305,8 @@ ASN1.prototype.toDOM = function() {
     node.appendChild(sub);
     head.switchNode = node;
     head.onclick = function() {
-	var node = this.switchNode;
-	node.className = (node.className == "node collapsed") ? "node" : "node collapsed";
+        var node = this.switchNode;
+        node.className = (node.className == "node collapsed") ? "node" : "node collapsed";
     };
     return node;
 }
@@ -321,11 +321,11 @@ ASN1.prototype.posEnd = function() {
 }
 ASN1.prototype.toHexDOM_sub = function(node, className, stream, start, end) {
     if (start >= end)
-	return;
+        return;
     var sub = document.createElement("span");
     sub.className = className;
     sub.appendChild(document.createTextNode(
-	stream.hexDump(start, end)));
+        stream.hexDump(start, end)));
     node.appendChild(sub);
 }
 ASN1.prototype.toHexDOM = function() {
@@ -340,15 +340,15 @@ ASN1.prototype.toHexDOM = function() {
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub == null)
-	node.appendChild(document.createTextNode(
-	    this.stream.hexDump(this.posContent(), this.posEnd())));
+        node.appendChild(document.createTextNode(
+            this.stream.hexDump(this.posContent(), this.posEnd())));
     else if (this.sub.length > 0) {
-	var first = this.sub[0];
-	var last = this.sub[this.sub.length - 1];
-	this.toHexDOM_sub(node, "intro", this.stream, this.posContent(), first.posStart());
-	for (var i = 0, max = this.sub.length; i < max; ++i)
-	    node.appendChild(this.sub[i].toHexDOM());
-	this.toHexDOM_sub(node, "outro", this.stream, last.posEnd(), this.posEnd());
+        var first = this.sub[0];
+        var last = this.sub[this.sub.length - 1];
+        this.toHexDOM_sub(node, "intro", this.stream, this.posContent(), first.posStart());
+        for (var i = 0, max = this.sub.length; i < max; ++i)
+            node.appendChild(this.sub[i].toHexDOM());
+        this.toHexDOM_sub(node, "outro", this.stream, last.posEnd(), this.posEnd());
     }
     return node;
 }
@@ -365,7 +365,7 @@ ASN1.decodeLength = function(stream) {
     if (len > 3)
         throw "Length over 24 bits not supported at position " + (stream.pos - 1);
     if (len == 0)
-	return -1; // undefined
+        return -1; // undefined
     buf = 0;
     for (var i = 0; i < len; ++i)
         buf = (buf << 8) | stream.get();
@@ -373,19 +373,19 @@ ASN1.decodeLength = function(stream) {
 }
 ASN1.hasContent = function(tag, len, stream) {
     if (tag & 0x20) // constructed
-	return true;
+        return true;
     if ((tag < 0x03) || (tag > 0x04))
-	return false;
+        return false;
     var p = new Stream(stream);
     if (tag == 0x03) p.get(); // BitString unused bits, must be in [0, 7]
     var subTag = p.get();
     if ((subTag >> 6) & 0x01) // not (universal or context)
-	return false;
+        return false;
     try {
-	var subLength = ASN1.decodeLength(p);
-	return ((p.pos - stream.pos) + subLength == len);
+        var subLength = ASN1.decodeLength(p);
+        return ((p.pos - stream.pos) + subLength == len);
     } catch (exception) {
-	return false;
+        return false;
     }
 }
 ASN1.decode = function(stream) {
@@ -397,31 +397,31 @@ ASN1.decode = function(stream) {
     var header = stream.pos - streamStart.pos;
     var sub = null;
     if (ASN1.hasContent(tag, len, stream)) {
-	// it has content, so we decode it
-	var start = stream.pos;
-	if (tag == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
+        // it has content, so we decode it
+        var start = stream.pos;
+        if (tag == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
         sub = [];
-	if (len >= 0) {
-	    // definite length
-	    var end = start + len;
-	    while (stream.pos < end)
-		sub[sub.length] = ASN1.decode(stream);
-	    if (stream.pos != end)
-		throw "Content size is not correct for container starting at offset " + start;
-	} else {
-	    // undefined length
-	    try {
-		for (;;) {
-		    var s = ASN1.decode(stream);
-		    if (s.tag == 0)
-			break;
-		    sub[sub.length] = s;
-		}
-		len = start - stream.pos;
-	    } catch (e) {
-		throw "Exception while decoding undefined length content: " + e;
-	    }
-	}
+        if (len >= 0) {
+            // definite length
+            var end = start + len;
+            while (stream.pos < end)
+                sub[sub.length] = ASN1.decode(stream);
+            if (stream.pos != end)
+                throw "Content size is not correct for container starting at offset " + start;
+        } else {
+            // undefined length
+            try {
+                for (;;) {
+                    var s = ASN1.decode(stream);
+                    if (s.tag == 0)
+                        break;
+                    sub[sub.length] = s;
+                }
+                len = start - stream.pos;
+            } catch (e) {
+                throw "Exception while decoding undefined length content: " + e;
+            }
+        }
     } else
         stream.pos += len; // skip content
     return new ASN1(streamStart, header, len, tag, sub);

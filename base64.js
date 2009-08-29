@@ -17,48 +17,48 @@ Base64 = {};
 
 Base64.decode = function(a) {
     if (Base64.decoder == undefined) {
-	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	var allow = "= \f\n\r\t\u00A0\u2028\u2029";
-	var dec = [];
-	for (var i = 0; i < 64; ++i)
-	    dec[b64.charAt(i)] = i;
-	for (var i = 0; i < allow.length; ++i)
-	    dec[allow.charAt(i)] = -1;
-	Base64.decoder = dec;
+        var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var allow = "= \f\n\r\t\u00A0\u2028\u2029";
+        var dec = [];
+        for (var i = 0; i < 64; ++i)
+            dec[b64.charAt(i)] = i;
+        for (var i = 0; i < allow.length; ++i)
+            dec[allow.charAt(i)] = -1;
+        Base64.decoder = dec;
     }
     var out = [];
     var bits = 0, char_count = 0;
     for (var i = 0; i < a.length; ++i) {
-	var c = a.charAt(i);
-	if (c == '=')
+        var c = a.charAt(i);
+        if (c == '=')
             break;
-	c = Base64.decoder[c];
-	if (c == -1)
+        c = Base64.decoder[c];
+        if (c == -1)
             continue;
-	if (c == undefined)
-	    throw 'Illegal character at offset ' + i;
-	bits |= c;
-	if (++char_count >= 4) {
-	    out[out.length] = (bits >> 16);
-	    out[out.length] = (bits >> 8) & 0xFF;
-	    out[out.length] = bits & 0xFF;
-	    bits = 0;
-	    char_count = 0;
-	} else {
-	    bits <<= 6;
-	}
+        if (c == undefined)
+            throw 'Illegal character at offset ' + i;
+        bits |= c;
+        if (++char_count >= 4) {
+            out[out.length] = (bits >> 16);
+            out[out.length] = (bits >> 8) & 0xFF;
+            out[out.length] = bits & 0xFF;
+            bits = 0;
+            char_count = 0;
+        } else {
+            bits <<= 6;
+        }
     }
     switch (char_count) {
       case 1:
-	throw "Base64 encoding incomplete: at least 2 bits missing";
-	break;
+        throw "Base64 encoding incomplete: at least 2 bits missing";
+        break;
       case 2:
-	out[out.length] = (bits >> 10);
-	break;
+        out[out.length] = (bits >> 10);
+        break;
       case 3:
-	out[out.length] = (bits >> 16);
-	out[out.length] = (bits >> 8) & 0xFF;
-	break;
+        out[out.length] = (bits >> 16);
+        out[out.length] = (bits >> 8) & 0xFF;
+        break;
     }
     return out;
 }
@@ -67,10 +67,10 @@ Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+\/=\s]+)-----END [^-]+-----|begin-
 Base64.unarmor = function(a) {
     var m = Base64.re.exec(a);
     if (m) {
-	if (m[1])
-	    a = m[1];
-	else if (m[2])
-	    a = m[2];
+        if (m[1])
+            a = m[1];
+        else if (m[2])
+            a = m[2];
     }
     return Base64.decode(a);
 }

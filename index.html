@@ -10,28 +10,28 @@
   <script type="text/javascript">
     var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/;
     function decode() {
-      document.getElementById('help').style.display = 'none';
-      var tree = document.getElementById('tree');
-      var dump = document.getElementById('dump');
-      tree.innerHTML = "";
-      dump.innerHTML = "";
-      try {
-        var pem = document.getElementById('pem').value;
-        var der = reHex.test(pem)
-	    ? Hex.decode(pem)
-	    : Base64.unarmor(pem);
-        var asn1 = ASN1.decode(der);
-        tree.appendChild(asn1.toDOM());
-        dump.appendChild(asn1.toHexDOM());
-      } catch (e) {
-        tree.innerHTML = e;
-      }
-      return false;
+        document.getElementById('help').style.display = 'none';
+        var tree = document.getElementById('tree');
+        var dump = document.getElementById('dump');
+        tree.innerHTML = "";
+        dump.innerHTML = "";
+        try {
+            var pem = document.getElementById('pem').value;
+            var der = reHex.test(pem)
+                ? Hex.decode(pem)
+                : Base64.unarmor(pem);
+            var asn1 = ASN1.decode(der);
+            tree.appendChild(asn1.toDOM());
+            dump.appendChild(asn1.toHexDOM());
+        } catch (e) {
+            tree.innerHTML = e;
+        }
+        return false;
     }
     function help() {
-      document.getElementById('tree').innerHTML = "";
-      document.getElementById('dump').innerHTML = "";
-      document.getElementById('help').style.display = 'block';
+        document.getElementById('tree').innerHTML = "";
+        document.getElementById('dump').innerHTML = "";
+        document.getElementById('help').style.display = 'block';
     }
   </script>
 </head>
