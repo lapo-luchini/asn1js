@@ -179,7 +179,7 @@ ASN1.prototype.content = function() {
 	return null;
     var tagClass = this.tag >> 6;
     if (tagClass != 0) // universal
-	return null;
+    	return (this.sub == null) ? null : "(" + this.sub.length + ")";
     var tagNumber = this.tag & 0x1F;
     var content = this.posContent();
     var len = Math.abs(this.length);
@@ -258,7 +258,7 @@ ASN1.prototype.toDOM = function() {
     node.asn1 = this;
     var head = document.createElement("div");
     head.className = "head";
-    var s = this.typeName();
+    var s = this.typeName().replace(/_/, ' ');
     head.innerHTML = s;
     var content = this.content(); //TODO: escape HTML
     if (content != null) {
