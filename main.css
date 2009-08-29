@@ -11,7 +11,7 @@ html, body {
 }
 .head {
     height: 1em;
-    overflow: hidden;
+    white-space: nowrap;
 }
 .node:hover > .head, .node.hover > .head {
     color: darkblue;
@@ -45,11 +45,14 @@ html, body {
 }
 #tree {
     font-family: monospace;
-    margin-right: 32em; /* this is approximate, TODO: find a way to know the exact width of #dump */
 }
 #dump {
+    z-index: 1;
+    background-color: #C0C0C0;
+    border: solid 1px #E0E0E0;
     font-family: monospace;
     white-space: pre;
+    padding: 2px;
 }
 #dump .tag             { color: blue; }
 #dump .dlen            { color: darkcyan; }
