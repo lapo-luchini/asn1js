@@ -87,9 +87,20 @@ Stream.prototype.parseTime = function(start, end) {
     return s;
 }
 Stream.prototype.parseInteger = function(start, end) {
-    if ((end - start) > 4)
-	return undefined;
     //TODO support negative numbers
+    var len = end - start;
+    if (len > 4) {
+    	len <<= 3;
+    	var s = this.get(start);
+    	if (s == 0)
+    	    len -= 8;
+    	else
+    	    while (s < 128) {
+    	    	short <<= 1;
+    	    	--len;
+    	    }
+	return "(" + len + " bit)";
+    }
     var n = 0;
     for (var i = start; i < end; ++i)
 	n = (n << 8) | this.get(i);
@@ -105,7 +116,7 @@ Stream.prototype.parseOID = function(start, end) {
 	    if (s == undefined)
 		s = parseInt(n / 40) + "." + (n % 40);
 	    else
-		s += "." + ((bits >= 31) ? "big" : n);
+		s += "." + ((bits >= 31) ? "bigint" : n);
 	    n = bits = 0;
 	}
 	s += String.fromCharCode();
