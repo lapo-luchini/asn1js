@@ -106,6 +106,22 @@ Stream.prototype.parseInteger = function(start, end) {
         n = (n << 8) | this.get(i);
     return n;
 }
+Stream.prototype.parseBitString = function(start, end) {
+    var unusedBit = this.get(start);
+    var lenBit = ((end - start - 1) << 3) - unusedBit;
+    var s  = "(" + lenBit + " bit)";
+    if (lenBit <= 32) {
+        var skip = unusedBit;
+        s += " ";
+        for (var i = end - 1; i > start; --i) {
+            var h = this.get(i);
+            for (var j = skip; j < 8; ++j)
+                s += (h >> j) & 1 ? "1" : "0";
+            skip = 0;
+        }
+    }
+    return s;
+}
 Stream.prototype.parseOID = function(start, end) {
     var s, n = 0, bits = 0;
     for (var i = start; i < end; ++i) {
@@ -189,7 +205,7 @@ ASN1.prototype.content = function() {
     case 0x02: // INTEGER
         return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
-        return "(" + (((len - 1) << 3) - this.stream.get(content)) + " bit)";
+        return this.stream.parseBitString(content, content + len)
     case 0x04: // OCTET_STRING
         return "(" + len + " byte)";
     //case 0x05: // NULL
