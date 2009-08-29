@@ -198,8 +198,9 @@ ASN1.prototype.content = function() {
     //case 0x09: // REAL
     //case 0x0A: // ENUMERATED
     //case 0x0B: // EMBEDDED_PDV
-    //case 0x10: // SEQUENCE
-    //case 0x11: // SET
+    case 0x10: // SEQUENCE
+    case 0x11: // SET
+    	return "(" + this.sub.length + ")";
     case 0x0C: // UTF8String
 	return this.stream.parseStringUTF(content, content + len);
     case 0x12: // NumericString
@@ -331,8 +332,8 @@ ASN1.prototype.toHexDOM = function() {
     this.head.onmouseover = function() { this.hexNode.className = 'hexCurrent'; }
     this.head.onmouseout  = function() { this.hexNode.className = 'hex'; }
     node.asn1 = this;
-    node.onmouseover = function() { this.asn1.node.className = 'node hover'; }
-    node.onmouseout  = function() { this.asn1.node.className = 'node';       }
+    node.onmouseover = function() { this.asn1.node.className += ' hover'; }
+    node.onmouseout  = function() { this.asn1.node.className = this.asn1.node.className.replace(/ ?hover/, ""); }
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub == null)

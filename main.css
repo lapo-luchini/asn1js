@@ -26,6 +26,9 @@ html, body {
 .node.collapsed > .sub {
     display: none;
 }
+.node.collapsed.hover > .sub {
+    display: block;
+}
 .value {
     display: none;
     position: absolute;
