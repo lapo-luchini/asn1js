@@ -188,8 +188,10 @@ ASN1.prototype.content = function() {
 	return (this.stream.get(content) == 0) ? "false" : "true";
     case 0x02: // INTEGER
 	return this.stream.parseInteger(content, content + len);
-    //case 0x03: // BIT_STRING
-    //case 0x04: // OCTET_STRING
+    case 0x03: // BIT_STRING
+    	return "(" + (((len - 1) << 3) - this.stream.get(content)) + " bit)";
+    case 0x04: // OCTET_STRING
+    	return "(" + len + " byte)";
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
 	return this.stream.parseOID(content, content + len);
@@ -280,6 +282,7 @@ ASN1.prototype.toDOM = function() {
 	s += "<br/>(constructed)";
     else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub != null))
 	s += "<br/>(encapsulates)";
+    //TODO if (this.tag == 0x03) s += "Unused bits: "
     if (content != null) {
 	s += "<br/>Value:<br/><b>" + content + "</b>";
 	if ((typeof(oids) == 'object') && (this.tag == 0x06)) {
