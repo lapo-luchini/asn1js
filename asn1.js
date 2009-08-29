@@ -96,7 +96,7 @@ Stream.prototype.parseInteger = function(start, end) {
     	    len -= 8;
     	else
     	    while (s < 128) {
-    	    	short <<= 1;
+    	    	s <<= 1;
     	    	--len;
     	    }
 	return "(" + len + " bit)";
