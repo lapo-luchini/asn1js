@@ -339,6 +339,17 @@ ASN1.prototype.posContent = function() {
 ASN1.prototype.posEnd = function() {
     return this.stream.pos + this.header + Math.abs(this.length);
 }
+ASN1.prototype.fakeHover = function(current) {
+    this.node.className += " hover";
+    if (current)
+        this.head.className += " hover";
+}
+ASN1.prototype.fakeOut = function(current) {
+    var re = / ?hover/;
+    this.node.className = this.node.className.replace(re, "");
+    if (current)
+        this.head.className = this.head.className.replace(re, "");
+}
 ASN1.prototype.toHexDOM_sub = function(node, className, stream, start, end) {
     if (start >= end)
         return;
@@ -348,15 +359,30 @@ ASN1.prototype.toHexDOM_sub = function(node, className, stream, start, end) {
         stream.hexDump(start, end)));
     node.appendChild(sub);
 }
-ASN1.prototype.toHexDOM = function() {
+ASN1.prototype.toHexDOM = function(root) {
     var node = document.createElement("span");
     node.className = 'hex';
+    if (root == undefined) root = node;
     this.head.hexNode = node;
-    this.head.onmouseover = function() { this.hexNode.className = 'hexCurrent'; }
-    this.head.onmouseout  = function() { this.hexNode.className = 'hex'; }
+    this.head.onmouseover = function() { this.hexNode.className = "hexCurrent"; }
+    this.head.onmouseout  = function() { this.hexNode.className = "hex"; }
     node.asn1 = this;
-    node.onmouseover = function() { this.asn1.node.className += ' hover'; }
-    node.onmouseout  = function() { this.asn1.node.className = this.asn1.node.className.replace(/ ?hover/, ""); }
+    node.onmouseover = function() {
+        var current = !root.selected;
+        if (current) {
+            root.selected = this.asn1;
+            this.className = "hexCurrent";
+        }
+        this.asn1.fakeHover(current);
+    }
+    node.onmouseout  = function() {
+        var current = (root.selected == this.asn1);
+        this.asn1.fakeOut(current);
+        if (current) {
+            root.selected = null;
+            this.className = "hex";
+        }
+    }
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub == null)
@@ -367,7 +393,7 @@ ASN1.prototype.toHexDOM = function() {
         var last = this.sub[this.sub.length - 1];
         this.toHexDOM_sub(node, "intro", this.stream, this.posContent(), first.posStart());
         for (var i = 0, max = this.sub.length; i < max; ++i)
-            node.appendChild(this.sub[i].toHexDOM());
+            node.appendChild(this.sub[i].toHexDOM(root));
         this.toHexDOM_sub(node, "outro", this.stream, last.posEnd(), this.posEnd());
     }
     return node;

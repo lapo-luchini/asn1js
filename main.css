@@ -17,7 +17,7 @@ html, body {
     color: darkblue;
     font-weight: bold;
 }
-.node:hover > .head:hover {
+.node:hover > .head:hover, .node.hover > .head.hover {
     color: blue;
 }
 .node.collapsed {
@@ -38,7 +38,7 @@ html, body {
     background-color: #D0D0D0;
     border: solid 1px white;
 }
-.head:hover + .value {
+.head:hover + .value, .head.hover + .value {
     display: block;
 }
 .preview {
