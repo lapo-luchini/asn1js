@@ -48,7 +48,6 @@ html, body {
 }
 #tree {
     font-family: monospace;
-    margin-bottom: 8em;
 }
 #dump {
     z-index: 1;

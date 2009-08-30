@@ -37,11 +37,6 @@
 </head>
 <body>
 <h1>ASN.1 JavaScript decoder</h1>
-<form>
-  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
-  <input type="button" value="decode" onclick="decode();">
-  <input type="button" value="help" onclick="help();">
-</form>
 <div id="help">
   <h2>Instructions</h2>
   <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <tt>begin-base64</tt> are recognized) or Hex-encoded. </p>
@@ -53,9 +48,14 @@
   <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2009 <a href="htp://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
   <p><tt>OBJECT&nbsp;IDENTIFIER</tt> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
 </div>
-<div style="position: relative; padding-top: 1em;">
+<div style="position: relative; padding-bottom: 1em;">
   <div id="tree"></div>
   <div id="dump" style="position: absolute; top: 0px; right: 0px;"></div>
 </div>
+<form>
+  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
+  <input type="button" value="decode" onclick="decode();">
+  <input type="button" value="help" onclick="help();">
+</form>
 </body>
 </html>
