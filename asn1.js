@@ -114,16 +114,27 @@ Stream.prototype.parseBitString = function(start, end) {
     var unusedBit = this.get(start);
     var lenBit = ((end - start - 1) << 3) - unusedBit;
     var s  = "(" + lenBit + " bit)";
-    if (lenBit <= 32) {
+    if (lenBit <= 20) {
         var skip = unusedBit;
         s += " ";
         for (var i = end - 1; i > start; --i) {
-            var h = this.get(i);
+            var b = this.get(i);
             for (var j = skip; j < 8; ++j)
-                s += (h >> j) & 1 ? "1" : "0";
+                s += (b >> j) & 1 ? "1" : "0";
             skip = 0;
         }
     }
+    return s;
+}
+Stream.prototype.parseOctetString = function(start, end) {
+    var len = end - start;
+    var s = "(" + len + " byte) ";
+    if (len > 20)
+        end = start + 20;
+    for (var i = start; i < end; ++i)
+        s += this.hexByte(this.get(i));
+    if (len > 20)
+        s += String.fromCharCode(8230); // ellipsis
     return s;
 }
 Stream.prototype.parseOID = function(start, end) {
@@ -209,9 +220,11 @@ ASN1.prototype.content = function() {
     case 0x02: // INTEGER
         return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
-        return this.stream.parseBitString(content, content + len)
+        return this.sub ? "(" + this.sub.length + " elem)" :
+            this.stream.parseBitString(content, content + len)
     case 0x04: // OCTET_STRING
-        return "(" + len + " byte)";
+        return this.sub ? "(" + this.sub.length + " elem)" :
+            this.stream.parseOctetString(content, content + len)
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
         return this.stream.parseOID(content, content + len);
@@ -222,7 +235,7 @@ ASN1.prototype.content = function() {
     //case 0x0B: // EMBEDDED_PDV
     case 0x10: // SEQUENCE
     case 0x11: // SET
-        return "(" + this.sub.length + ")";
+        return "(" + this.sub.length + " elem)";
     case 0x0C: // UTF8String
         return this.stream.parseStringUTF(content, content + len);
     case 0x12: // NumericString
