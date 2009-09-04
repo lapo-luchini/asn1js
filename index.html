@@ -44,14 +44,31 @@
   <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br/>
   Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
   Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
-  <h3>Copyright</h3>
-  <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2009 <a href="htp://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+  <div class="license">
+    <h3>Copyright</h3>
+    <div class="ref"><p class="hidden">
+      ASN.1 JavaScript decoder<br/>
+      Copyright &copy; 2008-2009 Lapo Luchini &lt;lapo@lapo.it&gt;<br/>
+      <br/>
+      Permission to use, copy, modify, and/or distribute this software for any
+      purpose with or without fee is hereby granted, provided that the above
+      copyright notice and this permission notice appear in all copies.<br/>
+      <br/>
+      THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+      MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+      ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+      WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+      ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+      OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+    </p></div>
+    <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2009 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+  </div>
   <p><tt>OBJECT&nbsp;IDENTIFIER</tt> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
 </div>
-<div style="padding-bottom: 1em;">
-  <div id="dump" style="float: right;"></div>
+<div style="position: relative; padding-bottom: 1em;">
+  <div id="dump" style="position: absolute; right: 0px;"></div>
   <div id="tree"></div>
-  <div style="clear: both;"></div>
 </div>
 <form>
   <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
