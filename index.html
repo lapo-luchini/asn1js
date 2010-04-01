@@ -9,20 +9,29 @@
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript">
     var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/;
-    function decode() {
+    function decode(der) {
         document.getElementById('help').style.display = 'none';
         var tree = document.getElementById('tree');
         var dump = document.getElementById('dump');
         tree.innerHTML = "";
         dump.innerHTML = "";
         try {
+            var asn1 = ASN1.decode(der);
+            tree.appendChild(asn1.toDOM());
+            if (document.getElementById('wantHex').checked)
+                dump.appendChild(asn1.toHexDOM());
+        } catch (e) {
+            tree.innerHTML = e;
+        }
+        return false;
+    }
+    function decodeArea() {
+        try {
             var pem = document.getElementById('pem').value;
             var der = reHex.test(pem)
                 ? Hex.decode(pem)
                 : Base64.unarmor(pem);
-            var asn1 = ASN1.decode(der);
-            tree.appendChild(asn1.toDOM());
-            dump.appendChild(asn1.toHexDOM());
+            decode(der);
         } catch (e) {
             tree.innerHTML = e;
         }
@@ -32,6 +41,28 @@
         document.getElementById('tree').innerHTML = "";
         document.getElementById('dump').innerHTML = "";
         document.getElementById('help').style.display = 'block';
+        return false;
+    }
+    function load() {
+        var file = document.getElementById('file');
+        if (file.files.length == 0) {
+            alert("Select a file to load first.");
+            return false;
+        }
+        if (!file.files[0].getAsBinary) {
+            alert("Cannot load files: your browser doesn't support the File.getAsBinary() method; try with Firefox.");
+            return false;
+        }
+        var derStr = file.files[0].getAsBinary();
+        var der = [];
+        for (var i = 0; i < derStr.length; ++i)
+            der[der.length] = derStr.charCodeAt(i);
+        try {
+            decode(der);
+        } catch (e) {
+            tree.innerHTML = e;
+        }
+        return false;
     }
   </script>
 </head>
@@ -71,9 +102,13 @@
   <div id="tree"></div>
 </div>
 <form>
-  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea><br/>
-  <input type="button" value="decode" onclick="decode();">
+  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea>
+  <br/>
+  <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
+  <input type="button" value="decode" onclick="decodeArea();">
   <input type="button" value="help" onclick="help();">
+  <br/>
+  <input type="file" id="file"><input type="button" value="load" onclick="load();">
 </form>
 </body>
 </html>
