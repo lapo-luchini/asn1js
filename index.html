@@ -13,8 +13,8 @@
         document.getElementById('help').style.display = 'none';
         var tree = document.getElementById('tree');
         var dump = document.getElementById('dump');
-        tree.innerHTML = "";
-        dump.innerHTML = "";
+        tree.innerHTML = '';
+        dump.innerHTML = '';
         try {
             var asn1 = ASN1.decode(der);
             tree.appendChild(asn1.toDOM());
@@ -37,30 +37,44 @@
         }
         return false;
     }
+    function decodeBinaryString(str) {
+        try {
+	    var der = [];
+	    for (var i = 0; i < str.length; ++i)
+		der[der.length] = str.charCodeAt(i);
+            decode(der);
+        } catch (e) {
+            tree.innerHTML = e;
+        }
+        return false;
+    }
     function help() {
-        document.getElementById('tree').innerHTML = "";
-        document.getElementById('dump').innerHTML = "";
+        document.getElementById('tree').innerHTML = '';
+        document.getElementById('dump').innerHTML = '';
         document.getElementById('help').style.display = 'block';
         return false;
     }
     function load() {
         var file = document.getElementById('file');
+        if (!file.files) {
+            alert("Your browser doesn't support reading files; try Firefox or Chrome.");
+            return false;
+        }
         if (file.files.length == 0) {
             alert("Select a file to load first.");
             return false;
         }
-        if (!file.files[0].getAsBinary) {
-            alert("Cannot load files: your browser doesn't support the File.getAsBinary() method; try with Firefox.");
+        var f = file.files[0];
+        if (f.getAsBinary) { // Firefox way
+            var derStr = f.getAsBinary();
+            decodeBinaryString(derStr);
+        } else if (window.FileReader) { // Chrome way
+            var r = new FileReader();
+            r.onloadend = function() { decodeBinaryString(r.result); }
+            derStr = r.readAsBinaryString(f);
+        } else {
+            alert("Your browser doesn't support reading files; try Firefox or Chrome.");
             return false;
-        }
-        var derStr = file.files[0].getAsBinary();
-        var der = [];
-        for (var i = 0; i < derStr.length; ++i)
-            der[der.length] = derStr.charCodeAt(i);
-        try {
-            decode(der);
-        } catch (e) {
-            tree.innerHTML = e;
         }
         return false;
     }
