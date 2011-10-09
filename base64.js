@@ -71,6 +71,8 @@ Base64.unarmor = function(a) {
             a = m[1];
         else if (m[2])
             a = m[2];
+        else
+            throw "RegExp out of sync";
     }
     return Base64.decode(a);
 }

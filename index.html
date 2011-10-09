@@ -9,31 +9,37 @@
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript">
     var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/;
+    function id(id) {
+        return document.getElementById(id);
+    }
+    function toHTML(obj) {
+        return String(obj).replace(/</g, "&lt;");
+    }
     function decode(der) {
-        document.getElementById('help').style.display = 'none';
-        var tree = document.getElementById('tree');
-        var dump = document.getElementById('dump');
+        id('help').style.display = 'none';
+        var tree = id('tree');
+        var dump = id('dump');
         tree.innerHTML = '';
         dump.innerHTML = '';
         try {
             var asn1 = ASN1.decode(der);
             tree.appendChild(asn1.toDOM());
-            if (document.getElementById('wantHex').checked)
+            if (id('wantHex').checked)
                 dump.appendChild(asn1.toHexDOM());
         } catch (e) {
-            tree.innerHTML = e;
+            tree.innerHTML = toHTML(e);
         }
         return false;
     }
     function decodeArea() {
         try {
-            var pem = document.getElementById('pem').value;
+            var pem = id('pem').value;
             var der = reHex.test(pem)
                 ? Hex.decode(pem)
                 : Base64.unarmor(pem);
             decode(der);
         } catch (e) {
-            tree.innerHTML = e;
+            tree.innerHTML = toHTML(e);
         }
         return false;
     }
@@ -44,21 +50,21 @@
 		der[der.length] = str.charCodeAt(i);
             decode(der);
         } catch (e) {
-            tree.innerHTML = e;
+            tree.innerHTML = toHTML(e);
         }
         return false;
     }
     function clearArea() {
-        document.getElementById('pem').value = "";
+        id('pem').value = '';
     }
     function help() {
-        document.getElementById('tree').innerHTML = '';
-        document.getElementById('dump').innerHTML = '';
-        document.getElementById('help').style.display = 'block';
+        id('tree').innerHTML = '';
+        id('dump').innerHTML = '';
+        id('help').style.display = 'block';
         return false;
     }
     function load() {
-        var file = document.getElementById('file');
+        var file = id('file');
         if (!file.files) {
             alert("Your browser doesn't support reading files; try Firefox or Chrome.");
             return false;
@@ -73,8 +79,14 @@
             decodeBinaryString(derStr);
         } else if (window.FileReader) { // Chrome way
             var r = new FileReader();
-            r.onloadend = function() { decodeBinaryString(r.result); }
-            derStr = r.readAsBinaryString(f);
+            r.onloadend = function() {
+                if (r.error) {
+                    alert("Your browser couldn't read the specified file (error code " + r.error.code + ").");
+                    return false;
+                } else
+                    decodeBinaryString(r.result);
+            };
+            r.readAsBinaryString(f);
         } else {
             alert("Your browser doesn't support reading files; try Firefox or Chrome.");
             return false;
