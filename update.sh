@@ -41,6 +41,7 @@ awk -v url="$URL" '
         }
     }
     END {
+        print "\"END\": \"\""
         print "};"
     }
 ' >oids.js

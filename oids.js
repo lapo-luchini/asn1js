@@ -1981,4 +1981,5 @@ oids = {
 "2.16.840.1.113733.1.7.23.6": { "d": "VeriSign EV policy", "c": "VeriSign Class 3 Public Primary Certification Authority - G5", "w": false },
 "2.16.840.1.114171.500.9": { "d": "Wells Fargo EV policy", "c": "Wells Fargo WellsSecure Public Root Certificate Authority", "w": false },
 "2.16.840.1.114404.1.1.2.4.1": { "d": "XRamp EV policy", "c": "XRamp Global Certification Authority", "w": false },
+"END": ""
 };
