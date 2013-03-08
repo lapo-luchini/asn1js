@@ -93,6 +93,15 @@
         }
         return false;
     }
+    function loadFromHash() {
+        if (window.location.hash) {
+            id('pem').value = window.location.hash.substring(1);
+            decodeArea();
+        }
+    }
+    window.onload = loadFromHash;
+    if ('onhashchange' in window)
+        window.onhashchange = loadFromHash;
   </script>
 </head>
 <body>
