@@ -13,29 +13,33 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Base64 = {};
+/*jshint browser: true, strict: true, globalstrict: true, immed: true, latedef: true, undef: true, regexdash: false */
+"use strict";
 
-Base64.decode = function(a) {
-    if (Base64.decoder == undefined) {
+var Base64 = {};
+
+Base64.decode = function (a) {
+    var i;
+    if (Base64.decoder === undefined) {
         var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         var allow = "= \f\n\r\t\u00A0\u2028\u2029";
         var dec = [];
-        for (var i = 0; i < 64; ++i)
+        for (i = 0; i < 64; ++i)
             dec[b64.charAt(i)] = i;
-        for (var i = 0; i < allow.length; ++i)
+        for (i = 0; i < allow.length; ++i)
             dec[allow.charAt(i)] = -1;
         Base64.decoder = dec;
     }
     var out = [];
     var bits = 0, char_count = 0;
-    for (var i = 0; i < a.length; ++i) {
+    for (i = 0; i < a.length; ++i) {
         var c = a.charAt(i);
         if (c == '=')
             break;
         c = Base64.decoder[c];
         if (c == -1)
             continue;
-        if (c == undefined)
+        if (c === undefined)
             throw 'Illegal character at offset ' + i;
         bits |= c;
         if (++char_count >= 4) {
@@ -51,7 +55,6 @@ Base64.decode = function(a) {
     switch (char_count) {
       case 1:
         throw "Base64 encoding incomplete: at least 2 bits missing";
-        break;
       case 2:
         out[out.length] = (bits >> 10);
         break;
@@ -61,10 +64,10 @@ Base64.decode = function(a) {
         break;
     }
     return out;
-}
+};
 
 Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+\/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+\/=\s]+)====/;
-Base64.unarmor = function(a) {
+Base64.unarmor = function (a) {
     var m = Base64.re.exec(a);
     if (m) {
         if (m[1])
@@ -75,4 +78,4 @@ Base64.unarmor = function(a) {
             throw "RegExp out of sync";
     }
     return Base64.decode(a);
-}
+};
