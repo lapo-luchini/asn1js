@@ -142,19 +142,19 @@ Stream.prototype.parseOctetString = function (start, end) {
     return s;
 };
 Stream.prototype.parseOID = function (start, end) {
-    var s, n = 0, bits = 0;
+    var s = '', n = 0, bits = 0;
     for (var i = start; i < end; ++i) {
         var v = this.get(i);
         n = (n << 7) | (v & 0x7F);
         bits += 7;
         if (!(v & 0x80)) { // finished
-            if (s === undefined)
-                s = ((n / 40)|0) + "." + (n % 40);
-            else
+            if (s === '') {
+                var m = n < 80 ? n < 40 ? 0 : 1 : 2;
+                s = m + "." + (n - m * 40);
+            } else
                 s += "." + ((bits >= 31) ? "bigint" : n);
             n = bits = 0;
         }
-        s += String.fromCharCode();
     }
     return s;
 };
