@@ -36,7 +36,10 @@ awk -v url="$URL" '
             gsub(" ", ".", oid);
             gsub("\"", "\\\"", description);
             gsub("\"", "\\\"", comment);
-            printf "\"%s\": { \"d\": \"%s\", \"c\": \"%s\", \"w\": %s },\n", oid, description, comment, warning;
+            if (++seen[oid] > 1)
+                print "Duplicate OID in line " NR ": " oid > "/dev/stderr";
+            else
+                printf "\"%s\": { \"d\": \"%s\", \"c\": \"%s\", \"w\": %s },\n", oid, description, comment, warning;
             clean();
         }
     }
