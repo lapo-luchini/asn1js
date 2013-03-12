@@ -37,15 +37,16 @@ Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexByte = function (b) {
     return this.hexDigits.charAt((b >> 4) & 0xF) + this.hexDigits.charAt(b & 0xF);
 };
-Stream.prototype.hexDump = function (start, end) {
+Stream.prototype.hexDump = function (start, end, raw) {
     var s = "";
     for (var i = start; i < end; ++i) {
         s += this.hexByte(this.get(i));
-        switch (i & 0xF) {
-        case 0x7: s += "  "; break;
-        case 0xF: s += "\n"; break;
-        default:  s += " ";
-        }
+        if (raw !== true)
+            switch (i & 0xF) {
+            case 0x7: s += "  "; break;
+            case 0xF: s += "\n"; break;
+            default:  s += " ";
+            }
     }
     return s;
 };
@@ -415,6 +416,9 @@ ASN1.prototype.toHexDOM = function (root) {
         this.toHexDOM_sub(node, "outro", this.stream, last.posEnd(), this.posEnd());
     }
     return node;
+};
+ASN1.prototype.toHexString = function (root) {
+    return this.stream.hexDump(this.posStart(), this.posEnd(), true);
 };
 ASN1.decodeLength = function (stream) {
     var buf = stream.get();

@@ -10,7 +10,8 @@
   <script type="text/javascript" src="oids.js"></script>
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript">
-    var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/;
+    var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
+	hash = null;
     function id(id) {
         return document.getElementById(id);
     }
@@ -24,10 +25,16 @@
         tree.innerHTML = '';
         dump.innerHTML = '';
         try {
-            var asn1 = ASN1.decode(der);
+            var asn1 = ASN1.decode(der),
+                hex = asn1.toHexString();
             tree.appendChild(asn1.toDOM());
             if (id('wantHex').checked)
                 dump.appendChild(asn1.toHexDOM());
+            if (id('pem').value == '') 
+                id('pem').value = hex;
+            // update URL hash (does this have length limits we should avoid?)
+            hash = '#' + hex;
+            window.location.hash = hash;
         } catch (e) {
             tree.innerHTML = toHTML(e);
         }
@@ -42,6 +49,7 @@
             decode(der);
         } catch (e) {
             tree.innerHTML = toHTML(e);
+            dump.innerHTML = '';
         }
         return false;
     }
@@ -67,6 +75,7 @@
     }
     function load() {
         var file = id('file');
+        id('pem').value = ''; // clear text area, will get hex content
         if (!file.files) {
             alert("Your browser doesn't support reading files; try Firefox or Chrome.");
             return false;
@@ -96,8 +105,9 @@
         return false;
     }
     function loadFromHash() {
-        if (window.location.hash) {
-            id('pem').value = window.location.hash.substring(1);
+        if (window.location.hash && window.location.hash != hash) {
+            hash = window.location.hash;
+            id('pem').value = hash.substring(1);
             decodeArea();
         }
     }
