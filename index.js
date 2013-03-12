@@ -43,13 +43,21 @@ function decodeArea() {
     return false;
 }
 function decodeBinaryString(str) {
+    var der;
     try {
-        var der = [];
-        for (var i = 0; i < str.length; ++i)
-            der[der.length] = str.charCodeAt(i);
+        if (reHex.test(str))
+            der = Hex.decode(str);
+        else if (Base64.re.test(str))
+            der = Base64.unarmor(str);
+        else {
+            der = [];
+            for (var i = 0; i < str.length; ++i)
+                der[der.length] = str.charCodeAt(i);
+        }
         decode(der);
     } catch (e) {
-        id('tree').innerHTML = toHTML(e);
+        id('tree').innerHTML = 'Cannot decode file.';
+        id('dump').innerHTML = '';
     }
     return false;
 }
