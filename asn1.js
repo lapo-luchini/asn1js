@@ -26,6 +26,7 @@ function Stream(enc, pos) {
         this.pos = pos;
     }
 }
+Stream.prototype.ellipsis = "\u2026";
 Stream.prototype.get = function (pos) {
     if (pos === undefined)
         pos = this.pos++;
@@ -139,7 +140,7 @@ Stream.prototype.parseOctetString = function (start, end) {
     for (var i = start; i < end; ++i)
         s += this.hexByte(this.get(i));
     if (len > 20)
-        s += String.fromCharCode(8230); // ellipsis
+        s += Stream.ellipsis;
     return s;
 };
 Stream.prototype.parseOID = function (start, end) {
@@ -222,7 +223,10 @@ ASN1.prototype.content = function () {
         if (this.sub !== null)
             return "(" + this.sub.length + " elem)";
         var s = this.stream.parseStringISO(content, content + len);
-        return this.reSeemsASCII.test(s) ? "'" + s + "'" : this.stream.hexDump(content, content + len, true);
+        if (this.reSeemsASCII.test(s))
+            return s.substring(0, 40) + ((s.length > 40) ? this.stream.ellipsis : "");
+        else
+            return this.stream.parseOctetString(content, content + len);
     }
     switch (tagNumber) {
     case 0x01: // BOOLEAN
