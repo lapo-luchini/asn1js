@@ -210,15 +210,20 @@ ASN1.prototype.typeName = function () {
     case 3: return "Private_" + tagNumber.toString(16);
     }
 };
+ASN1.prototype.reSeemsASCII = /^[ -~]+$/;
 ASN1.prototype.content = function () {
     if (this.tag === undefined)
         return null;
-    var tagClass = this.tag >> 6;
-    if (tagClass !== 0) // universal
-        return (this.sub === null) ? null : "(" + this.sub.length + ")";
-    var tagNumber = this.tag & 0x1F;
-    var content = this.posContent();
-    var len = Math.abs(this.length);
+    var tagClass = this.tag >> 6,
+        tagNumber = this.tag & 0x1F,
+        content = this.posContent(),
+        len = Math.abs(this.length);
+    if (tagClass !== 0) { // universal
+        if (this.sub !== null)
+            return "(" + this.sub.length + " elem)";
+        var s = this.stream.parseStringISO(content, content + len);
+        return this.reSeemsASCII.test(s) ? "'" + s + "'" : this.stream.hexDump(content, content + len, true);
+    }
     switch (tagNumber) {
     case 0x01: // BOOLEAN
         return (this.stream.get(content) === 0) ? "false" : "true";
