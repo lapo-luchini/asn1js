@@ -22,4 +22,4 @@ links
 - [official website](http://lapo.it/asn1js/)
 - [InDefero tracker](http://idf.lapo.it/p/asn1js/)
 - [github mirror](https://github.com/lapo-luchini/asn1js)
-- [Ohloh page](https://www.ohloh.net/p/asn1js)
+- [Ohloh code stats](https://www.ohloh.net/p/asn1js)

@@ -4,120 +4,29 @@
   <meta charset="US-ASCII">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>ASN.1 JavaScript decoder</title>
-  <link rel="stylesheet" href="main.css" type="text/css">
+  <link rel="stylesheet" href="index.css" type="text/css">
   <script type="text/javascript" src="hex.js"></script>
   <script type="text/javascript" src="base64.js"></script>
   <script type="text/javascript" src="oids.js"></script>
   <script type="text/javascript" src="asn1.js"></script>
-  <script type="text/javascript">
-    var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
-	hash = null;
-    function id(id) {
-        return document.getElementById(id);
-    }
-    function toHTML(obj) {
-        return String(obj).replace(/</g, "&lt;");
-    }
-    function decode(der) {
-        id('help').style.display = 'none';
-        var tree = id('tree');
-        var dump = id('dump');
-        tree.innerHTML = '';
-        dump.innerHTML = '';
-        try {
-            var asn1 = ASN1.decode(der),
-                hex = asn1.toHexString();
-            tree.appendChild(asn1.toDOM());
-            if (id('wantHex').checked)
-                dump.appendChild(asn1.toHexDOM());
-            if (id('pem').value == '') 
-                id('pem').value = hex;
-            // update URL hash (does this have length limits we should avoid?)
-            hash = '#' + hex;
-            window.location.hash = hash;
-        } catch (e) {
-            tree.innerHTML = toHTML(e);
-        }
-        return false;
-    }
-    function decodeArea() {
-        try {
-            var pem = id('pem').value;
-            var der = reHex.test(pem)
-                ? Hex.decode(pem)
-                : Base64.unarmor(pem);
-            decode(der);
-        } catch (e) {
-            tree.innerHTML = toHTML(e);
-            dump.innerHTML = '';
-        }
-        return false;
-    }
-    function decodeBinaryString(str) {
-        try {
-	    var der = [];
-	    for (var i = 0; i < str.length; ++i)
-		der[der.length] = str.charCodeAt(i);
-            decode(der);
-        } catch (e) {
-            tree.innerHTML = toHTML(e);
-        }
-        return false;
-    }
-    function clearArea() {
-        id('pem').value = '';
-    }
-    function help() {
-        id('tree').innerHTML = '';
-        id('dump').innerHTML = '';
-        id('help').style.display = 'block';
-        return false;
-    }
-    function load() {
-        var file = id('file');
-        id('pem').value = ''; // clear text area, will get hex content
-        if (!file.files) {
-            alert("Your browser doesn't support reading files; try Firefox or Chrome.");
-            return false;
-        }
-        if (file.files.length == 0) {
-            alert("Select a file to load first.");
-            return false;
-        }
-        var f = file.files[0];
-        if (f.getAsBinary) { // Firefox way
-            var derStr = f.getAsBinary();
-            decodeBinaryString(derStr);
-        } else if (window.FileReader) { // Chrome way
-            var r = new FileReader();
-            r.onloadend = function() {
-                if (r.error) {
-                    alert("Your browser couldn't read the specified file (error code " + r.error.code + ").");
-                    return false;
-                } else
-                    decodeBinaryString(r.result);
-            };
-            r.readAsBinaryString(f);
-        } else {
-            alert("Your browser doesn't support reading files; try Firefox or Chrome.");
-            return false;
-        }
-        return false;
-    }
-    function loadFromHash() {
-        if (window.location.hash && window.location.hash != hash) {
-            hash = window.location.hash;
-            id('pem').value = hash.substring(1);
-            decodeArea();
-        }
-    }
-    window.onload = loadFromHash;
-    if ('onhashchange' in window)
-        window.onhashchange = loadFromHash;
+  <script type="text/javascript" src="index.js"></script>
   </script>
 </head>
 <body>
 <h1>ASN.1 JavaScript decoder</h1>
+<div style="position: relative; padding-bottom: 1em;">
+  <div id="dump" style="position: absolute; right: 0px;"></div>
+  <div id="tree"></div>
+</div>
+<form>
+  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea>
+  <br/>
+  <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
+  <input type="button" value="decode" onclick="decodeArea();">
+  <input type="button" value="clear" onclick="clearAll();">
+  <br/>
+  <input type="file" id="file"><input type="button" value="load" onclick="load();">
+</form>
 <div id="help">
   <h2>Instructions</h2>
   <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <tt>begin-base64</tt> are recognized) or Hex-encoded. </p>
@@ -143,23 +52,16 @@
       ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
       OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     </p></div>
-    <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2009 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+    <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2013 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
   </div>
   <p><tt>OBJECT&nbsp;IDENTIFIER</tt> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
+  <h3>Links</h3>
+  <ul>
+    <li><a href="http://lapo.it/asn1js/">official website</a></li>
+    <li><a href="http://idf.lapo.it/p/asn1js/">InDefero tracker</a></li>
+    <li><a href="https://github.com/lapo-luchini/asn1js">github mirror</a></li>
+    <li><a href="https://www.ohloh.net/p/asn1js">Ohloh code stats</a></li>
+  </ul>
 </div>
-<div style="position: relative; padding-bottom: 1em;">
-  <div id="dump" style="position: absolute; right: 0px;"></div>
-  <div id="tree"></div>
-</div>
-<form>
-  <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea>
-  <br/>
-  <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
-  <input type="button" value="decode" onclick="decodeArea();">
-  <input type="button" value="clear" onclick="clearArea();">
-  <input type="button" value="help" onclick="help();">
-  <br/>
-  <input type="file" id="file"><input type="button" value="load" onclick="load();">
-</form>
 </body>
 </html>
