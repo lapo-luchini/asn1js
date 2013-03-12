@@ -3,6 +3,9 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: justify;
 }
+.tt {
+    font-family: monospace;
+}
 .license .ref {
     position: relative;
 }

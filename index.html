@@ -10,7 +10,6 @@
   <script type="text/javascript" src="oids.js"></script>
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript" src="index.js"></script>
-  </script>
 </head>
 <body>
 <h1>ASN.1 JavaScript decoder</h1>
@@ -20,30 +19,30 @@
 </div>
 <form>
   <textarea id="pem" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea>
-  <br/>
+  <br>
   <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
   <input type="button" value="decode" onclick="decodeArea();">
   <input type="button" value="clear" onclick="clearAll();">
-  <br/>
+  <br>
   <input type="file" id="file"><input type="button" value="load" onclick="load();">
 </form>
 <div id="help">
   <h2>Instructions</h2>
-  <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <tt>begin-base64</tt> are recognized) or Hex-encoded. </p>
-  <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><tt>http://lapo.it/asn1js/</tt></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <tt>index.html</tt> in a browser</p>
-  <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br/>
-  Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br/>
-  Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
+  <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <span class="tt">begin-base64</span> are recognized) or Hex-encoded. </p>
+  <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><span class="tt">http://lapo.it/asn1js/</span></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <span class="tt">index.html</span> in a browser</p>
+  <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br>
+    Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br>
+    Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
   <div class="license">
     <h3>Copyright</h3>
     <div class="ref"><p class="hidden">
-      ASN.1 JavaScript decoder<br/>
-      Copyright &copy; 2008-2013 Lapo Luchini &lt;lapo@lapo.it&gt;<br/>
-      <br/>
+      ASN.1 JavaScript decoder<br>
+      Copyright &copy; 2008-2013 Lapo Luchini &lt;lapo@lapo.it&gt;<br>
+      <br>
       Permission to use, copy, modify, and/or distribute this software for any
       purpose with or without fee is hereby granted, provided that the above
-      copyright notice and this permission notice appear in all copies.<br/>
-      <br/>
+      copyright notice and this permission notice appear in all copies.<br>
+      <br>
       THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
       WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
       MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -54,7 +53,7 @@
     </p></div>
     <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2013 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
   </div>
-  <p><tt>OBJECT&nbsp;IDENTIFIER</tt> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
+  <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
   <h3>Links</h3>
   <ul>
     <li><a href="http://lapo.it/asn1js/">official website</a></li>
