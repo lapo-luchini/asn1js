@@ -65,37 +65,28 @@ function clearAll() {
     id('pem').value = '';
     id('tree').innerHTML = '';
     id('dump').innerHTML = '';
+    hash = window.location.hash = '';
     return false;
+}
+// this is only used if window.FileReader
+function read(f) {
+    id('pem').value = ''; // clear text area, will get hex content
+    var r = new FileReader();
+    r.onloadend = function () {
+        if (r.error) {
+            alert("Your browser couldn't read the specified file (error code " + r.error.code + ").");
+        } else
+            decodeBinaryString(r.result);
+    };
+    r.readAsBinaryString(f);
 }
 function load() {
     var file = id('file');
-    id('pem').value = ''; // clear text area, will get hex content
-    if (!file.files) {
-        alert("Your browser doesn't support reading files; try Firefox or Chrome.");
-        return false;
-    }
     if (file.files.length === 0) {
         alert("Select a file to load first.");
         return false;
     }
-    var f = file.files[0];
-    if (f.getAsBinary) { // Firefox way
-        var derStr = f.getAsBinary();
-        decodeBinaryString(derStr);
-    } else if (window.FileReader) { // Chrome way
-        var r = new FileReader();
-        r.onloadend = function () {
-            if (r.error) {
-                alert("Your browser couldn't read the specified file (error code " + r.error.code + ").");
-                return false;
-            } else
-                decodeBinaryString(r.result);
-        };
-        r.readAsBinaryString(f);
-    } else {
-        alert("Your browser doesn't support reading files; try Firefox or Chrome.");
-        return false;
-    }
+    read(file.files[0]);
     return false;
 }
 function loadFromHash() {
@@ -105,6 +96,24 @@ function loadFromHash() {
         decodeArea();
     }
 }
-window.onload = loadFromHash;
-if ('onhashchange' in window)
-    window.onhashchange = loadFromHash;
+function stop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+}
+function dragAccept(e) {
+    stop(e);
+    if (e.dataTransfer.files.length > 0)
+        read(e.dataTransfer.files[0]);
+}
+window.onload = function () {
+    if ('onhashchange' in window)
+        window.onhashchange = loadFromHash;
+    loadFromHash();
+    document.ondragover = stop;
+    document.ondragleave = stop;
+    if ('FileReader' in window) {
+        id('file').style.display = 'block';
+        id('file').onchange = load;
+        document.ondrop = dragAccept;
+    }
+};
