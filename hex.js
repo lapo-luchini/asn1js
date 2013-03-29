@@ -21,9 +21,9 @@ var Hex = {};
 Hex.decode = function(a) {
     var i;
     if (Hex.decoder === undefined) {
-        var hex = "0123456789ABCDEF";
-        var allow = " \f\n\r\t\u00A0\u2028\u2029";
-        var dec = [];
+        var hex = "0123456789ABCDEF",
+            allow = " \f\n\r\t\u00A0\u2028\u2029",
+            dec = [];
         for (i = 0; i < 16; ++i)
             dec[hex.charAt(i)] = i;
         hex = hex.toLowerCase();
@@ -33,8 +33,9 @@ Hex.decode = function(a) {
             dec[allow.charAt(i)] = -1;
         Hex.decoder = dec;
     }
-    var out = [];
-    var bits = 0, char_count = 0;
+    var out = [],
+        bits = 0,
+        char_count = 0;
     for (i = 0; i < a.length; ++i) {
         var c = a.charAt(i);
         if (c == '=')

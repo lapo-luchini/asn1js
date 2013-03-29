@@ -58,7 +58,8 @@ Stream.prototype.parseStringISO = function (start, end) {
     return s;
 };
 Stream.prototype.parseStringUTF = function (start, end) {
-    var s = "", c = 0;
+    var s = "",
+        c = 0;
     for (var i = start; i < end; ) {
         c = this.get(i++);
         if (c < 128)
@@ -73,8 +74,8 @@ Stream.prototype.parseStringUTF = function (start, end) {
 };
 Stream.prototype.reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
 Stream.prototype.parseTime = function (start, end) {
-    var s = this.parseStringISO(start, end);
-    var m = this.reTime.exec(s);
+    var s = this.parseStringISO(start, end),
+        m = this.reTime.exec(s);
     if (!m)
         return "Unrecognized time: " + s;
     s = m[1] + "-" + m[2] + "-" + m[3] + " " + m[4];
@@ -117,9 +118,9 @@ Stream.prototype.parseInteger = function (start, end) {
     return n;
 };
 Stream.prototype.parseBitString = function (start, end) {
-    var unusedBit = this.get(start);
-    var lenBit = ((end - start - 1) << 3) - unusedBit;
-    var s = "(" + lenBit + " bit)";
+    var unusedBit = this.get(start),
+        lenBit = ((end - start - 1) << 3) - unusedBit,
+        s = "(" + lenBit + " bit)";
     if (lenBit <= 20) {
         var skip = unusedBit;
         s += " ";
@@ -133,8 +134,8 @@ Stream.prototype.parseBitString = function (start, end) {
     return s;
 };
 Stream.prototype.parseOctetString = function (start, end) {
-    var len = end - start;
-    var s = "(" + len + " byte) ";
+    var len = end - start,
+        s = "(" + len + " byte) ";
     if (len > 20)
         end = start + 20;
     for (var i = start; i < end; ++i)
@@ -144,7 +145,9 @@ Stream.prototype.parseOctetString = function (start, end) {
     return s;
 };
 Stream.prototype.parseOID = function (start, end) {
-    var s = '', n = 0, bits = 0;
+    var s = '',
+        n = 0,
+        bits = 0;
     for (var i = start; i < end; ++i) {
         var v = this.get(i);
         n = (n << 7) | (v & 0x7F);
@@ -171,9 +174,9 @@ function ASN1(stream, header, length, tag, sub) {
 ASN1.prototype.typeName = function () {
     if (this.tag === undefined)
         return "unknown";
-    var tagClass = this.tag >> 6;
-    var tagConstructed = (this.tag >> 5) & 1;
-    var tagNumber = this.tag & 0x1F;
+    var tagClass = this.tag >> 6,
+        tagConstructed = (this.tag >> 5) & 1,
+        tagNumber = this.tag & 0x1F;
     switch (tagClass) {
     case 0: // universal
         switch (tagNumber) {
@@ -312,7 +315,7 @@ ASN1.prototype.toDOM = function () {
         content = String(content).replace(/</g, "&lt;");
         var preview = document.createElement("span");
         preview.className = "preview";
-        preview.innerHTML = content;
+        preview.innerHTML = content; //TODO: innerText
         head.appendChild(preview);
     }
     node.appendChild(head);
@@ -430,8 +433,8 @@ ASN1.prototype.toHexString = function (root) {
     return this.stream.hexDump(this.posStart(), this.posEnd(), true);
 };
 ASN1.decodeLength = function (stream) {
-    var buf = stream.get();
-    var len = buf & 0x7F;
+    var buf = stream.get(),
+        len = buf & 0x7F;
     if (len == buf)
         return len;
     if (len > 3)
@@ -463,11 +466,11 @@ ASN1.hasContent = function (tag, len, stream) {
 ASN1.decode = function (stream) {
     if (!(stream instanceof Stream))
         stream = new Stream(stream, 0);
-    var streamStart = new Stream(stream);
-    var tag = stream.get();
-    var len = ASN1.decodeLength(stream);
-    var header = stream.pos - streamStart.pos;
-    var sub = null;
+    var streamStart = new Stream(stream),
+        tag = stream.get(),
+        len = ASN1.decodeLength(stream),
+        header = stream.pos - streamStart.pos,
+        sub = null;
     if (ASN1.hasContent(tag, len, stream)) {
         // it has content, so we decode it
         var start = stream.pos;
@@ -505,9 +508,9 @@ ASN1.test = function () {
         { value: [0x83, 0xFE, 0xDC, 0xBA], expected: 0xFEDCBA }
     ];
     for (var i = 0, max = test.length; i < max; ++i) {
-        var pos = 0;
-        var stream = new Stream(test[i].value, 0);
-        var res = ASN1.decodeLength(stream);
+        var pos = 0,
+            stream = new Stream(test[i].value, 0),
+            res = ASN1.decodeLength(stream);
         if (res != test[i].expected)
             document.write("In test[" + i + "] expected " + test[i].expected + " got " + res + "\n");
     }

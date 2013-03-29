@@ -21,9 +21,9 @@ var Base64 = {};
 Base64.decode = function (a) {
     var i;
     if (Base64.decoder === undefined) {
-        var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        var allow = "= \f\n\r\t\u00A0\u2028\u2029";
-        var dec = [];
+        var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+            allow = "= \f\n\r\t\u00A0\u2028\u2029",
+            dec = [];
         for (i = 0; i < 64; ++i)
             dec[b64.charAt(i)] = i;
         for (i = 0; i < allow.length; ++i)
