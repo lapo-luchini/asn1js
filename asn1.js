@@ -19,7 +19,17 @@
 "use strict";
 
 var hardLimit = 100,
-    ellipsis = "\u2026";
+    ellipsis = "\u2026",
+    DOM = {
+        tag: function (tagName, className) {
+            var t = document.createElement(tagName);
+            t.className = className;
+            return t;
+        },
+        text: function (str) {
+            return document.createTextNode(str);
+        }
+    };
 
 function Stream(enc, pos) {
     if (enc instanceof Stream) {
@@ -305,26 +315,22 @@ ASN1.prototype.toPrettyString = function (indent) {
     return s;
 };
 ASN1.prototype.toDOM = function () {
-    var node = document.createElement("div");
-    node.className = "node";
+    var node = DOM.tag("div", "node");
     node.asn1 = this;
-    var head = document.createElement("div");
-    head.className = "head";
+    var head = DOM.tag("div", "head");
     var s = this.typeName().replace(/_/g, " ");
     head.innerHTML = s;
     var content = this.content();
     if (content !== null) {
         content = String(content).replace(/</g, "&lt;");
-        var preview = document.createElement("span");
-        preview.className = "preview";
-        preview.innerHTML = content; //TODO: innerText
+        var preview = DOM.tag("span", "preview");
+        preview.appendChild(DOM.text(content));
         head.appendChild(preview);
     }
     node.appendChild(head);
     this.node = node;
     this.head = head;
-    var value = document.createElement("div");
-    value.className = "value";
+    var value = DOM.tag("div", "value");
     s = "Offset: " + this.stream.pos + "<br/>";
     s += "Length: " + this.header + "+";
     if (this.length >= 0)
@@ -349,8 +355,7 @@ ASN1.prototype.toDOM = function () {
     }
     value.innerHTML = s;
     node.appendChild(value);
-    var sub = document.createElement("div");
-    sub.className = "sub";
+    var sub = DOM.tag("div", "sub");
     if (this.sub !== null) {
         for (var i = 0, max = this.sub.length; i < max; ++i)
             sub.appendChild(this.sub[i].toDOM());
@@ -384,15 +389,13 @@ ASN1.prototype.fakeOut = function (current) {
 ASN1.prototype.toHexDOM_sub = function (node, className, stream, start, end) {
     if (start >= end)
         return;
-    var sub = document.createElement("span");
-    sub.className = className;
-    sub.appendChild(document.createTextNode(
+    var sub = DOM.tag("span", className);
+    sub.appendChild(DOM.text(
         stream.hexDump(start, end)));
     node.appendChild(sub);
 };
 ASN1.prototype.toHexDOM = function (root) {
-    var node = document.createElement("span");
-    node.className = 'hex';
+    var node = DOM.tag("span", "hex");
     if (root === undefined) root = node;
     this.head.hexNode = node;
     this.head.onmouseover = function () { this.hexNode.className = "hexCurrent"; };
@@ -417,7 +420,7 @@ ASN1.prototype.toHexDOM = function (root) {
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub === null)
-        node.appendChild(document.createTextNode(
+        node.appendChild(DOM.text(
             this.stream.hexDump(this.posContent(), this.posEnd())));
     else if (this.sub.length > 0) {
         var first = this.sub[0];
