@@ -13,22 +13,23 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, globalstrict: true, immed: true, latedef: true, undef: true, regexdash: false */
+/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
+(function (undefined) {
 "use strict";
 
-var Base64 = {};
+var Base64 = {},
+    decoder;
 
 Base64.decode = function (a) {
     var i;
-    if (Base64.decoder === undefined) {
+    if (decoder === undefined) {
         var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-            allow = "= \f\n\r\t\u00A0\u2028\u2029",
-            dec = [];
+            ignore = "= \f\n\r\t\u00A0\u2028\u2029";
+        decoder = [];
         for (i = 0; i < 64; ++i)
-            dec[b64.charAt(i)] = i;
-        for (i = 0; i < allow.length; ++i)
-            dec[allow.charAt(i)] = -1;
-        Base64.decoder = dec;
+            decoder[b64.charAt(i)] = i;
+        for (i = 0; i < ignore.length; ++i)
+            decoder[ignore.charAt(i)] = -1;
     }
     var out = [];
     var bits = 0, char_count = 0;
@@ -36,7 +37,7 @@ Base64.decode = function (a) {
         var c = a.charAt(i);
         if (c == '=')
             break;
-        c = Base64.decoder[c];
+        c = decoder[c];
         if (c == -1)
             continue;
         if (c === undefined)
@@ -79,3 +80,7 @@ Base64.unarmor = function (a) {
     }
     return Base64.decode(a);
 };
+
+// export globals
+window.Base64 = Base64;
+})();

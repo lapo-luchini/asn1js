@@ -13,9 +13,13 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, globalstrict: true, immed: true, latedef: true, undef: true, regexdash: false */
+/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
 /*global oids */
+(function (undefined) {
 "use strict";
+
+var hardLimit = 100,
+    ellipsis = "\u2026";
 
 function Stream(enc, pos) {
     if (enc instanceof Stream) {
@@ -26,7 +30,6 @@ function Stream(enc, pos) {
         this.pos = pos;
     }
 }
-Stream.prototype.ellipsis = "\u2026";
 Stream.prototype.get = function (pos) {
     if (pos === undefined)
         pos = this.pos++;
@@ -58,17 +61,15 @@ Stream.prototype.parseStringISO = function (start, end) {
     return s;
 };
 Stream.prototype.parseStringUTF = function (start, end) {
-    var s = "",
-        c = 0;
+    var s = "";
     for (var i = start; i < end; ) {
-        c = this.get(i++);
+        var c = this.get(i++);
         if (c < 128)
             s += String.fromCharCode(c);
         else if ((c > 191) && (c < 224))
             s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
         else
             s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
-        //TODO: this doesn't check properly 'end', some char could begin before and end after
     }
     return s;
 };
@@ -136,12 +137,12 @@ Stream.prototype.parseBitString = function (start, end) {
 Stream.prototype.parseOctetString = function (start, end) {
     var len = end - start,
         s = "(" + len + " byte) ";
-    if (len > 20)
-        end = start + 20;
+    if (len > hardLimit)
+        end = start + hardLimit;
     for (var i = start; i < end; ++i)
-        s += this.hexByte(this.get(i));
-    if (len > 20)
-        s += Stream.ellipsis;
+        s += this.hexByte(this.get(i)); //TODO: also try Latin1?
+    if (len > hardLimit)
+        s += ellipsis;
     return s;
 };
 Stream.prototype.parseOID = function (start, end) {
@@ -225,9 +226,10 @@ ASN1.prototype.content = function () {
     if (tagClass !== 0) { // universal
         if (this.sub !== null)
             return "(" + this.sub.length + " elem)";
-        var s = this.stream.parseStringISO(content, content + len);
+        //TODO: TRY TO PARSE ASCII STRING
+        var s = this.stream.parseStringISO(content, content + Math.min(len, hardLimit));
         if (this.reSeemsASCII.test(s))
-            return s.substring(0, 40) + ((s.length > 40) ? this.stream.ellipsis : "");
+            return s.substring(0, 2 * hardLimit) + ((s.length > 2 * hardLimit) ? ellipsis : "");
         else
             return this.stream.parseOctetString(content, content + len);
     }
@@ -354,9 +356,7 @@ ASN1.prototype.toDOM = function () {
             sub.appendChild(this.sub[i].toDOM());
     }
     node.appendChild(sub);
-    head.switchNode = node;
     head.onclick = function () {
-        var node = this.switchNode;
         node.className = (node.className == "node collapsed") ? "node" : "node collapsed";
     };
     return node;
@@ -515,3 +515,7 @@ ASN1.test = function () {
             document.write("In test[" + i + "] expected " + test[i].expected + " got " + res + "\n");
     }
 };
+
+// export globals
+window.ASN1 = ASN1;
+})();

@@ -13,25 +13,26 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, globalstrict: true, immed: true, latedef: true, undef: true, regexdash: false */
+/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
+(function (undefined) {
 "use strict";
 
-var Hex = {};
+var Hex = {},
+    decoder;
 
 Hex.decode = function(a) {
     var i;
-    if (Hex.decoder === undefined) {
+    if (decoder === undefined) {
         var hex = "0123456789ABCDEF",
-            allow = " \f\n\r\t\u00A0\u2028\u2029",
-            dec = [];
+            ignore = " \f\n\r\t\u00A0\u2028\u2029";
+        decoder = [];
         for (i = 0; i < 16; ++i)
-            dec[hex.charAt(i)] = i;
+            decoder[hex.charAt(i)] = i;
         hex = hex.toLowerCase();
         for (i = 10; i < 16; ++i)
-            dec[hex.charAt(i)] = i;
-        for (i = 0; i < allow.length; ++i)
-            dec[allow.charAt(i)] = -1;
-        Hex.decoder = dec;
+            decoder[hex.charAt(i)] = i;
+        for (i = 0; i < ignore.length; ++i)
+            decoder[ignore.charAt(i)] = -1;
     }
     var out = [],
         bits = 0,
@@ -40,7 +41,7 @@ Hex.decode = function(a) {
         var c = a.charAt(i);
         if (c == '=')
             break;
-        c = Hex.decoder[c];
+        c = decoder[c];
         if (c == -1)
             continue;
         if (c === undefined)
@@ -58,3 +59,7 @@ Hex.decode = function(a) {
         throw "Hex encoding incomplete: 4 bits missing";
     return out;
 };
+
+// export globals
+window.Hex = Hex;
+})();
