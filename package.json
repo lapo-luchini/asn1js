@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "ASN1 implementation for Node and Browser",
   "main": "index.js",
-  "scripts": {
+  /*"scripts": {
     "test": "node test.js"
-  },
+  },*/
   "repository": {
     "type": "git",
     "url": "git://github.com/emirotin/node-asn1.git"
