@@ -47,5 +47,5 @@ awk -v url="$URL" '
         print "\"END\": \"\""
         print "};"
     }
-' >oids.js
+' >lib/oids.js
 echo Conversion completed.

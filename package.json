@@ -1,0 +1,20 @@
+{
+  "name": "node-asn1",
+  "version": "0.0.1",
+  "description": "ASN1 implementation for Node and Browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/emirotin/node-asn1.git"
+  },
+  "keywords": [
+    "asn1"
+  ],
+  "author": "Eugene Mirotin",
+  "license": "ISC",
+  "readmeFilename": "README.md",
+  "gitHead": "33475597cafcfad8cda73aa1d01afa7507dc8882"
+}
