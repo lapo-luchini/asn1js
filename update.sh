@@ -25,7 +25,7 @@ awk -v url="$URL" '
         print "// which is made by Peter Gutmann and whose license states:";
         print "//   You can use this code in whatever way you want,";
         print "//   as long as you don" apos "t try to claim you wrote it.";
-        print "oids = {";
+        print "var oids = {";
     }
     /^OID/         { oid = $2; }
     /^Comment/     { comment = $2; }
@@ -46,6 +46,7 @@ awk -v url="$URL" '
     END {
         print "\"END\": \"\""
         print "};"
+        print "if (typeof module !== \"undefined\") { module.exports = oids; } else { window.oids = oids; };"
     }
-' >oids.js
+' >lib/oids.js
 echo Conversion completed.
