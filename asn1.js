@@ -64,6 +64,16 @@ Stream.prototype.hexDump = function (start, end, raw) {
     }
     return s;
 };
+Stream.prototype.parseStringBMP = function (start, end) {
+    var str = ""
+    for (var i = start; i < end; i += 2) {
+        var high_byte = this.get(i);
+        var low_byte = this.get(i + 1);
+        str += String.fromCharCode( (high_byte << 8) + low_byte );
+    }
+
+    return str;
+};
 Stream.prototype.parseStringISO = function (start, end) {
     var s = "";
     for (var i = start; i < end; ++i)
@@ -276,11 +286,12 @@ ASN1.prototype.content = function () {
     case 0x1A: // VisibleString
     //case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
-    //case 0x1E: // BMPString
         return this.stream.parseStringISO(content, content + len);
     case 0x17: // UTCTime
     case 0x18: // GeneralizedTime
         return this.stream.parseTime(content, content + len);
+    case 0x1E: // BMPString
+        return this.stream.parseStringBMP(content, content + len);
     }
     return null;
 };
