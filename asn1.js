@@ -83,6 +83,16 @@ Stream.prototype.parseStringUTF = function (start, end) {
     }
     return s;
 };
+Stream.prototype.parseStringBMP = function (start, end) {
+    var str = ""
+    for (var i = start; i < end; i += 2) {
+        var high_byte = this.get(i);
+        var low_byte = this.get(i + 1);
+        str += String.fromCharCode( (high_byte << 8) + low_byte );
+    }
+
+    return str;
+};
 Stream.prototype.reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
 Stream.prototype.parseTime = function (start, end) {
     var s = this.parseStringISO(start, end),
@@ -276,8 +286,9 @@ ASN1.prototype.content = function () {
     case 0x1A: // VisibleString
     //case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
-    //case 0x1E: // BMPString
         return this.stream.parseStringISO(content, content + len);
+    case 0x1E: // BMPString
+        return this.stream.parseStringBMP(content, content + len);
     case 0x17: // UTCTime
     case 0x18: // GeneralizedTime
         return this.stream.parseTime(content, content + len);
