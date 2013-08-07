@@ -195,12 +195,9 @@ function ASN1(stream, header, length, tag, sub) {
 ASN1.prototype.typeName = function () {
     if (this.tag === undefined)
         return "unknown";
-    var tagClass = this.tag >> 6,
-        tagConstructed = (this.tag >> 5) & 1,
-        tagNumber = this.tag & 0x1F;
-    switch (tagClass) {
+    switch (this.tag.tagClass) {
     case 0: // universal
-        switch (tagNumber) {
+        switch (this.tag.tagNumber) {
         case 0x00: return "EOC";
         case 0x01: return "BOOLEAN";
         case 0x02: return "INTEGER";
@@ -228,22 +225,20 @@ ASN1.prototype.typeName = function () {
         case 0x1B: return "GeneralString";
         case 0x1C: return "UniversalString";
         case 0x1E: return "BMPString";
-        default:   return "Universal_" + tagNumber.toString(16);
+        default:   return "Universal_" + this.tag.tagNumber.toString(16);
         }
-    case 1: return "Application_" + tagNumber.toString(16);
-    case 2: return "[" + tagNumber + "]"; // Context
-    case 3: return "Private_" + tagNumber.toString(16);
+    case 1: return "Application_" + this.tag.tagNumber.toString(16);
+    case 2: return "[" + this.tag.tagNumber + "]"; // Context
+    case 3: return "Private_" + this.tag.tagNumber.toString(16);
     }
 };
 ASN1.prototype.reSeemsASCII = /^[ -~]+$/;
 ASN1.prototype.content = function () {
     if (this.tag === undefined)
         return null;
-    var tagClass = this.tag >> 6,
-        tagNumber = this.tag & 0x1F,
-        content = this.posContent(),
+    var content = this.posContent(),
         len = Math.abs(this.length);
-    if (tagClass !== 0) { // universal
+    if (this.tag.tagClass !== 0) { // universal
         if (this.sub !== null)
             return "(" + this.sub.length + " elem)";
         //TODO: TRY TO PARSE ASCII STRING
@@ -253,7 +248,7 @@ ASN1.prototype.content = function () {
         else
             return this.stream.parseOctetString(content, content + len);
     }
-    switch (tagNumber) {
+    switch (this.tag.tagNumber) {
     case 0x01: // BOOLEAN
         return (this.stream.get(content) === 0) ? "false" : "true";
     case 0x02: // INTEGER
@@ -313,9 +308,9 @@ ASN1.prototype.toPrettyString = function (indent) {
     if (this.length >= 0)
         s += "+";
     s += this.length;
-    if (this.tag & 0x20)
+    if (this.tag.tagConstructed)
         s += " (constructed)";
-    else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub !== null))
+    else if ((this.tag.tagClass == 0x00 && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
         s += " (encapsulates)";
     s += "\n";
     if (this.sub !== null) {
@@ -348,14 +343,14 @@ ASN1.prototype.toDOM = function () {
         s += this.length;
     else
         s += (-this.length) + " (undefined)";
-    if (this.tag & 0x20)
+    if (this.tag.tagConstructed)
         s += "<br/>(constructed)";
-    else if (((this.tag == 0x03) || (this.tag == 0x04)) && (this.sub !== null))
+    else if ((this.tag.tagClass == 0x00 && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
         s += "<br/>(encapsulates)";
-    //TODO if (this.tag == 0x03) s += "Unused bits: "
+    //TODO if (this.tag.tagClass == 0x00 && this.tag.tagNumber == 0x03) s += "Unused bits: "
     if (content !== null) {
         s += "<br/>Value:<br/><b>" + content + "</b>";
-        if ((typeof oids === 'object') && (this.tag == 0x06)) {
+        if ((typeof oids === 'object') && ((this.tag.tagClass == 0x00) && (this.tag.tagNumber == 0x06))) {
             var oid = oids[content];
             if (oid) {
                 if (oid.d) s += "<br/>" + oid.d;
@@ -461,15 +456,13 @@ ASN1.decodeLength = function (stream) {
     return buf;
 };
 ASN1.hasContent = function (tag, len, stream) {
-    if (tag & 0x20) // constructed
+    if (tag.tagConstructed) // constructed
         return true;
-    if ((tag < 0x03) || (tag > 0x04))
+    if (tag.tagClass == 0x00 && ((tag.tagNumber < 0x03) || (tag.tagNumber > 0x04)))
         return false;
     var p = new Stream(stream);
-    if (tag == 0x03) p.get(); // BitString unused bits, must be in [0, 7]
-    var subTag = p.get();
-    if ((subTag >> 6) & 0x01) // not (universal or context)
-        return false;
+    if (tag.tagClass == 0x00 && tag.tagNumber == 0x03) p.get(); // BitString unused bits, must be in [0, 7]
+    var subTag = ASN1.decodeTag(p);
     try {
         var subLength = ASN1.decodeLength(p);
         return ((p.pos - stream.pos) + subLength == len);
@@ -477,18 +470,41 @@ ASN1.hasContent = function (tag, len, stream) {
         return false;
     }
 };
+ASN1.decodeTag = function (stream) {
+    var buf = stream.get();
+    var tagClass = buf >> 6,
+        tagConstructed = (buf >> 5) & 1,
+        tagNumber = buf & 0x1F;
+    if (tagNumber == 0x1F) {
+        // long tag
+        var tagBits = 0;
+        tagNumber = 0;
+        do {
+            buf = stream.get();
+            tagBits += 7;
+            if(tagBits > 28)
+                throw "Tag numbers over 28 bits not supported at position " + (stream.pos -1);
+            tagNumber = (tagNumber << 7) || (buf & 0x7F);
+        } while(buf & 0x80);
+    }
+    return {
+        tagClass : tagClass,
+        tagConstructed : tagConstructed,
+        tagNumber : tagNumber
+    };
+};
 ASN1.decode = function (stream) {
     if (!(stream instanceof Stream))
         stream = new Stream(stream, 0);
     var streamStart = new Stream(stream),
-        tag = stream.get(),
+        tag = ASN1.decodeTag(stream),
         len = ASN1.decodeLength(stream),
         header = stream.pos - streamStart.pos,
         sub = null;
     if (ASN1.hasContent(tag, len, stream)) {
         // it has content, so we decode it
         var start = stream.pos;
-        if (tag == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
+        if (tag.tagClass == 0x00 && tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
         sub = [];
         if (len >= 0) {
             // definite length
@@ -502,7 +518,7 @@ ASN1.decode = function (stream) {
             try {
                 for (;;) {
                     var s = ASN1.decode(stream);
-                    if (s.tag === 0)
+                    if (s.tag.tagClass == 0x00 && s.tag.tagNumber == 0x00)
                         break;
                     sub[sub.length] = s;
                 }
