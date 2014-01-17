@@ -121,7 +121,7 @@ Stream.prototype.parseTime = function (start, end) {
 Stream.prototype.parseInteger = function (start, end) {
     //TODO support negative numbers
     var len = end - start;
-    if (len > 4) {
+    if (len > 6) {
         len <<= 3;
         var s = this.get(start);
         if (s === 0)
@@ -135,7 +135,7 @@ Stream.prototype.parseInteger = function (start, end) {
     }
     var n = 0;
     for (var i = start; i < end; ++i)
-        n = (n << 8) | this.get(i);
+        n = (n * 256) + this.get(i);
     return n;
 };
 Stream.prototype.parseBitString = function (start, end) {
@@ -451,13 +451,13 @@ ASN1.decodeLength = function (stream) {
         len = buf & 0x7F;
     if (len == buf)
         return len;
-    if (len > 3)
-        throw "Length over 24 bits not supported at position " + (stream.pos - 1);
+    if (len > 6)
+        throw "Length over 48 bits not supported at position " + (stream.pos - 1);
     if (len === 0)
         return -1; // undefined
     buf = 0;
     for (var i = 0; i < len; ++i)
-        buf = (buf << 8) | stream.get();
+        buf = (buf * 256) + stream.get();
     return buf;
 };
 ASN1.hasContent = function (tag, len, stream) {
