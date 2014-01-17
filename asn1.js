@@ -460,59 +460,54 @@ ASN1.decodeLength = function (stream) {
         buf = (buf * 256) + stream.get();
     return buf;
 };
-ASN1.hasContent = function (tag, len, stream) {
-    if (tag & 0x20) // constructed
-        return true;
-    if ((tag < 0x03) || (tag > 0x04))
-        return false;
-    var p = new Stream(stream);
-    if (tag == 0x03) p.get(); // BitString unused bits, must be in [0, 7]
-    var subTag = p.get();
-    if ((subTag >> 6) & 0x01) // not (universal or context)
-        return false;
-    try {
-        var subLength = ASN1.decodeLength(p);
-        return ((p.pos - stream.pos) + subLength == len);
-    } catch (exception) {
-        return false;
-    }
-};
 ASN1.decode = function (stream) {
     if (!(stream instanceof Stream))
         stream = new Stream(stream, 0);
     var streamStart = new Stream(stream),
         tag = stream.get(),
         len = ASN1.decodeLength(stream),
-        header = stream.pos - streamStart.pos,
-        sub = null;
-    if (ASN1.hasContent(tag, len, stream)) {
-        // it has content, so we decode it
-        var start = stream.pos;
-        if (tag == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
-        sub = [];
-        if (len >= 0) {
-            // definite length
-            var end = start + len;
-            while (stream.pos < end)
-                sub[sub.length] = ASN1.decode(stream);
-            if (stream.pos != end)
-                throw "Content size is not correct for container starting at offset " + start;
-        } else {
-            // undefined length
-            try {
-                for (;;) {
-                    var s = ASN1.decode(stream);
-                    if (s.tag === 0)
-                        break;
-                    sub[sub.length] = s;
+        start = stream.pos,
+        header = start - streamStart.pos,
+        sub = null,
+        getSub = function () {
+            sub = [];
+            if (len >= 0) {
+                // definite length
+                var end = start + len;
+                while (stream.pos < end)
+                    sub[sub.length] = ASN1.decode(stream);
+                if (stream.pos != end)
+                    throw "Content size is not correct for container starting at offset " + start;
+            } else {
+                // undefined length
+                try {
+                    for (;;) {
+                        var s = ASN1.decode(stream);
+                        if (s.tag === 0)
+                            break;
+                        sub[sub.length] = s;
+                    }
+                    len = start - stream.pos;
+                } catch (e) {
+                    throw "Exception while decoding undefined length content: " + e;
                 }
-                len = start - stream.pos;
-            } catch (e) {
-                throw "Exception while decoding undefined length content: " + e;
             }
+        };
+    if (tag & 0x20) {
+        // constructed, must have valid content
+        getSub();
+    } else if ((tag == 0x03) || (tag == 0x04)) {
+        // sometimes BitString and OctetString do contain ASN.1
+        try {
+            getSub();
+        } catch (e) {
+            // but silently ignore we they don't
+            sub = null;
         }
-    } else
-        stream.pos += len; // skip content
+    }
+    if (len < 0)
+        throw "We can't skip over an invalid tag with undefined length.";
+    stream.pos = start + len;
     return new ASN1(streamStart, header, len, tag, sub);
 };
 ASN1.test = function () {
