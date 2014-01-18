@@ -160,14 +160,14 @@ Stream.prototype.parseOID = function (start, end) {
         bits = 0;
     for (var i = start; i < end; ++i) {
         var v = this.get(i);
-        n = (n << 7) | (v & 0x7F);
+        n = (n * 128) + (v & 0x7F);
         bits += 7;
         if (!(v & 0x80)) { // finished
             if (s === '') {
                 var m = n < 80 ? n < 40 ? 0 : 1 : 2;
                 s = m + "." + (n - m * 40);
             } else
-                s += "." + ((bits >= 31) ? "bigint" : n);
+                s += "." + ((bits > 53) ? "bigint" : n);
             n = bits = 0;
         }
     }
