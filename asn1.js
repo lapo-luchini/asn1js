@@ -449,7 +449,7 @@ ASN1.decodeLength = function (stream) {
     if (len > 6)
         throw "Length over 48 bits not supported at position " + (stream.pos - 1);
     if (len === 0)
-        return -1; // undefined
+        return null; // undefined
     buf = 0;
     for (var i = 0; i < len; ++i)
         buf = (buf * 256) + stream.get();
@@ -475,6 +475,9 @@ function ASN1Tag(stream) {
 ASN1Tag.prototype.isUniversal = function () {
     return this.tagClass == 0x00;
 };
+ASN1Tag.prototype.isEOC = function () {
+    return this.tagClass == 0x00 && this.tagNumber == 0x00;
+};
 ASN1.decode = function (stream) {
     if (!(stream instanceof Stream))
         stream = new Stream(stream, 0);
@@ -486,7 +489,7 @@ ASN1.decode = function (stream) {
         sub = null,
         getSub = function () {
             sub = [];
-            if (len >= 0) {
+            if (len !== null) {
                 // definite length
                 var end = start + len;
                 while (stream.pos < end)
@@ -498,11 +501,11 @@ ASN1.decode = function (stream) {
                 try {
                     for (;;) {
                         var s = ASN1.decode(stream);
-                    if (s.tag.isUniversal() && s.tag.tagNumber == 0x00)
+                        if (s.tag.isEOC())
                             break;
                         sub[sub.length] = s;
                     }
-                    len = start - stream.pos;
+                    len = start - stream.pos; // undefined lengths are represented as negative values
                 } catch (e) {
                     throw "Exception while decoding undefined length content: " + e;
                 }
@@ -516,14 +519,19 @@ ASN1.decode = function (stream) {
         // sometimes BitString and OctetString do contain ASN.1
         try {
             getSub();
+            for (var i = 0; i < sub.length; ++i)
+                if (sub[i].tag.isEOC())
+                    throw 'EOC is not supposed to be actual content.';
         } catch (e) {
-            // but silently ignore we they don't
+            // but silently ignore when they don't
             sub = null;
         }
     }
-    if (len < 0)
-        throw "We can't skip over an invalid tag with undefined length.";
-    stream.pos = start + len;
+    if (sub == null) {
+        if (len === null)
+            throw "We can't skip over an invalid tag with undefined length at offset " + start;
+        stream.pos = start + Math.abs(len);
+    }
     return new ASN1(streamStart, header, len, tag, sub);
 };
 ASN1.test = function () {
