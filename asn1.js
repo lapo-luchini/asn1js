@@ -310,7 +310,7 @@ ASN1.prototype.toPrettyString = function (indent) {
     s += this.length;
     if (this.tag.tagConstructed)
         s += " (constructed)";
-    else if ((this.tag.tagClass == 0x00 && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
+    else if ((this.tag.isUniversal() && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
         s += " (encapsulates)";
     s += "\n";
     if (this.sub !== null) {
@@ -345,12 +345,12 @@ ASN1.prototype.toDOM = function () {
         s += (-this.length) + " (undefined)";
     if (this.tag.tagConstructed)
         s += "<br/>(constructed)";
-    else if ((this.tag.tagClass == 0x00 && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
+    else if ((this.tag.isUniversal() && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
         s += "<br/>(encapsulates)";
-    //TODO if (this.tag.tagClass == 0x00 && this.tag.tagNumber == 0x03) s += "Unused bits: "
+    //TODO if (this.tag.isUniversal() && this.tag.tagNumber == 0x03) s += "Unused bits: "
     if (content !== null) {
         s += "<br/>Value:<br/><b>" + content + "</b>";
-        if ((typeof oids === 'object') && ((this.tag.tagClass == 0x00) && (this.tag.tagNumber == 0x06))) {
+        if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
             var oid = oids[content];
             if (oid) {
                 if (oid.d) s += "<br/>" + oid.d;
@@ -455,34 +455,31 @@ ASN1.decodeLength = function (stream) {
         buf = (buf * 256) + stream.get();
     return buf;
 };
-ASN1.decodeTag = function (stream) {
+function ASN1Tag(stream) {
     var buf = stream.get();
-    var tagClass = buf >> 6,
-        tagConstructed = (buf >> 5) & 1,
-        tagNumber = buf & 0x1F;
-    if (tagNumber == 0x1F) {
-        // long tag
+    this.tagClass = buf >> 6;
+    this.tagConstructed = ((buf & 0x20) != 0);
+    this.tagNumber = buf & 0x1F;
+    if (this.tagNumber == 0x1F) { // long tag
         var tagBits = 0;
-        tagNumber = 0;
+        this.tagNumber = 0;
         do {
             buf = stream.get();
             tagBits += 7;
-            if(tagBits > 28)
-                throw "Tag numbers over 28 bits not supported at position " + (stream.pos -1);
-            tagNumber = (tagNumber << 7) || (buf & 0x7F);
-        } while(buf & 0x80);
+            if (tagBits > 53)
+                throw "Tag numbers over 53 bits not supported at position " + (stream.pos - 1);
+            this.tagNumber = (this.tagNumber * 128) + (buf & 0x7F);
+        } while (buf & 0x80);
     }
-    return {
-        tagClass : tagClass,
-        tagConstructed : tagConstructed,
-        tagNumber : tagNumber
-    };
+};
+ASN1Tag.prototype.isUniversal = function () {
+    return this.tagClass == 0x00;
 };
 ASN1.decode = function (stream) {
     if (!(stream instanceof Stream))
         stream = new Stream(stream, 0);
     var streamStart = new Stream(stream),
-        tag = ASN1.decodeTag(stream),
+        tag = new ASN1Tag(stream),
         len = ASN1.decodeLength(stream),
         start = stream.pos,
         header = start - streamStart.pos,
@@ -501,7 +498,7 @@ ASN1.decode = function (stream) {
                 try {
                     for (;;) {
                         var s = ASN1.decode(stream);
-                    if (s.tag.tagClass == 0x00 && s.tag.tagNumber == 0x00)
+                    if (s.tag.isUniversal() && s.tag.tagNumber == 0x00)
                             break;
                         sub[sub.length] = s;
                     }
@@ -511,11 +508,11 @@ ASN1.decode = function (stream) {
                 }
             }
         };
-    if (tag.tagClass == 0x00 && tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
+    if (tag.isUniversal() && tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
     if (tag.tagConstructed) {
         // must have valid content
         getSub();
-    } else if (tag.tagClass == 0x00 && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
+    } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
         // sometimes BitString and OctetString do contain ASN.1
         try {
             getSub();
