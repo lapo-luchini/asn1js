@@ -493,6 +493,7 @@ ASN1.decode = function (stream) {
                 }
             }
         };
+    if (tag == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
     if (tag & 0x20) {
         // constructed, must have valid content
         getSub();
