@@ -282,15 +282,6 @@ ASN1.prototype.content = function () {
 ASN1.prototype.toString = function () {
     return this.typeName() + "@" + this.stream.pos + "[header:" + this.header + ",length:" + this.length + ",sub:" + ((this.sub === null) ? 'null' : this.sub.length) + "]";
 };
-ASN1.prototype.print = function (indent) {
-    if (indent === undefined) indent = '';
-    document.writeln(indent + this);
-    if (this.sub !== null) {
-        indent += '  ';
-        for (var i = 0, max = this.sub.length; i < max; ++i)
-            this.sub[i].print(indent);
-    }
-};
 ASN1.prototype.toPrettyString = function (indent) {
     if (indent === undefined) indent = '';
     var s = indent + this.typeName() + " @" + this.stream.pos;
@@ -338,7 +329,7 @@ ASN1.decodeLength = function (stream) {
 function ASN1Tag(stream) {
     var buf = stream.get();
     this.tagClass = buf >> 6;
-    this.tagConstructed = ((buf & 0x20) != 0);
+    this.tagConstructed = ((buf & 0x20) !== 0);
     this.tagNumber = buf & 0x1F;
     if (this.tagNumber == 0x1F) { // long tag
         var tagBits = 0;
@@ -351,12 +342,12 @@ function ASN1Tag(stream) {
             this.tagNumber = (this.tagNumber * 128) + (buf & 0x7F);
         } while (buf & 0x80);
     }
-};
+}
 ASN1Tag.prototype.isUniversal = function () {
-    return this.tagClass == 0x00;
+    return this.tagClass === 0x00;
 };
 ASN1Tag.prototype.isEOC = function () {
-    return this.tagClass == 0x00 && this.tagNumber == 0x00;
+    return this.tagClass === 0x00 && this.tagNumber === 0x00;
 };
 ASN1.decode = function (stream) {
     if (!(stream instanceof Stream))
@@ -407,26 +398,12 @@ ASN1.decode = function (stream) {
             sub = null;
         }
     }
-    if (sub == null) {
+    if (sub === null) {
         if (len === null)
             throw "We can't skip over an invalid tag with undefined length at offset " + start;
         stream.pos = start + Math.abs(len);
     }
     return new ASN1(streamStart, header, len, tag, sub);
-};
-ASN1.test = function () {
-    var test = [
-        { value: [0x27],                   expected: 0x27     },
-        { value: [0x81, 0xC9],             expected: 0xC9     },
-        { value: [0x83, 0xFE, 0xDC, 0xBA], expected: 0xFEDCBA }
-    ];
-    for (var i = 0, max = test.length; i < max; ++i) {
-        var pos = 0,
-            stream = new Stream(test[i].value, 0),
-            res = ASN1.decodeLength(stream);
-        if (res != test[i].expected)
-            document.write("In test[" + i + "] expected " + test[i].expected + " got " + res + "\n");
-    }
 };
 
 // export globals
