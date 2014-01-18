@@ -238,7 +238,7 @@ ASN1.prototype.content = function () {
         return null;
     var content = this.posContent(),
         len = Math.abs(this.length);
-    if (this.tag.tagClass !== 0) { // universal
+    if (!this.tag.isUniversal()) {
         if (this.sub !== null)
             return "(" + this.sub.length + " elem)";
         //TODO: TRY TO PARSE ASCII STRING
