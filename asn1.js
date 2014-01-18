@@ -171,10 +171,13 @@ Stream.prototype.parseOID = function (start, end) {
             n = bits = 0;
         }
     }
+    if (bits > 0)
+        s += ".incomplete";
     return s;
 };
 
 function ASN1(stream, header, length, tag, sub) {
+    if (!(tag instanceof ASN1Tag)) throw 'Invalid tag value.';
     this.stream = stream;
     this.header = header;
     this.length = length;
@@ -182,8 +185,6 @@ function ASN1(stream, header, length, tag, sub) {
     this.sub = sub;
 }
 ASN1.prototype.typeName = function () {
-    if (this.tag === undefined)
-        return "unknown";
     switch (this.tag.tagClass) {
     case 0: // universal
         switch (this.tag.tagNumber) {
