@@ -18,8 +18,14 @@
 (function (undefined) {
 "use strict";
 
-var hardLimit = 100,
-    ellipsis = "\u2026";
+var ellipsis = "\u2026",
+    reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
+
+function stringCut(str, len) {
+    if (str.length > len)
+        str = str.substring(0, len) + ellipsis;
+    return str;
+}
 
 function Stream(enc, pos) {
     if (enc instanceof Stream) {
@@ -54,6 +60,14 @@ Stream.prototype.hexDump = function (start, end, raw) {
     }
     return s;
 };
+Stream.prototype.isASCII = function (start, end) {
+    for (var i = start; i < end; ++i) {
+        var c = this.get(i);
+        if (c < 32 || c > 176)
+            return false;
+    }
+    return true;
+};
 Stream.prototype.parseStringISO = function (start, end) {
     var s = "";
     for (var i = start; i < end; ++i)
@@ -82,10 +96,9 @@ Stream.prototype.parseStringBMP = function (start, end) {
     }
     return str;
 };
-Stream.prototype.reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
 Stream.prototype.parseTime = function (start, end) {
     var s = this.parseStringISO(start, end),
-        m = this.reTime.exec(s);
+        m = reTime.exec(s);
     if (!m)
         return "Unrecognized time: " + s;
     s = m[1] + "-" + m[2] + "-" + m[3] + " " + m[4];
@@ -127,34 +140,36 @@ Stream.prototype.parseInteger = function (start, end) {
         n = (n * 256) + this.get(i);
     return n;
 };
-Stream.prototype.parseBitString = function (start, end) {
+Stream.prototype.parseBitString = function (start, end, maxLength) {
     var unusedBit = this.get(start),
         lenBit = ((end - start - 1) << 3) - unusedBit,
-        s = "(" + lenBit + " bit)";
-    if (lenBit <= 20) {
-        var skip = unusedBit;
-        s += " ";
-        for (var i = end - 1; i > start; --i) {
-            var b = this.get(i);
-            for (var j = skip; j < 8; ++j)
-                s += (b >> j) & 1 ? "1" : "0";
-            skip = 0;
-        }
+        s = "(" + lenBit + " bit)\n",
+        skip = unusedBit;
+    for (var i = end - 1; i > start; --i) {
+        var b = this.get(i);
+        for (var j = skip; j < 8; ++j)
+            s += (b >> j) & 1 ? "1" : "0";
+        skip = 0;
+        if (s.length > maxLength)
+            return stringCut(s, maxLength);
     }
     return s;
 };
-Stream.prototype.parseOctetString = function (start, end) {
+Stream.prototype.parseOctetString = function (start, end, maxLength) {
+    if (this.isASCII(start, end))
+        return stringCut(this.parseStringISO(start, end), maxLength);
     var len = end - start,
-        s = "(" + len + " byte) ";
-    if (len > hardLimit)
-        end = start + hardLimit;
+        s = "(" + len + " byte)\n";
+    maxLength /= 2; // we work in bytes
+    if (len > maxLength)
+        end = start + maxLength;
     for (var i = start; i < end; ++i)
         s += this.hexByte(this.get(i)); //TODO: also try Latin1?
-    if (len > hardLimit)
+    if (len > maxLength)
         s += ellipsis;
     return s;
 };
-Stream.prototype.parseOID = function (start, end) {
+Stream.prototype.parseOID = function (start, end, maxLength) {
     var s = '',
         n = 0,
         bits = 0;
@@ -169,6 +184,8 @@ Stream.prototype.parseOID = function (start, end) {
             } else
                 s += "." + ((bits > 53) ? "bigint" : n);
             n = bits = 0;
+            if (s.length > maxLength)
+                return stringCut(s, maxLength);
         }
     }
     if (bits > 0)
@@ -222,21 +239,17 @@ ASN1.prototype.typeName = function () {
     case 3: return "Private_" + this.tag.tagNumber.toString(16);
     }
 };
-ASN1.prototype.reSeemsASCII = /^[ -~]+$/;
-ASN1.prototype.content = function () {
+ASN1.prototype.content = function (maxLength) { // a preview of the content (intended for humans)
     if (this.tag === undefined)
         return null;
+    if (maxLength === undefined)
+        maxLength = Infinity;
     var content = this.posContent(),
         len = Math.abs(this.length);
     if (!this.tag.isUniversal()) {
         if (this.sub !== null)
             return "(" + this.sub.length + " elem)";
-        //TODO: TRY TO PARSE ASCII STRING
-        var s = this.stream.parseStringISO(content, content + Math.min(len, hardLimit));
-        if (this.reSeemsASCII.test(s))
-            return s.substring(0, 2 * hardLimit) + ((s.length > 2 * hardLimit) ? ellipsis : "");
-        else
-            return this.stream.parseOctetString(content, content + len);
+        return this.stream.parseOctetString(content, content + len, maxLength);
     }
     switch (this.tag.tagNumber) {
     case 0x01: // BOOLEAN
@@ -245,13 +258,13 @@ ASN1.prototype.content = function () {
         return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
         return this.sub ? "(" + this.sub.length + " elem)" :
-            this.stream.parseBitString(content, content + len);
+            this.stream.parseBitString(content, content + len, maxLength);
     case 0x04: // OCTET_STRING
         return this.sub ? "(" + this.sub.length + " elem)" :
-            this.stream.parseOctetString(content, content + len);
+            this.stream.parseOctetString(content, content + len, maxLength);
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
-        return this.stream.parseOID(content, content + len);
+        return this.stream.parseOID(content, content + len, maxLength);
     //case 0x07: // ObjectDescriptor
     //case 0x08: // EXTERNAL
     //case 0x09: // REAL
@@ -261,7 +274,7 @@ ASN1.prototype.content = function () {
     case 0x11: // SET
         return "(" + this.sub.length + " elem)";
     case 0x0C: // UTF8String
-        return this.stream.parseStringUTF(content, content + len);
+        return stringCut(this.stream.parseStringUTF(content, content + len), maxLength);
     case 0x12: // NumericString
     case 0x13: // PrintableString
     case 0x14: // TeletexString
@@ -271,9 +284,9 @@ ASN1.prototype.content = function () {
     case 0x1A: // VisibleString
     //case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
-        return this.stream.parseStringISO(content, content + len);
+        return stringCut(this.stream.parseStringISO(content, content + len), maxLength);
     case 0x1E: // BMPString
-        return this.stream.parseStringBMP(content, content + len);
+        return stringCut(this.stream.parseStringBMP(content, content + len), maxLength);
     case 0x17: // UTCTime
     case 0x18: // GeneralizedTime
         return this.stream.parseTime(content, content + len);

@@ -18,7 +18,10 @@
 (function (undefined) {
 "use strict";
 
-var DOM = {
+var lineLength = 80,
+    contentLength = 8 * lineLength,
+    DOM = {
+        ellipsis: "\u2026",
         tag: function (tagName, className) {
             var t = document.createElement(tagName);
             t.className = className;
@@ -26,6 +29,21 @@ var DOM = {
         },
         text: function (str) {
             return document.createTextNode(str);
+        },
+        breakLines: function (str, length) {
+            var lines = str.split(/\r?\n/),
+                o = '';
+            for (var i = 0; i < lines.length; ++i) {
+                var line = lines[i];
+                if (i > 0) o += "\n";
+                while (line.length > length) {
+                    o += line.substring(0, length);
+                    o += "\n";
+                    line = line.substring(length);
+                }
+                o += line;
+            }
+            return o;
         }
     };
 
@@ -35,12 +53,17 @@ ASN1.prototype.toDOM = function () {
     var head = DOM.tag("div", "head");
     var s = this.typeName().replace(/_/g, " ");
     head.innerHTML = s;
-    var content = this.content();
+    var content = this.content(contentLength);
     if (content !== null) {
-        content = String(content).replace(/</g, "&lt;");
-        var preview = DOM.tag("span", "preview");
-        preview.appendChild(DOM.text(content));
+        var preview = DOM.tag("span", "preview"),
+            shortContent;
+        content = String(content); // it might be a number
+        shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
+        preview.appendChild(DOM.text(shortContent));
         head.appendChild(preview);
+        content = DOM.breakLines(content, lineLength);
+        content = content.replace(/</g, "&lt;");
+        content = content.replace(/\n/g, "<br/>");
     }
     node.appendChild(head);
     this.node = node;
