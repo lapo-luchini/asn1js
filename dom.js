@@ -63,31 +63,31 @@ ASN1.prototype.toDOM = function () {
         head.appendChild(preview);
         content = DOM.breakLines(content, lineLength);
         content = content.replace(/</g, "&lt;");
-        content = content.replace(/\n/g, "<br/>");
+        content = content.replace(/\n/g, "<br>");
     }
     node.appendChild(head);
     this.node = node;
     this.head = head;
     var value = DOM.tag("div", "value");
-    s = "Offset: " + this.stream.pos + "<br/>";
+    s = "Offset: " + this.stream.pos + "<br>";
     s += "Length: " + this.header + "+";
     if (this.length >= 0)
         s += this.length;
     else
         s += (-this.length) + " (undefined)";
     if (this.tag.tagConstructed)
-        s += "<br/>(constructed)";
+        s += "<br>(constructed)";
     else if ((this.tag.isUniversal() && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
-        s += "<br/>(encapsulates)";
+        s += "<br>(encapsulates)";
     //TODO if (this.tag.isUniversal() && this.tag.tagNumber == 0x03) s += "Unused bits: "
     if (content !== null) {
-        s += "<br/>Value:<br/><b>" + content + "</b>";
+        s += "<br>Value:<br><b>" + content + "</b>";
         if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
             var oid = oids[content];
             if (oid) {
-                if (oid.d) s += "<br/>" + oid.d;
-                if (oid.c) s += "<br/>" + oid.c;
-                if (oid.w) s += "<br/>(warning!)";
+                if (oid.d) s += "<br>" + oid.d;
+                if (oid.c) s += "<br>" + oid.c;
+                if (oid.w) s += "<br>(warning!)";
             }
         }
     }
