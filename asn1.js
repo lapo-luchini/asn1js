@@ -143,7 +143,8 @@ Stream.prototype.parseInteger = function (start, end) {
 Stream.prototype.parseBitString = function (start, end, maxLength) {
     var unusedBit = this.get(start),
         lenBit = ((end - start - 1) << 3) - unusedBit,
-        s = "(" + lenBit + " bit)\n",
+        intro = "(" + lenBit + " bit)\n",
+        s = "",
         skip = unusedBit;
     for (var i = end - 1; i > start; --i) {
         var b = this.get(i);
@@ -151,9 +152,9 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
             s += (b >> j) & 1 ? "1" : "0";
         skip = 0;
         if (s.length > maxLength)
-            return stringCut(s, maxLength);
+            return intro + stringCut(s, maxLength);
     }
-    return s;
+    return intro + s;
 };
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
     if (this.isASCII(start, end))
