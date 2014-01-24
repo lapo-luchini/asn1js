@@ -397,11 +397,11 @@ ASN1.decode = function (stream) {
                 }
             }
         };
-    if (tag.isUniversal() && tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
     if (tag.tagConstructed) {
         // must have valid content
         getSub();
     } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
+        if (tag.isUniversal() && tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
         // sometimes BitString and OctetString do contain ASN.1
         try {
             getSub();
