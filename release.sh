@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 FILES="
-  asn1.js oids.js base64.js hex.js dom.js
+  asn1.js oids.js base64.js hex.js dom.js test.js
   index.css index.js index.html
   README.md LICENSE
   update.sh check.sh
