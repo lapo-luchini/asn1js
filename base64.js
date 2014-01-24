@@ -82,5 +82,5 @@ Base64.unarmor = function (a) {
 };
 
 // export globals
-window.Base64 = Base64;
+if (typeof module !== 'undefined') { module.exports = Base64; } else { window.Base64 = Base64; }
 })();

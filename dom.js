@@ -45,7 +45,10 @@ var lineLength = 80,
             }
             return o;
         }
-    };
+    },
+    ASN1;
+
+if (typeof module !== 'undefined') { ASN1 = require('./asn1.js'); } else { ASN1 = window.ASN1; }
 
 ASN1.prototype.toDOM = function () {
     var node = DOM.tag("div", "node");
