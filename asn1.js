@@ -96,11 +96,17 @@ Stream.prototype.parseStringBMP = function (start, end) {
     }
     return str;
 };
-Stream.prototype.parseTime = function (start, end) {
+Stream.prototype.parseTime = function (start, end, shortYear) {
     var s = this.parseStringISO(start, end),
         m = reTime.exec(s);
     if (!m)
         return "Unrecognized time: " + s;
+    if (shortYear) {
+        // to avoid querying the timer, use the fixed range [1970, 2069]
+        // it will conform with ITU X.400 [-10, +40] sliding window until 2030
+        m[1] = +m[1];
+        m[1] += (m[1] < 70) ? 2000 : 1900;
+    }
     s = m[1] + "-" + m[2] + "-" + m[3] + " " + m[4];
     if (m[5]) {
         s += ":" + m[5];
@@ -290,7 +296,7 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
         return stringCut(this.stream.parseStringBMP(content, content + len), maxLength);
     case 0x17: // UTCTime
     case 0x18: // GeneralizedTime
-        return this.stream.parseTime(content, content + len);
+        return this.stream.parseTime(content, content + len, (this.tag.tagNumber == 0x17));
     }
     return null;
 };
