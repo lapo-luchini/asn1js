@@ -1,9 +1,9 @@
 #/bin/sh
-URL='http://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg'
+URL='https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg'
 if [ -x /usr/bin/fetch ]; then
-    /usr/bin/fetch -m $URL
+    /usr/bin/fetch -m --no-verify-peer $URL
 elif [ -x /usr/bin/wget ]; then
-    /usr/bin/wget -N $URL
+    /usr/bin/wget -N --no-check-certificate $URL
 elif [ ! -r dumpasn1.cfg ]; then
     echo Please download $URL in this directory.
     exit 1
