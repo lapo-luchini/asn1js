@@ -46,8 +46,7 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
             }
             return o;
         }
-    },
-    ASN1;
+    };
 
 ASN1.prototype.toDOM = function () {
     var node = DOM.tag("div", "node");

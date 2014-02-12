@@ -133,7 +133,7 @@ Stream.prototype.parseInteger = function (start, end) {
         s = '';
     if (len > 6) {
         len <<= 3;
-        var s = this.get(start);
+        s = this.get(start);
         if (s === 0)
             len -= 8;
         else

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/*jshint node: true, strict: true, globalstrict: true, es5: true, indent: 4, immed: true, undef: true, unused: true */
+/*jshint node: true, strict: true, globalstrict: true, indent: 4, immed: true, undef: true, unused: true */
 'use strict';
 
 var Hex = require('./hex.js'),
