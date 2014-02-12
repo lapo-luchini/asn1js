@@ -141,7 +141,7 @@ Stream.prototype.parseInteger = function (start, end) {
                 s <<= 1;
                 --len;
             }
-        s = "(" + len + " bit) ";
+        s = "(" + len + " bit)\n";
     }
     var n = new Int10();
     for (var i = start; i < end; ++i)
