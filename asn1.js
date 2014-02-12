@@ -18,7 +18,8 @@
 (function (undefined) {
 "use strict";
 
-var ellipsis = "\u2026",
+var Int10 = (typeof module !== 'undefined') ? require('./int10.js') : window.Int10,
+    ellipsis = "\u2026",
     reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
 
 function stringCut(str, len) {
@@ -128,7 +129,8 @@ Stream.prototype.parseTime = function (start, end, shortYear) {
 };
 Stream.prototype.parseInteger = function (start, end) {
     //TODO support negative numbers
-    var len = end - start;
+    var len = end - start,
+        s = '';
     if (len > 6) {
         len <<= 3;
         var s = this.get(start);
@@ -139,12 +141,12 @@ Stream.prototype.parseInteger = function (start, end) {
                 s <<= 1;
                 --len;
             }
-        return "(" + len + " bit)";
+        s = "(" + len + " bit) ";
     }
-    var n = 0;
+    var n = new Int10();
     for (var i = start; i < end; ++i)
-        n = (n * 256) + this.get(i);
-    return n;
+        n.mulAdd(256, this.get(i));
+    return s + n.toString();
 };
 Stream.prototype.parseBitString = function (start, end, maxLength) {
     var unusedBit = this.get(start),
@@ -171,26 +173,27 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
     if (len > maxLength)
         end = start + maxLength;
     for (var i = start; i < end; ++i)
-        s += this.hexByte(this.get(i)); //TODO: also try Latin1?
+        s += this.hexByte(this.get(i));
     if (len > maxLength)
         s += ellipsis;
     return s;
 };
 Stream.prototype.parseOID = function (start, end, maxLength) {
     var s = '',
-        n = 0,
+        n = new Int10(),
         bits = 0;
     for (var i = start; i < end; ++i) {
         var v = this.get(i);
-        n = (n * 128) + (v & 0x7F);
+        n.mulAdd(128, v & 0x7F);
         bits += 7;
         if (!(v & 0x80)) { // finished
             if (s === '') {
                 var m = n < 80 ? n < 40 ? 0 : 1 : 2;
                 s = m + "." + (n - m * 40);
             } else
-                s += "." + ((bits > 53) ? "bigint" : n);
-            n = bits = 0;
+                s += "." + n.toString();
+            n = new Int10();
+            bits = 0;
             if (s.length > maxLength)
                 return stringCut(s, maxLength);
         }
@@ -338,7 +341,7 @@ ASN1.decodeLength = function (stream) {
         len = buf & 0x7F;
     if (len == buf)
         return len;
-    if (len > 6)
+    if (len > 6) // no reason to use Int10, as it would be a huge buffer anyways
         throw "Length over 48 bits not supported at position " + (stream.pos - 1);
     if (len === 0)
         return null; // undefined
@@ -358,7 +361,7 @@ function ASN1Tag(stream) {
         do {
             buf = stream.get();
             tagBits += 7;
-            if (tagBits > 53)
+            if (tagBits > 53) //TODO: use Int10
                 throw "Tag numbers over 53 bits not supported at position " + (stream.pos - 1);
             this.tagNumber = (this.tagNumber * 128) + (buf & 0x7F);
         } while (buf & 0x80);

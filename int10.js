@@ -17,31 +17,51 @@
 (function () {
 "use strict";
 
-var Int10 = {};
+var max = 10000000000000; // biggest integer that can still fit 2^53 when multiplied by 256
 
-Int10.print = function (a) {
-    var buf = [0],
-        max = 10000000000000, // biggest integer that can still fit when multiplied by 256
-        i, j, t, c, s;
-    for (j = 0; j < a.length; ++j) {
-        c = a[j];
-        for (i = 0; i < buf.length; ++i) {
-            t = buf[i] * 256 + c;
-            if (t < max)
-                c = 0;
-            else {
-                c = 0|(t / max);
-                t -= c * max;
-            }
-            buf[i] = t;
+function Int10(value) {
+    this.buf = [+value || 0];
+}
+
+Int10.prototype.mulAdd = function (m, c) {
+    // assert(m <= 256)
+    var b = this.buf,
+        l = b.length,
+        i, t;
+    for (i = 0; i < l; ++i) {
+        t = b[i] * m + c;
+        if (t < max)
+            c = 0;
+        else {
+            c = 0|(t / max);
+            t -= c * max;
         }
-        if (c > 0)
-            buf[i] = c;
+        b[i] = t;
     }
-    s = buf[buf.length - 1].toString();
-    for (i = buf.length - 2; i >= 0; --i)
-        s += (max + buf[i]).toString().substring(1);
+    if (c > 0)
+        b[i] = c;
+};
+
+Int10.prototype.toString = function () {
+    // assert(no parameters)
+    var b = this.buf,
+        s = b[b.length - 1].toString();
+    for (var i = b.length - 2; i >= 0; --i)
+        s += (max + b[i]).toString().substring(1);
     return s;
+};
+
+Int10.prototype.valueOf = function () {
+    var b = this.buf,
+        v = 0;
+    for (var i = b.length - 1; i >= 0; --i)
+        v = v * max + b[i];
+    return v;
+};
+
+Int10.prototype.simplify = function () {
+    var b = this.buf;
+    return (b.length == 1) ? b[0] : this;
 };
 
 // export globals

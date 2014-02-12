@@ -18,7 +18,8 @@
 (function (undefined) {
 "use strict";
 
-var lineLength = 80,
+var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
+    lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
         ellipsis: "\u2026",
@@ -47,8 +48,6 @@ var lineLength = 80,
         }
     },
     ASN1;
-
-if (typeof module !== 'undefined') { ASN1 = require('./asn1.js'); } else { ASN1 = window.ASN1; }
 
 ASN1.prototype.toDOM = function () {
     var node = DOM.tag("div", "node");
