@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+/*jshint node: true, strict: true, globalstrict: true, es5: true, indent: 4, immed: true, undef: true, unused: true */
+'use strict';
+
 var Hex = require('./hex.js'),
     ASN1 = require('./asn1.js'),
     tests;
