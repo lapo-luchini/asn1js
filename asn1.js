@@ -243,10 +243,10 @@ ASN1.prototype.typeName = function () {
         case 0x1C: return "UniversalString";
         case 0x1E: return "BMPString";
         }
-        return "Universal_" + this.tag.tagNumber.toString(16);
-    case 1: return "Application_" + this.tag.tagNumber.toString(16);
-    case 2: return "[" + this.tag.tagNumber + "]"; // Context
-    case 3: return "Private_" + this.tag.tagNumber.toString(16);
+        return "Universal_" + this.tag.tagNumber.toString();
+    case 1: return "Application_" + this.tag.tagNumber.toString();
+    case 2: return "[" + this.tag.tagNumber.toString() + "]"; // Context
+    case 3: return "Private_" + this.tag.tagNumber.toString();
     }
 };
 ASN1.prototype.content = function (maxLength) { // a preview of the content (intended for humans)
@@ -356,15 +356,12 @@ function ASN1Tag(stream) {
     this.tagConstructed = ((buf & 0x20) !== 0);
     this.tagNumber = buf & 0x1F;
     if (this.tagNumber == 0x1F) { // long tag
-        var tagBits = 0;
-        this.tagNumber = 0;
+        var n = new Int10();
         do {
             buf = stream.get();
-            tagBits += 7;
-            if (tagBits > 53) //TODO: use Int10
-                throw "Tag numbers over 53 bits not supported at position " + (stream.pos - 1);
-            this.tagNumber = (this.tagNumber * 128) + (buf & 0x7F);
+            n.mulAdd(128, buf & 0x7F);
         } while (buf & 0x80);
+        this.tagNumber = n.simplify();
     }
 }
 ASN1Tag.prototype.isUniversal = function () {
