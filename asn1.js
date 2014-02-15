@@ -242,8 +242,8 @@ ASN1.prototype.typeName = function () {
         case 0x1B: return "GeneralString";
         case 0x1C: return "UniversalString";
         case 0x1E: return "BMPString";
-        default:   return "Universal_" + this.tag.tagNumber.toString(16);
         }
+        return "Universal_" + this.tag.tagNumber.toString(16);
     case 1: return "Application_" + this.tag.tagNumber.toString(16);
     case 2: return "[" + this.tag.tagNumber + "]"; // Context
     case 3: return "Private_" + this.tag.tagNumber.toString(16);
