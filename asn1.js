@@ -188,14 +188,15 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
         bits += 7;
         if (!(v & 0x80)) { // finished
             if (s === '') {
+                n = n.simplify();
                 var m = n < 80 ? n < 40 ? 0 : 1 : 2;
                 s = m + "." + (n - m * 40);
             } else
                 s += "." + n.toString();
-            n = new Int10();
-            bits = 0;
             if (s.length > maxLength)
                 return stringCut(s, maxLength);
+            n = new Int10();
+            bits = 0;
         }
     }
     if (bits > 0)
