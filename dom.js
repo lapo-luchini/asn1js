@@ -159,6 +159,8 @@ ASN1.prototype.toHexDOM = function (root) {
         for (var i = 0, max = this.sub.length; i < max; ++i)
             node.appendChild(this.sub[i].toHexDOM(root));
         this.toHexDOM_sub(node, "outro", this.stream, last.posEnd(), this.posEnd());
+    } else {
+        this.toHexDOM_sub(node, "outro", this.stream, this.posContent(), this.posEnd());
     }
     return node;
 };
