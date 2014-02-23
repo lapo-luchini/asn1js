@@ -128,10 +128,11 @@ Stream.prototype.parseTime = function (start, end, shortYear) {
     return s;
 };
 Stream.prototype.parseInteger = function (start, end) {
-    //TODO support negative numbers
     var len = end - start,
+        v = this.get(start),
+        neg = (v > 127),
         s = '';
-    if (len > 6) {
+    if (len > 6) { //TODO: this assumes DER, let's support BER too
         len <<= 3;
         s = this.get(start);
         if (s === 0)
@@ -143,8 +144,9 @@ Stream.prototype.parseInteger = function (start, end) {
             }
         s = "(" + len + " bit)\n";
     }
-    var n = new Int10();
-    for (var i = start; i < end; ++i)
+    if (neg) v = 0xFFFFFF00 | (v & 0xFF); //TODO: how to better sign-extend a byte?
+    var n = new Int10(v);
+    for (var i = start + 1; i < end; ++i)
         n.mulAdd(256, this.get(i));
     return s + n.toString();
 };
