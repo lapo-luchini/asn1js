@@ -144,7 +144,7 @@ Stream.prototype.parseInteger = function (start, end) {
             }
         s = "(" + len + " bit)\n";
     }
-    if (neg) v = 0xFFFFFF00 | (v & 0xFF); //TODO: how to better sign-extend a byte?
+    if (neg) v = v - 256;
     var n = new Int10(v);
     for (var i = start + 1; i < end; ++i)
         n.mulAdd(256, this.get(i));
