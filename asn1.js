@@ -128,22 +128,28 @@ Stream.prototype.parseTime = function (start, end, shortYear) {
     return s;
 };
 Stream.prototype.parseInteger = function (start, end) {
-    var len = end - start,
-        v = this.get(start),
+    var v = this.get(start),
         neg = (v > 127),
+        pad = neg ? 255 : 0,
+        len,
         s = '';
-    if (len > 6) { //TODO: this assumes DER, let's support BER too
+    // skip unuseful bits (not allowed in DER)
+    while (v == pad && start < end)
+        v = this.get(++start);
+    len = end - start;
+    if (len === 0)
+        return neg ? -1 : 0;
+    // show bit length of huge integers
+    if (len > 4) {
+        s = v;
         len <<= 3;
-        s = this.get(start);
-        if (s === 0)
-            len -= 8;
-        else
-            while (s < 128) {
-                s <<= 1;
-                --len;
-            }
+        while (((s ^ pad) & 0x80) == 0) {
+            s <<= 1;
+            --len;
+        }
         s = "(" + len + " bit)\n";
     }
+    // decode the integer
     if (neg) v = v - 256;
     var n = new Int10(v);
     for (var i = start + 1; i < end; ++i)
