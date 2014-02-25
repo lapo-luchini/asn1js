@@ -20,6 +20,7 @@ credits
 - OBJECT IDENTIFIER values are recognized using data taken from Peter Gutmann's [dumpasn1](http://www.cs.auckland.ac.nz/~pgut001/#standards) program.
 - BMPString support added by [Felice Gasper](https://github.com/FGasper)
 - extended tag support added by [Péter Budai](https://www.peterbudai.eu/)
+- patches by [Gergely Nagy](https://github.com/ngg)
 
 links
 -----
