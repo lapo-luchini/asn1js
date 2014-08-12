@@ -134,8 +134,8 @@ Stream.prototype.parseInteger = function (start, end) {
         len,
         s = '';
     // skip unuseful bits (not allowed in DER)
-    while (v == pad && start < end)
-        v = this.get(++start);
+    while (v == pad && ++start < end)
+        v = this.get(start);
     len = end - start;
     if (len === 0)
         return neg ? -1 : 0;
