@@ -89,8 +89,22 @@ ASN1.prototype.toDOM = function (spaces) {
         if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
             var oid = oids[content];
             if (oid) {
-                if (oid.d) s += "<br>" + oid.d;
-                if (oid.c) s += "<br>" + oid.c;
+                if (oid.d)
+                {
+                    s += "<br>" + oid.d;
+                    var debug = DOM.tag("span", "debugOID");
+                    debug.innerHTML = "&nbsp;";
+                    debug.appendChild(DOM.text(oid.d));
+                    head.appendChild(debug);
+                }
+                if (oid.c)
+                {
+                    s += "<br>" + oid.c;
+                    var debug = DOM.tag("span", "debugOID2");
+                    debug.innerHTML = "&nbsp;";
+                    debug.appendChild(DOM.text("(" + oid.c + ")"));
+                    head.appendChild(debug);
+                }
                 if (oid.w) s += "<br>(warning!)";
             }
         }

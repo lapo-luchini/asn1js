@@ -69,6 +69,16 @@ html, body {
     color: #505050;
     font-weight: normal;
 }
+.debugOID {
+    margin-left: 1em;
+    color: #eeeeee;
+    font-weight: normal;
+}
+.debugOID2 {
+    margin-left: 1em;
+    color: #e0e0e0;
+    font-weight: normal;
+}
 .spaces {
     font-size: 0px;
 }
