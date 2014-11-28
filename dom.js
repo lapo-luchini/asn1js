@@ -48,12 +48,15 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
         }
     };
 
-ASN1.prototype.toDOM = function () {
+ASN1.prototype.toDOM = function (spaces) {
     var node = DOM.tag("div", "node");
     node.asn1 = this;
     var head = DOM.tag("div", "head");
     var s = this.typeName().replace(/_/g, " ");
-    head.innerHTML = s;
+    if (spaces == undefined)
+    	spaces = "";
+    head.innerHTML = "<span class='spaces'>" + spaces  + "</span>" + s;
+    spaces = spaces + "&nbsp;&nbsp;";
     var content = this.content(contentLength);
     if (content !== null) {
         var preview = DOM.tag("span", "preview"),
@@ -97,7 +100,7 @@ ASN1.prototype.toDOM = function () {
     var sub = DOM.tag("div", "sub");
     if (this.sub !== null) {
         for (var i = 0, max = this.sub.length; i < max; ++i)
-            sub.appendChild(this.sub[i].toDOM());
+            sub.appendChild(this.sub[i].toDOM(spaces));
     }
     node.appendChild(sub);
     head.onclick = function () {
