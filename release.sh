@@ -6,6 +6,7 @@ FILES="
   README.md LICENSE
   update.sh check.sh
 "
-sha256sum -t $FILES | gpg --clearsign > sha256sums.asc
+sha256sum </dev/null >/dev/null 2>&1 && SHA256=sha256sum || SHA256=gsha256sum
+$SHA256 -t $FILES | gpg --clearsign > sha256sums.asc
 7z a -tzip -mx=9 asn1js.zip $FILES sha256sums.asc
 rsync -Pvrtz asn1js.zip lapo.it:www/asn1js/
