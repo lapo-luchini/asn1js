@@ -417,16 +417,22 @@ ASN1.decode = function (stream) {
         // must have valid content
         getSub();
     } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
-        if (tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
+        var try_to_decode = 1;
+        if (tag.tagNumber == 0x03) {
+            var unusedBit = stream.get(); // skip BitString unused bits, must be in [0, 7]
+            if (unusedBit != 0) try_to_decode = 0;
+        }
         // sometimes BitString and OctetString do contain ASN.1
-        try {
-            getSub();
-            for (var i = 0; i < sub.length; ++i)
-                if (sub[i].tag.isEOC())
-                    throw 'EOC is not supposed to be actual content.';
-        } catch (e) {
-            // but silently ignore when they don't
-            sub = null;
+        if (try_to_decode == 1) {
+            try {
+                getSub();
+                for (var i = 0; i < sub.length; ++i)
+                    if (sub[i].tag.isEOC())
+                        throw 'EOC is not supposed to be actual content.';
+            } catch (e) {
+                // but silently ignore when they don't
+                sub = null;
+            }
         }
     }
     if (sub === null) {
