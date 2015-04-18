@@ -416,9 +416,11 @@ ASN1.decode = function (stream) {
         // must have valid content
         getSub();
     } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
-        if (tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
-        // sometimes BitString and OctetString do contain ASN.1
+        // sometimes BitString and OctetString are used to encapsulate ASN.1
         try {
+            if (tag.tagNumber == 0x03)
+                if (stream.get() != 0)
+                    throw "BIT STRINGs with unused bits cannot encapsulate.";
             getSub();
             for (var i = 0; i < sub.length; ++i)
                 if (sub[i].tag.isEOC())
