@@ -1,2 +1,3 @@
 #!/bin/sh
-gpg -o - sha256sums.asc | sha256sum -c --quiet
+sha256sum </dev/null >/dev/null 2>&1 && SHA256=sha256sum || SHA256=gsha256sum
+gpg -o - sha256sums.asc | $SHA256 -c --quiet
