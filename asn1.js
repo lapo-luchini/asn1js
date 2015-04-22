@@ -164,8 +164,8 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
         intro = "(" + lenBit + " bit)\n",
         s = "";
     for (var i = start + 1; i < end; ++i) {
-        var b = this.get(i);
-        var skip = (i == end - 1) ? unusedBit : 0;
+        var b = this.get(i),
+            skip = (i == end - 1) ? unusedBit : 0;
         for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
         if (s.length > maxLength)
