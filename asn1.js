@@ -20,7 +20,8 @@
 
 var Int10 = (typeof module !== 'undefined') ? require('./int10.js') : window.Int10,
     ellipsis = "\u2026",
-    reTime = /^((?:1[89]|2\d)?\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
+    reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/,
+    reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
 
 function stringCut(str, len) {
     if (str.length > len)
@@ -33,6 +34,7 @@ function Stream(enc, pos) {
         this.enc = enc.enc;
         this.pos = enc.pos;
     } else {
+        // enc should be an array or a binary string
         this.enc = enc;
         this.pos = pos;
     }
@@ -42,7 +44,7 @@ Stream.prototype.get = function (pos) {
         pos = this.pos++;
     if (pos >= this.enc.length)
         throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
-    return this.enc[pos];
+    return (typeof this.enc == "string") ? this.enc.charCodeAt(pos) : this.enc[pos];
 };
 Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexByte = function (b) {
@@ -99,7 +101,7 @@ Stream.prototype.parseStringBMP = function (start, end) {
 };
 Stream.prototype.parseTime = function (start, end, shortYear) {
     var s = this.parseStringISO(start, end),
-        m = reTime.exec(s);
+        m = (shortYear ? reTimeS : reTimeL).exec(s);
     if (!m)
         return "Unrecognized time: " + s;
     if (shortYear) {
@@ -134,8 +136,8 @@ Stream.prototype.parseInteger = function (start, end) {
         len,
         s = '';
     // skip unuseful bits (not allowed in DER)
-    while (v == pad && start < end)
-        v = this.get(++start);
+    while (v == pad && ++start < end)
+        v = this.get(start);
     len = end - start;
     if (len === 0)
         return neg ? -1 : 0;
@@ -415,9 +417,11 @@ ASN1.decode = function (stream) {
         // must have valid content
         getSub();
     } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
-        if (tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
-        // sometimes BitString and OctetString do contain ASN.1
+        // sometimes BitString and OctetString are used to encapsulate ASN.1
         try {
+            if (tag.tagNumber == 0x03)
+                if (stream.get() != 0)
+                    throw "BIT STRINGs with unused bits cannot encapsulate.";
             getSub();
             for (var i = 0; i < sub.length; ++i)
                 if (sub[i].tag.isEOC())

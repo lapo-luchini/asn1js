@@ -32,6 +32,8 @@ tests = [
     ['0208FFFFFFFFFFFFFC18', '-1000', 'Negative 1000 (8)'],
     ['0210FFFFFFFFFFFFFFFFFFFFFFFFFFFFFC18', '-1000', 'Negative 1000 (16)'],
     ['0203800001', '-8388607', 'Negative 8388607'],
+    ['02020000', '0', 'Zero (2)'],
+    ['0204FFFFFFFF', '-1', 'Negative 1 (4)'],
 ];
 
 tests.forEach(function (t) {
