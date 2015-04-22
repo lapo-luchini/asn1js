@@ -149,10 +149,24 @@ ASN1.prototype.toHexDOM = function (root) {
     };
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
-    if (this.sub === null)
-        node.appendChild(DOM.text(
-            this.stream.hexDump(this.posContent(), this.posEnd())));
-    else if (this.sub.length > 0) {
+    if (this.sub === null) {
+        var start = this.posContent();
+        var end = this.posEnd();
+        if (end - start < 10 * 16)
+            node.appendChild(DOM.text(
+                this.stream.hexDump(start, end)));
+        else {
+            var end1 = start + 5 * 16 - (start & 0xF);
+            var start2 = end - 16 - (end & 0xF);
+            node.appendChild(DOM.text(
+                this.stream.hexDump(start, end1)));
+            var sub = DOM.tag("span", "skip");
+            sub.appendChild(DOM.text("\u2026 skipping " + (start2 - end1) + " bytes \u2026\n"));
+            node.appendChild(sub);
+            node.appendChild(DOM.text(
+                this.stream.hexDump(start2, end)));
+        }
+    } else if (this.sub.length > 0) {
         var first = this.sub[0];
         var last = this.sub[this.sub.length - 1];
         this.toHexDOM_sub(node, "intro", this.stream, this.posContent(), first.posStart());
