@@ -162,13 +162,12 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
     var unusedBit = this.get(start),
         lenBit = ((end - start - 1) << 3) - unusedBit,
         intro = "(" + lenBit + " bit)\n",
-        s = "",
-        skip = unusedBit;
-    for (var i = end - 1; i > start; --i) {
+        s = "";
+    for (var i = start + 1; i < end; ++i) {
         var b = this.get(i);
-        for (var j = skip; j < 8; ++j)
+        var skip = (i == end - 1) ? unusedBit : 0;
+        for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
-        skip = 0;
         if (s.length > maxLength)
             return intro + stringCut(s, maxLength);
     }
