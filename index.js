@@ -23,9 +23,9 @@ function decode(der) {
             dump.appendChild(asn1.toHexDOM());
         if (id('pem').value === '') 
             id('pem').value = hex;
-        // update URL hash (does this have length limits we should avoid?)
-        hash = '#' + hex;
-        window.location.hash = hash;
+        // update URL hash
+        if (hex.length < 10240)
+            hash = window.location.hash = '#' + hex;
     } catch (e) {
         tree.innerHTML = toHTML(e);
     }
