@@ -34,6 +34,7 @@ function Stream(enc, pos) {
         this.enc = enc.enc;
         this.pos = enc.pos;
     } else {
+        // enc should be an array or a binary string
         this.enc = enc;
         this.pos = pos;
     }
@@ -43,7 +44,7 @@ Stream.prototype.get = function (pos) {
         pos = this.pos++;
     if (pos >= this.enc.length)
         throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
-    return this.enc[pos];
+    return (typeof this.enc == "string") ? this.enc.charCodeAt(pos) : this.enc[pos];
 };
 Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexByte = function (b) {

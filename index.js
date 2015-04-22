@@ -49,11 +49,8 @@ function decodeBinaryString(str) {
             der = Hex.decode(str);
         else if (Base64.re.test(str))
             der = Base64.unarmor(str);
-        else {
-            der = [];
-            for (var i = 0; i < str.length; ++i)
-                der[der.length] = str.charCodeAt(i);
-        }
+        else
+            der = str;
         decode(der);
     } catch (e) {
         id('tree').innerHTML = 'Cannot decode file.';
