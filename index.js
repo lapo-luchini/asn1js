@@ -24,8 +24,13 @@ function decode(der) {
         if (id('pem').value === '') 
             id('pem').value = hex;
         // update URL hash
-        if (hex.length < 10240)
-            hash = window.location.hash = '#' + hex;
+        if (hex.length > 10240)
+            window.location.hash = hash = '#';
+        else try {
+            window.location.hash = hash = '#' + hex;
+        } catch (e) { // fails with "Access Denied" on IE with URLs longer than ~2048 bytes
+            window.location.hash = hash = '#';
+        }
     } catch (e) {
         tree.innerHTML = toHTML(e);
     }
