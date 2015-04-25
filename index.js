@@ -27,8 +27,7 @@ function decode(der) {
         tree.appendChild(asn1.toDOM());
         if (wantHex.checked)
             dump.appendChild(asn1.toHexDOM());
-        if (der.length > maxLength)
-            return;
+        var hex = (der.length < maxLength) ? asn1.toHexString() : '';
         if (area.value === '') 
             area.value = hex;
         try {
