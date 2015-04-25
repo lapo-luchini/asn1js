@@ -442,3 +442,4 @@ ASN1.decode = function (stream) {
 // export globals
 if (typeof module !== 'undefined') { module.exports = ASN1; } else { window.ASN1 = ASN1; }
 })();
+

@@ -2,50 +2,53 @@
 /*global Hex, Base64, ASN1 */
 "use strict";
 
-var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
+var maxLength = 10240,
+    reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
+    tree = id('tree'),
+    dump = id('dump'),
+    wantHex = id('wantHex'),
+    area = id('area'),
+    file = id('file'),
     hash = null;
 function id(elem) {
     return document.getElementById(elem);
 }
-function toHTML(obj) {
-    return String(obj).replace(/</g, "&lt;");
+function text(el, string) {
+    if ('textContent' in el)
+        el.textContent = string;
+    else
+        el.innerText = string;
 }
 function decode(der) {
-    var tree = id('tree');
-    var dump = id('dump');
     tree.innerHTML = '';
     dump.innerHTML = '';
     try {
-        var asn1 = ASN1.decode(der),
-            hex = asn1.toHexString();
+        var asn1 = ASN1.decode(der);
         tree.appendChild(asn1.toDOM());
-        if (id('wantHex').checked)
+        if (wantHex.checked)
             dump.appendChild(asn1.toHexDOM());
-        if (id('pem').value === '') 
-            id('pem').value = hex;
-        // update URL hash
-        if (hex.length > 10240)
-            window.location.hash = hash = '#';
-        else try {
+        if (der.length > maxLength)
+            return;
+        if (area.value === '') 
+            area.value = hex;
+        try {
             window.location.hash = hash = '#' + hex;
-        } catch (e) { // fails with "Access Denied" on IE with URLs longer than ~2048 bytes
+        } catch (e) { // fails with "Access Denied" on IE with URLs longer than ~2048 chars
             window.location.hash = hash = '#';
         }
     } catch (e) {
-        tree.innerHTML = toHTML(e);
+        text(tree, e);
     }
-    return false;
 }
 function decodeArea() {
     try {
-        var pem = id('pem').value;
-        var der = reHex.test(pem) ? Hex.decode(pem) : Base64.unarmor(pem);
+        var val = area.value,
+            der = reHex.test(val) ? Hex.decode(val) : Base64.unarmor(val);
         decode(der);
     } catch (e) {
-        id('tree').innerHTML = toHTML(e);
-        id('dump').innerHTML = '';
+        text(tree, e);
+        dump.innerHTML = '';
     }
-    return false;
 }
 function decodeBinaryString(str) {
     var der;
@@ -58,43 +61,38 @@ function decodeBinaryString(str) {
             der = str;
         decode(der);
     } catch (e) {
-        id('tree').innerHTML = 'Cannot decode file.';
-        id('dump').innerHTML = '';
+        text(tree, 'Cannot decode file.');
+        dump.innerHTML = '';
     }
-    return false;
 }
 function clearAll() {
-    id('pem').value = '';
-    id('tree').innerHTML = '';
-    id('dump').innerHTML = '';
+    area.value = '';
+    tree.innerHTML = '';
+    dump.innerHTML = '';
     hash = window.location.hash = '';
-    return false;
 }
 // this is only used if window.FileReader
 function read(f) {
-    id('pem').value = ''; // clear text area, will get hex content
+    area.value = ''; // clear text area, will get hex content
     var r = new FileReader();
     r.onloadend = function () {
-        if (r.error) {
+        if (r.error)
             alert("Your browser couldn't read the specified file (error code " + r.error.code + ").");
-        } else
+        else
             decodeBinaryString(r.result);
     };
     r.readAsBinaryString(f);
 }
 function load() {
-    var file = id('file');
-    if (file.files.length === 0) {
+    if (file.files.length === 0)
         alert("Select a file to load first.");
-        return false;
-    }
-    read(file.files[0]);
-    return false;
+    else
+        read(file.files[0]);
 }
 function loadFromHash() {
     if (window.location.hash && window.location.hash != hash) {
         hash = window.location.hash;
-        id('pem').value = hash.substring(1);
+        area.value = hash.substr(1);
         decodeArea();
     }
 }
@@ -107,15 +105,15 @@ function dragAccept(e) {
     if (e.dataTransfer.files.length > 0)
         read(e.dataTransfer.files[0]);
 }
-window.onload = function () {
-    if ('onhashchange' in window)
-        window.onhashchange = loadFromHash;
-    loadFromHash();
-    document.ondragover = stop;
-    document.ondragleave = stop;
-    if ('FileReader' in window) {
-        id('file').style.display = 'block';
-        id('file').onchange = load;
-        document.ondrop = dragAccept;
-    }
-};
+// main
+if ('onhashchange' in window)
+    window.onhashchange = loadFromHash;
+loadFromHash();
+document.ondragover = stop;
+document.ondragleave = stop;
+if ('FileReader' in window) {
+    file.style.display = 'block';
+    file.onchange = load;
+    document.ondrop = dragAccept;
+}
+
