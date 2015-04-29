@@ -7,6 +7,10 @@ var maxLength = 10240,
     tree = id('tree'),
     dump = id('dump'),
     wantHex = id('wantHex'),
+    wantSchema = id('wantSchema'),
+    wantToObject=id("wantToObject"),
+    areaSchema = id('area-schema'),
+    areaObject = id("areaObject"),
     area = id('area'),
     file = id('file'),
     hash = null;
@@ -19,9 +23,30 @@ function text(el, string) {
     else
         el.innerText = string;
 }
+function printObject(o, t) {
+    if (!t) t = 0;
+    var s = '';
+    for (var i in o) {
+        s += printTab(t) + i + ": ";
+        if (typeof o[i] == "object")
+            s += "\n" + printObject(o[i], t + 1);
+        else {
+            s += o[i].replace(/\n/, " ");
+            s += "\n";
+        }
+    }
+    return s;
+}
+function printTab(t) {
+    var s = '';
+    for (var i = 0; i < t; i++)
+        s += '\t';
+    return s;
+}
 function decode(der) {
     tree.innerHTML = '';
     dump.innerHTML = '';
+    areaObject.value === '';
     try {
         var asn1 = ASN1.decode(der);
         tree.appendChild(asn1.toDOM());
@@ -34,6 +59,14 @@ function decode(der) {
             window.location.hash = hash = '#' + hex;
         } catch (e) { // fails with "Access Denied" on IE with URLs longer than ~2048 chars
             window.location.hash = hash = '#';
+        }
+        if (wantSchema.checked) {
+            var res = ASN1Schema.parse(areaSchema.value);
+            ASN1.schemas.import(res);
+            if (wantToObject.checked) {
+                var o = ASN1Schema.get(res[0]).toObject(asn1);
+                areaObject.value = printObject(o)
+            }
         }
     } catch (e) {
         text(tree, e);
@@ -66,6 +99,7 @@ function decodeBinaryString(str) {
 }
 function clearAll() {
     area.value = '';
+    areaObject.value = '';
     tree.innerHTML = '';
     dump.innerHTML = '';
     hash = window.location.hash = '';

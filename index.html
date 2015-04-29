@@ -8,14 +8,38 @@
 </head>
 <body>
 <h1>ASN.1 JavaScript decoder</h1>
+<textarea id="area-schema" style="width: 100%;" rows="16">
+-- Custom schema
+
+CustomSchema ::= SEQUENCE {
+    version                 Version DEFAULT 1,
+    digest                  Digest,
+    crytical                BOOLEAN 
+}
+
+Version ::= INTEGER
+
+Digest ::= SEQUENCE {
+    algorithmId             AlgorithmIdentifier,
+    value                   OCTET STRING 
+}
+
+AlgorithmIdentifier  ::=  SEQUENCE  {
+    algorithm               OBJECT IDENTIFIER,
+    parameters              ANY DEFINED BY algorithm OPTIONAL 
+}
+</textarea>
 <div style="position: relative; padding-bottom: 1em;">
   <div id="dump" style="position: absolute; right: 0px;"></div>
   <div id="tree"></div>
 </div>
 <form>
   <textarea id="area" style="width: 100%;" rows="8">MCcCAQEwHzAHBgUrDgMCGgQUnhEBKvg8fTVa5r0bftJbqOES7LYBAf8=</textarea>
+  <textarea id="areaObject" style="width: 100%;" rows="8"></textarea>
   <br>
-  <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
+  <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label><br/>
+  <label title=""><input type="checkbox" id="wantSchema" checked="checked"> parse schema</label><br />
+  <label title=""><input type="checkbox" id="wantToObject" checked="checked"> parse ASN1 to Object</label><br />
   <input type="button" value="decode" onclick="decodeArea();">
   <input type="button" value="clear" onclick="clearAll();">
   <input type="file" id="file">
@@ -61,6 +85,7 @@
 <script type="text/javascript" src="oids.js"></script>
 <script type="text/javascript" src="int10.js"></script>
 <script type="text/javascript" src="asn1.js"></script>
+<script type="text/javascript" src="schema.js"></script>
 <script type="text/javascript" src="dom.js"></script>
 <script type="text/javascript" src="index.js"></script>
 </body>
