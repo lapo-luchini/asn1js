@@ -2,6 +2,7 @@ asn1js
 ======
 
 asn1js is a JavaScript generic ASN.1 parser/decoder that can decode any valid ASN.1 DER or BER structures.
+schema module allows to parse asn1 data to object using ASN1 schemas.
 
 An example page that can decode Base64-encoded (raw base64, PEM armoring and `begin-base64` are recognized) or Hex-encoded (or local files with some browsers) is included and can be used both [online on the official website](http://lapo.it/asn1js/) or [offline (ZIP file)](http://lapo.it/asn1js/asn1js.zip).
 
