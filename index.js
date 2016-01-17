@@ -91,7 +91,10 @@ function load() {
 function loadFromHash() {
     if (window.location.hash && window.location.hash != hash) {
         hash = window.location.hash;
-        area.value = hash.substr(1);
+        // Firefox is not consistent with other browsers and return an
+        // already-decoded hash string so we risk double-decoding here,
+        // but since % is not allowed in base64 nor hexadecimal, it's ok
+        area.value = decodeURIComponent(hash.substr(1));
         decodeArea();
     }
 }
@@ -115,4 +118,3 @@ if ('FileReader' in window) {
     file.onchange = load;
     document.ondrop = dragAccept;
 }
-
