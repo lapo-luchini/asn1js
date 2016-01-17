@@ -292,7 +292,10 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     //case 0x0B: // EMBEDDED_PDV
     case 0x10: // SEQUENCE
     case 0x11: // SET
-        return "(" + this.sub.length + " elem)";
+        if (this.sub !== null)
+            return "(" + this.sub.length + " elem)";
+        else
+            return "(no elem)";
     case 0x0C: // UTF8String
         return stringCut(this.stream.parseStringUTF(content, content + len), maxLength);
     case 0x12: // NumericString
