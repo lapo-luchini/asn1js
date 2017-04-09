@@ -1,4 +1,4 @@
-// Converted from: https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
+﻿// Converted from: https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
 // which is made by Peter Gutmann and whose license states:
 //   You can use this code in whatever way you want,
 //   as long as you don't try to claim you wrote it.
@@ -2223,5 +2223,15 @@ oids = {
 "1.3.6.1.4.1.40869.1.1.22.3": { "d": "TWCA EV policy", "c": "TWCA Root Certification Authority", "w": false },
 "2.16.840.1.113733.1.7.23.6": { "d": "VeriSign EV policy", "c": "VeriSign Class 3 Public Primary Certification Authority", "w": false },
 "2.16.840.1.114171.500.9": { "d": "Wells Fargo EV policy", "c": "Wells Fargo WellsSecure Public Root Certificate Authority", "w": false },
+
+"1.2.643.100.1": { "d": "OGRN", "c": "ОГРН организации", "w":false},
+"1.2.643.100.5": { "d": "OGRNIP", "c": "ОГРН ИП или ФЛ", "w":false},
+"1.2.643.3.131.1.1": { "d": "INN", "c": "ИНН", "w":false},
+"1.2.643.100.3": { "d": "SNILS", "c": "СНИЛС", "w":false},
+"1.2.643.100.111": { "d": "SubjectSignTool", "c": "Инструмент создания сертификата", "w":false},
+"1.2.643.100.112": { "d": "IssuerSignTool", "c": "Инструмент выпуска сертификата", "w":false},
+"1.2.643.100.113.1": { "d": "KC1", "c": "KC1", "w":false},
+"1.2.643.100.113.2": { "d": "KC2", "c": "KC2", "w":false},
+"1.2.643.100.113.3": { "d": "KC3", "c": "KC3", "w":false},
 "END": ""
 };

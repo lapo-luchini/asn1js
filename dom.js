@@ -48,12 +48,15 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
         }
     };
 
-ASN1.prototype.toDOM = function () {
+ASN1.prototype.toDOM = function (spaces) {
     var node = DOM.tag("div", "node");
     node.asn1 = this;
     var head = DOM.tag("div", "head");
     var s = this.typeName().replace(/_/g, " ");
-    head.innerHTML = s;
+    if (spaces == undefined)
+    	spaces = "";
+    head.innerHTML = "<span class='spaces'>" + spaces  + "</span>" + s;
+    spaces = spaces + "&nbsp;&nbsp;";
     var content = this.content(contentLength);
     if (content !== null) {
         var preview = DOM.tag("span", "preview"),
@@ -86,8 +89,22 @@ ASN1.prototype.toDOM = function () {
         if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
             var oid = oids[content];
             if (oid) {
-                if (oid.d) s += "<br>" + oid.d;
-                if (oid.c) s += "<br>" + oid.c;
+                if (oid.d)
+                {
+                    s += "<br>" + oid.d;
+                    var debug = DOM.tag("span", "debugOID");
+                    debug.innerHTML = "&nbsp;";
+                    debug.appendChild(DOM.text(oid.d));
+                    head.appendChild(debug);
+                }
+                if (oid.c)
+                {
+                    s += "<br>" + oid.c;
+                    var debug = DOM.tag("span", "debugOID2");
+                    debug.innerHTML = "&nbsp;";
+                    debug.appendChild(DOM.text("(" + oid.c + ")"));
+                    head.appendChild(debug);
+                }
                 if (oid.w) s += "<br>(warning!)";
             }
         }
@@ -97,7 +114,7 @@ ASN1.prototype.toDOM = function () {
     var sub = DOM.tag("div", "sub");
     if (this.sub !== null) {
         for (var i = 0, max = this.sub.length; i < max; ++i)
-            sub.appendChild(this.sub[i].toDOM());
+            sub.appendChild(this.sub[i].toDOM(spaces));
     }
     node.appendChild(sub);
     head.onclick = function () {
