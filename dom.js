@@ -61,6 +61,21 @@ ASN1.prototype.toDOM = function () {
         content = String(content); // it might be a number
         shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
         preview.appendChild(DOM.text(shortContent));
+        if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
+            var oid = oids[content];
+            if (oid) {
+                if (oid.d) {
+                    var oidd = DOM.tag("span", "oid description");
+                    oidd.appendChild(DOM.text(oid.d));
+                    preview.appendChild(oidd);
+                }
+                if (oid.c) {
+                    var oidc = DOM.tag("span", "oid comment");
+                    oidc.appendChild(DOM.text("(" + oid.c + ")"));
+                    preview.appendChild(oidc);
+                }
+            }
+        }
         head.appendChild(preview);
         content = DOM.breakLines(content, lineLength);
         content = content.replace(/</g, "&lt;");
