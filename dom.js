@@ -57,9 +57,11 @@ ASN1.prototype.toDOM = function () {
     var content = this.content(contentLength);
     if (content !== null) {
         var preview = DOM.tag("span", "preview"),
-            shortContent;
+            prettyContent, shortContent;
         content = String(content); // it might be a number
-        shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
+        prettyContent = ((typeof oids === 'object') && this.tag.isUniversal() && (this.tag.tagNumber == 0x06) && oids[content]) ?
+            oids[content].d : content;
+        shortContent = (prettyContent.length > lineLength) ? prettyContent.substring(0, lineLength) + DOM.ellipsis : prettyContent;
         preview.appendChild(DOM.text(shortContent));
         if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
             var oid = oids[content];
