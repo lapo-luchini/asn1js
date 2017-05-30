@@ -4,7 +4,7 @@
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
 // copyright notice and this permission notice appear in all copies.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 // WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -397,8 +397,13 @@ ASN1.decode = function (stream) {
             if (len !== null) {
                 // definite length
                 var end = start + len;
-                while (stream.pos < end)
+                while (stream.pos < end) {
+                  if (stream.enc.length <= stream.pos) {
+                    throw "Requesting byte offset " + stream.pos + " in a stream of length " + stream.enc.length;
+                  } else {
                     sub[sub.length] = ASN1.decode(stream);
+                  }
+                }
                 if (stream.pos != end)
                     throw "Content size is not correct for container starting at offset " + start;
             } else {
@@ -445,4 +450,5 @@ ASN1.decode = function (stream) {
 // export globals
 if (typeof module !== 'undefined') { module.exports = ASN1; } else { window.ASN1 = ASN1; }
 })();
+
 
