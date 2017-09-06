@@ -198,8 +198,13 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
         if (!(v & 0x80)) { // finished
             if (s === '') {
                 n = n.simplify();
-                var m = n < 80 ? n < 40 ? 0 : 1 : 2;
-                s = m + "." + (n - m * 40);
+                if (n instanceof Int10) {
+                    n.sub(80);
+                    s = "2." + n.toString();
+                } else {
+                    var m = n < 80 ? n < 40 ? 0 : 1 : 2;
+                    s = m + "." + (n - m * 40);
+                }
             } else
                 s += "." + n.toString();
             if (s.length > maxLength)

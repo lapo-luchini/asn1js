@@ -42,6 +42,24 @@ Int10.prototype.mulAdd = function (m, c) {
         b[i] = c;
 };
 
+Int10.prototype.sub = function (c) {
+    // assert(m <= 256)
+    var b = this.buf,
+        l = b.length,
+        i, t;
+    for (i = 0; i < l; ++i) {
+        t = b[i] - c;
+        if (t < 0) {
+            t += max;
+            c = 1;
+        } else
+            c = 0;
+        b[i] = t;
+    }
+    while (b[b.length - 1] === 0)
+        b.pop();
+};
+
 Int10.prototype.toString = function (base) {
     if ((base || 10) != 10)
         throw 'only base 10 is supported';
