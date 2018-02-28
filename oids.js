@@ -1144,6 +1144,7 @@ oids = {
 "1.3.6.1.4.1.8301.3.5.1": { "d": "validityModelChain", "c": "TU Darmstadt ValidityModel", "w": false },
 "1.3.6.1.4.1.8301.3.5.2": { "d": "validityModelShell", "c": "ValidityModel", "w": false },
 "1.3.6.1.4.1.8231.1": { "d": "rolUnicoNacional", "c": "Chilean Government national unique roll number", "w": false },
+"1.3.6.1.4.1.11129.2.4.3": { "d": "ctPoison", "c": "Certificate Transparency precertificate poison extension", "w": false },
 "1.3.6.1.4.1.11591": { "d": "gnu", "c": "GNU Project (see http://www.gnupg.org/oids.html)", "w": false },
 "1.3.6.1.4.1.11591.1": { "d": "gnuRadius", "c": "GNU Radius", "w": false },
 "1.3.6.1.4.1.11591.3": { "d": "gnuRadar", "c": "GNU Radar", "w": false },
