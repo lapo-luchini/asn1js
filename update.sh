@@ -15,7 +15,7 @@ awk -v url="$URL" '
         oid = "";
         comment = "";
         description = "";
-        warning = "false";
+        warning = "";
     }
     BEGIN {
         FS = "= *";
@@ -30,7 +30,7 @@ awk -v url="$URL" '
     /^OID/         { oid = $2; }
     /^Comment/     { comment = $2; }
     /^Description/ { description = $2; }
-    /^Warning/     { warning = "true"; }
+    /^Warning/     { warning = ", \"w\": true"; }
     /^$/ {
         if (length(oid) > 0) {
             gsub(" ", ".", oid);
@@ -39,7 +39,7 @@ awk -v url="$URL" '
             if (++seen[oid] > 1)
                 print "Duplicate OID in line " NR ": " oid > "/dev/stderr";
             else
-                printf "\"%s\": { \"d\": \"%s\", \"c\": \"%s\", \"w\": %s },\n", oid, description, comment, warning;
+                printf "\"%s\": { \"d\": \"%s\", \"c\": \"%s\"%s },\n", oid, description, comment, warning;
             clean();
         }
     }
