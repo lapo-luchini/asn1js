@@ -42,6 +42,7 @@ tests = [
     ['0203800001', '-8388607', 'Negative 8388607'],
     ['02020000', '0', 'Zero (2)'],
     ['0204FFFFFFFF', '-1', 'Negative 1 (4)'],
+    ['06092A864886F70D010105', '1.2.840.113549.1.1.5\nsha1WithRSAEncryption\nPKCS #1', 'OID decoding']
 ];
 
 tests.forEach(function (t) {
