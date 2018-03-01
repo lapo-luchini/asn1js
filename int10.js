@@ -17,7 +17,7 @@
 (function () {
 "use strict";
 
-var max = 10000000000000; // biggest integer that can still fit 2^53 when multiplied by 256
+var max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
 
 function Int10(value) {
     this.buf = [+value || 0];
