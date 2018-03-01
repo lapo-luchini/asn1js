@@ -13,8 +13,6 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
-/*global oids */
 (function (undefined) {
 "use strict";
 
@@ -450,4 +448,3 @@ ASN1.decode = function (stream) {
 // export globals
 if (typeof module !== 'undefined') { module.exports = ASN1; } else { window.ASN1 = ASN1; }
 })();
-

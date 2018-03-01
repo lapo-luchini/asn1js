@@ -13,7 +13,6 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
 (function (undefined) {
 "use strict";
 
@@ -54,12 +53,12 @@ Base64.decode = function (a) {
         }
     }
     switch (char_count) {
-      case 1:
+    case 1:
         throw "Base64 encoding incomplete: at least 2 bits missing";
-      case 2:
+    case 2:
         out[out.length] = (bits >> 10);
         break;
-      case 3:
+    case 3:
         out[out.length] = (bits >> 16);
         out[out.length] = (bits >> 8) & 0xFF;
         break;
@@ -84,4 +83,3 @@ Base64.unarmor = function (a) {
 // export globals
 if (typeof module !== 'undefined') { module.exports = Base64; } else { window.Base64 = Base64; }
 })();
-

@@ -1,5 +1,4 @@
-﻿/*jshint browser: true, strict: true, globalstrict: true, indent: 4, immed: true, latedef: true, undef: true, regexdash: false */
-/*global Hex, Base64, ASN1 */
+﻿/*global Hex, Base64, ASN1 */
 "use strict";
 
 var maxLength = 10240,
