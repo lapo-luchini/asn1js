@@ -13,11 +13,11 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*global oids */
 (function (undefined) {
 "use strict";
 
 var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
+    oids = (typeof module !== 'undefined') ? require('./oids.js') : window.oids,
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
@@ -48,6 +48,7 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
     };
 
 ASN1.prototype.toDOM = function () {
+    var isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06));
     var node = DOM.tag("div", "node");
     node.asn1 = this;
     var head = DOM.tag("div", "head");
@@ -58,9 +59,11 @@ ASN1.prototype.toDOM = function () {
         var preview = DOM.tag("span", "preview"),
             shortContent;
         content = String(content); // it might be a number
+        if (isOID)
+            content = content.split('\n', 1)[0];
         shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
         preview.appendChild(DOM.text(shortContent));
-        if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
+        if (isOID) {
             var oid = oids[content];
             if (oid) {
                 if (oid.d) {
@@ -97,13 +100,10 @@ ASN1.prototype.toDOM = function () {
     //TODO if (this.tag.isUniversal() && this.tag.tagNumber == 0x03) s += "Unused bits: "
     if (content !== null) {
         s += "<br>Value:<br><b>" + content + "</b>";
-        if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
-            var oid = oids[content];
-            if (oid) {
-                if (oid.d) s += "<br>" + oid.d;
-                if (oid.c) s += "<br>" + oid.c;
-                if (oid.w) s += "<br>(warning!)";
-            }
+        if (isOID && oid) {
+            if (oid.d) s += "<br>" + oid.d;
+            if (oid.c) s += "<br>" + oid.c;
+            if (oid.w) s += "<br>(warning!)";
         }
     }
     value.innerHTML = s;

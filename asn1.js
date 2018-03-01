@@ -17,6 +17,7 @@
 "use strict";
 
 var Int10 = (typeof module !== 'undefined') ? require('./int10.js') : window.Int10,
+    oids = (typeof module !== 'undefined') ? require('./oids.js') : window.oids,
     ellipsis = "\u2026",
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
@@ -213,6 +214,14 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
     }
     if (bits > 0)
         s += ".incomplete";
+    if (typeof oids === 'object') {
+        var oid = oids[s];
+        if (oid) {
+            if (oid.d) s += "\n" + oid.d;
+            if (oid.c) s += "\n" + oid.c;
+            if (oid.w) s += "\n(warning!)";
+        }
+    }
     return s;
 };
 
@@ -332,6 +341,9 @@ ASN1.prototype.toPrettyString = function (indent) {
         s += " (constructed)";
     else if ((this.tag.isUniversal() && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
         s += " (encapsulates)";
+    var content = this.content();
+    if (content)
+        s += ": " + content.replace(/\n/g, '|');
     s += "\n";
     if (this.sub !== null) {
         indent += '  ';
