@@ -29,6 +29,9 @@ Base64.decode = function (a) {
             decoder[b64.charAt(i)] = i;
         for (i = 0; i < ignore.length; ++i)
             decoder[ignore.charAt(i)] = -1;
+        // RFC 3548 URL & file safe encoding
+        decoder['-'] = decoder['+'];
+        decoder['_'] = decoder['/'];
     }
     var out = [];
     var bits = 0, char_count = 0;
