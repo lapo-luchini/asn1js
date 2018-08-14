@@ -412,6 +412,8 @@ ASN1.decode = function (stream) {
             if (len !== null) {
                 // definite length
                 var end = start + len;
+                if (end > stream.enc.length)
+                    throw 'Container at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream';
                 while (stream.pos < end)
                     sub[sub.length] = ASN1.decode(stream);
                 if (stream.pos != end)
