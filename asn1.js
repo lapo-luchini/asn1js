@@ -417,7 +417,7 @@ ASN1.decode = function (stream) {
                 while (stream.pos < end)
                     sub[sub.length] = ASN1.decode(stream);
                 if (stream.pos != end)
-                    throw "Content size is not correct for container starting at offset " + start;
+                    throw 'Content size is not correct for container at offset ' + start;
             } else {
                 // undefined length
                 try {
@@ -429,7 +429,7 @@ ASN1.decode = function (stream) {
                     }
                     len = start - stream.pos; // undefined lengths are represented as negative values
                 } catch (e) {
-                    throw "Exception while decoding undefined length content: " + e;
+                    throw 'Exception while decoding undefined length content at offset ' + start + ': ' + e;
                 }
             }
         };
@@ -449,6 +449,7 @@ ASN1.decode = function (stream) {
         } catch (e) {
             // but silently ignore when they don't
             sub = null;
+            //DEBUG console.log('Could not decode structure at ' + start + ':', e);
         }
     }
     if (sub === null) {
