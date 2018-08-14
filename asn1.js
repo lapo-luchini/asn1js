@@ -139,7 +139,7 @@ Stream.prototype.parseInteger = function (start, end) {
         v = this.get(start);
     len = end - start;
     if (len === 0)
-        return neg ? -1 : 0;
+        return neg ? '-1' : '0';
     // show bit length of huge integers
     if (len > 4) {
         s = v;
