@@ -64,7 +64,6 @@ ASN1.prototype.toDOM = function (spaces) {
     if (content !== null) {
         var preview = DOM.tag("span", "preview"),
             shortContent;
-        content = String(content); // it might be a number
         if (isOID)
             content = content.split('\n', 1)[0];
         shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
