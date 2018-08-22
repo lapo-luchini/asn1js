@@ -30,6 +30,12 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
         text: function (str) {
             return document.createTextNode(str);
         },
+        space: function () {
+            var t = document.createElement('span');
+            t.className = 'spaces';
+            t.innerHTML = ' ';
+            return t;
+        },
         breakLines: function (str, length) {
             var lines = str.split(/\r?\n/),
                 o = '';
@@ -48,15 +54,12 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
     };
 
 ASN1.prototype.toDOM = function (spaces) {
+    spaces = spaces || '';
     var isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06));
     var node = DOM.tag("div", "node");
     node.asn1 = this;
     var head = DOM.tag("div", "head");
-    var s = this.typeName().replace(/_/g, " ");
-    if (spaces == undefined)
-    	spaces = "";
-    head.innerHTML = "<span class='spaces'>" + spaces  + "</span>" + s;
-    spaces = spaces + "&nbsp;&nbsp;";
+    head.innerHTML = "<span class='spaces'>" + spaces + "</span>" + this.typeName().replace(/_/g, " ");
     var content = this.content(contentLength);
     if (content !== null) {
         var preview = DOM.tag("span", "preview"),
@@ -65,16 +68,19 @@ ASN1.prototype.toDOM = function (spaces) {
         if (isOID)
             content = content.split('\n', 1)[0];
         shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
+        preview.appendChild(DOM.space());
         preview.appendChild(DOM.text(shortContent));
         if (isOID) {
             var oid = oids[content];
             if (oid) {
                 if (oid.d) {
+                    preview.appendChild(DOM.space());
                     var oidd = DOM.tag("span", "oid description");
                     oidd.appendChild(DOM.text(oid.d));
                     preview.appendChild(oidd);
                 }
                 if (oid.c) {
+                    preview.appendChild(DOM.space());
                     var oidc = DOM.tag("span", "oid comment");
                     oidc.appendChild(DOM.text("(" + oid.c + ")"));
                     preview.appendChild(oidc);
@@ -90,7 +96,7 @@ ASN1.prototype.toDOM = function (spaces) {
     this.node = node;
     this.head = head;
     var value = DOM.tag("div", "value");
-    s = "Offset: " + this.stream.pos + "<br>";
+    var s = "Offset: " + this.stream.pos + "<br>";
     s += "Length: " + this.header + "+";
     if (this.length >= 0)
         s += this.length;
@@ -113,6 +119,7 @@ ASN1.prototype.toDOM = function (spaces) {
     node.appendChild(value);
     var sub = DOM.tag("div", "sub");
     if (this.sub !== null) {
+        spaces += '\xA0 ';
         for (var i = 0, max = this.sub.length; i < max; ++i)
             sub.appendChild(this.sub[i].toDOM(spaces));
     }
