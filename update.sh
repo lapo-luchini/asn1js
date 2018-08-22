@@ -46,7 +46,7 @@ awk -v url="$URL" '
     END {
         print "\"END\": \"\""
         print "};"
-        print "if (typeof module !== 'undefined') { module.exports = oids; }"
+        print "if (typeof module !== " apos "undefined" apos ") { module.exports = oids; }"
     }
 ' >oids.js
 echo Conversion completed.
