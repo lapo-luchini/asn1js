@@ -512,6 +512,7 @@ var oids = {
 "1.2.643.2.2.30.1": { "d": "cryptoProDigestA", "c": "CryptoPro digest params A (default, variant 'Verba-O') for GOST R 34.11-94" },
 "1.2.643.2.2.30.2": { "d": "cryptoProDigestB", "c": "CryptoPro digest params B (variant 1) for GOST R 34.11-94" },
 "1.2.643.2.2.30.3": { "d": "cryptoProDigestC", "c": "CryptoPro digest params C (variant 2) for GOST R 34.11-94" },
+"1.2.643.2.2.30.4": { "d": "cryptoProDigestD", "c": "CryptoPro digest params D (variant 3) for GOST R 34.11-94" },
 "1.2.643.2.2.32.2": { "d": "cryptoPro94SignA", "c": "CryptoPro sign params A (default, variant 'Verba-O') for GOST R 34.10-94" },
 "1.2.643.2.2.32.3": { "d": "cryptoPro94SignB", "c": "CryptoPro sign params B (variant 1) for GOST R 34.10-94" },
 "1.2.643.2.2.32.4": { "d": "cryptoPro94SignC", "c": "CryptoPro sign params C (variant 2) for GOST R 34.10-94" },
