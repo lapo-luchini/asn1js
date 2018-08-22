@@ -1,5 +1,5 @@
 // Big integer base-10 printing library
-// Copyright (c) 2014 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2014-2018 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,11 +13,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
 (function () {
 "use strict";
 
-var max = 10000000000000; // biggest integer that can still fit 2^53 when multiplied by 256
+var max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
 
 function Int10(value) {
     this.buf = [+value || 0];
@@ -40,6 +39,24 @@ Int10.prototype.mulAdd = function (m, c) {
     }
     if (c > 0)
         b[i] = c;
+};
+
+Int10.prototype.sub = function (c) {
+    // assert(m <= 256)
+    var b = this.buf,
+        l = b.length,
+        i, t;
+    for (i = 0; i < l; ++i) {
+        t = b[i] - c;
+        if (t < 0) {
+            t += max;
+            c = 1;
+        } else
+            c = 0;
+        b[i] = t;
+    }
+    while (b[b.length - 1] === 0)
+        b.pop();
 };
 
 Int10.prototype.toString = function (base) {

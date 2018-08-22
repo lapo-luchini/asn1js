@@ -15,7 +15,7 @@ awk -v url="$URL" '
         oid = "";
         comment = "";
         description = "";
-        warning = "false";
+        warning = "";
     }
     BEGIN {
         FS = "= *";
@@ -25,12 +25,12 @@ awk -v url="$URL" '
         print "// which is made by Peter Gutmann and whose license states:";
         print "//   You can use this code in whatever way you want,";
         print "//   as long as you don" apos "t try to claim you wrote it.";
-        print "oids = {";
+        print "var oids = {";
     }
     /^OID/         { oid = $2; }
     /^Comment/     { comment = $2; }
     /^Description/ { description = $2; }
-    /^Warning/     { warning = "true"; }
+    /^Warning/     { warning = ", \"w\": true"; }
     /^$/ {
         if (length(oid) > 0) {
             gsub(" ", ".", oid);
@@ -39,13 +39,14 @@ awk -v url="$URL" '
             if (++seen[oid] > 1)
                 print "Duplicate OID in line " NR ": " oid > "/dev/stderr";
             else
-                printf "\"%s\": { \"d\": \"%s\", \"c\": \"%s\", \"w\": %s },\n", oid, description, comment, warning;
+                printf "\"%s\": { \"d\": \"%s\", \"c\": \"%s\"%s },\n", oid, description, comment, warning;
             clean();
         }
     }
     END {
         print "\"END\": \"\""
         print "};"
+        print "if (typeof module !== " apos "undefined" apos ") { module.exports = oids; }"
     }
 ' >oids.js
 echo Conversion completed.

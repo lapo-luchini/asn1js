@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2014 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2018 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,12 +13,11 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
-/*global oids */
 (function (undefined) {
 "use strict";
 
 var Int10 = (typeof module !== 'undefined') ? require('./int10.js') : window.Int10,
+    oids = (typeof module !== 'undefined') ? require('./oids.js') : window.oids,
     ellipsis = "\u2026",
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
@@ -34,6 +33,7 @@ function Stream(enc, pos) {
         this.enc = enc.enc;
         this.pos = enc.pos;
     } else {
+        // enc should be an array or a binary string
         this.enc = enc;
         this.pos = pos;
     }
@@ -43,7 +43,7 @@ Stream.prototype.get = function (pos) {
         pos = this.pos++;
     if (pos >= this.enc.length)
         throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
-    return this.enc[pos];
+    return (typeof this.enc == "string") ? this.enc.charCodeAt(pos) : this.enc[pos];
 };
 Stream.prototype.hexDigits = "0123456789ABCDEF";
 Stream.prototype.hexByte = function (b) {
@@ -139,7 +139,7 @@ Stream.prototype.parseInteger = function (start, end) {
         v = this.get(start);
     len = end - start;
     if (len === 0)
-        return neg ? -1 : 0;
+        return neg ? '-1' : '0';
     // show bit length of huge integers
     if (len > 4) {
         s = v;
@@ -161,13 +161,12 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
     var unusedBit = this.get(start),
         lenBit = ((end - start - 1) << 3) - unusedBit,
         intro = "(" + lenBit + " bit)\n",
-        s = "",
-        skip = unusedBit;
-    for (var i = end - 1; i > start; --i) {
-        var b = this.get(i);
-        for (var j = skip; j < 8; ++j)
+        s = "";
+    for (var i = start + 1; i < end; ++i) {
+        var b = this.get(i),
+            skip = (i == end - 1) ? unusedBit : 0;
+        for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
-        skip = 0;
         if (s.length > maxLength)
             return intro + stringCut(s, maxLength);
     }
@@ -198,8 +197,13 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
         if (!(v & 0x80)) { // finished
             if (s === '') {
                 n = n.simplify();
-                var m = n < 80 ? n < 40 ? 0 : 1 : 2;
-                s = m + "." + (n - m * 40);
+                if (n instanceof Int10) {
+                    n.sub(80);
+                    s = "2." + n.toString();
+                } else {
+                    var m = n < 80 ? n < 40 ? 0 : 1 : 2;
+                    s = m + "." + (n - m * 40);
+                }
             } else
                 s += "." + n.toString();
             if (s.length > maxLength)
@@ -210,6 +214,14 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
     }
     if (bits > 0)
         s += ".incomplete";
+    if (typeof oids === 'object') {
+        var oid = oids[s];
+        if (oid) {
+            if (oid.d) s += "\n" + oid.d;
+            if (oid.c) s += "\n" + oid.c;
+            if (oid.w) s += "\n(warning!)";
+        }
+    }
     return s;
 };
 
@@ -292,7 +304,10 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     //case 0x0B: // EMBEDDED_PDV
     case 0x10: // SEQUENCE
     case 0x11: // SET
-        return "(" + this.sub.length + " elem)";
+        if (this.sub !== null)
+            return "(" + this.sub.length + " elem)";
+        else
+            return "(no elem)";
     case 0x0C: // UTF8String
         return stringCut(this.stream.parseStringUTF(content, content + len), maxLength);
     case 0x12: // NumericString
@@ -326,6 +341,9 @@ ASN1.prototype.toPrettyString = function (indent) {
         s += " (constructed)";
     else if ((this.tag.isUniversal() && ((this.tag.tagNumber == 0x03) || (this.tag.tagNumber == 0x04))) && (this.sub !== null))
         s += " (encapsulates)";
+    var content = this.content();
+    if (content)
+        s += ": " + content.replace(/\n/g, '|');
     s += "\n";
     if (this.sub !== null) {
         indent += '  ';
@@ -394,10 +412,12 @@ ASN1.decode = function (stream) {
             if (len !== null) {
                 // definite length
                 var end = start + len;
+                if (end > stream.enc.length)
+                    throw 'Container at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream';
                 while (stream.pos < end)
                     sub[sub.length] = ASN1.decode(stream);
                 if (stream.pos != end)
-                    throw "Content size is not correct for container starting at offset " + start;
+                    throw 'Content size is not correct for container at offset ' + start;
             } else {
                 // undefined length
                 try {
@@ -409,7 +429,7 @@ ASN1.decode = function (stream) {
                     }
                     len = start - stream.pos; // undefined lengths are represented as negative values
                 } catch (e) {
-                    throw "Exception while decoding undefined length content: " + e;
+                    throw 'Exception while decoding undefined length content at offset ' + start + ': ' + e;
                 }
             }
         };
@@ -417,9 +437,11 @@ ASN1.decode = function (stream) {
         // must have valid content
         getSub();
     } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
-        if (tag.tagNumber == 0x03) stream.get(); // skip BitString unused bits, must be in [0, 7]
-        // sometimes BitString and OctetString do contain ASN.1
+        // sometimes BitString and OctetString are used to encapsulate ASN.1
         try {
+            if (tag.tagNumber == 0x03)
+                if (stream.get() != 0)
+                    throw "BIT STRINGs with unused bits cannot encapsulate.";
             getSub();
             for (var i = 0; i < sub.length; ++i)
                 if (sub[i].tag.isEOC())
@@ -427,6 +449,7 @@ ASN1.decode = function (stream) {
         } catch (e) {
             // but silently ignore when they don't
             sub = null;
+            //DEBUG console.log('Could not decode structure at ' + start + ':', e);
         }
     }
     if (sub === null) {

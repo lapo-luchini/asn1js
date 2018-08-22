@@ -1,5 +1,5 @@
 // Base64 JavaScript decoder
-// Copyright (c) 2008-2014 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2018 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,7 +13,6 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
 (function (undefined) {
 "use strict";
 
@@ -30,6 +29,9 @@ Base64.decode = function (a) {
             decoder[b64.charAt(i)] = i;
         for (i = 0; i < ignore.length; ++i)
             decoder[ignore.charAt(i)] = -1;
+        // RFC 3548 URL & file safe encoding
+        decoder['-'] = decoder['+'];
+        decoder['_'] = decoder['/'];
     }
     var out = [];
     var bits = 0, char_count = 0;
@@ -54,12 +56,12 @@ Base64.decode = function (a) {
         }
     }
     switch (char_count) {
-      case 1:
+    case 1:
         throw "Base64 encoding incomplete: at least 2 bits missing";
-      case 2:
+    case 2:
         out[out.length] = (bits >> 10);
         break;
-      case 3:
+    case 3:
         out[out.length] = (bits >> 16);
         out[out.length] = (bits >> 8) & 0xFF;
         break;

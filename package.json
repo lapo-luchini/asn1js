@@ -1,0 +1,38 @@
+{
+  "name": "@lapo/asn1js",
+  "version": "1.0.1",
+  "description": "Generic ASN.1 parser/decoder that can decode any valid ASN.1 DER or BER structures.",
+  "main": "asn1.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lapo-luchini/asn1js.git"
+  },
+  "keywords": [ "asn1", "ber", "der", "pem" ],
+  "author": "Lapo Luchini <lapo@lapo.it>",
+  "license": "ISC",
+  "bugs": { "url": "https://github.com/lapo-luchini/asn1js/issues" },
+  "homepage": "https://lapo.it/asn1js/",
+  "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "extends": [ "eslint:recommended" ],
+    "rules": {
+      "strict": [ "error", "function" ],
+      "indent": [ "error", 4, { "outerIIFEBody": 0 } ],
+      "linebreak-style": [ "error", "unix" ],
+      "semi": [ "warn", "always" ],
+      "comma-dangle": [ "error", "never" ]
+    },
+    "overrides": [
+      {
+        "files": [ "index.js", "test.js" ],
+        "rules": {
+          "strict": [ "error", "global" ]
+        }
+      }
+    ]
+  }
+}

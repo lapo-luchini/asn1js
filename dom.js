@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2014 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2018 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,12 +13,11 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-/*jshint browser: true, strict: true, immed: true, latedef: true, undef: true, regexdash: false */
-/*global oids, ASN1 */
 (function (undefined) {
 "use strict";
 
 var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
+    oids = (typeof module !== 'undefined') ? require('./oids.js') : window.oids,
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
@@ -49,6 +48,7 @@ var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
     };
 
 ASN1.prototype.toDOM = function (spaces) {
+    var isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06));
     var node = DOM.tag("div", "node");
     node.asn1 = this;
     var head = DOM.tag("div", "head");
@@ -62,8 +62,25 @@ ASN1.prototype.toDOM = function (spaces) {
         var preview = DOM.tag("span", "preview"),
             shortContent;
         content = String(content); // it might be a number
+        if (isOID)
+            content = content.split('\n', 1)[0];
         shortContent = (content.length > lineLength) ? content.substring(0, lineLength) + DOM.ellipsis : content;
         preview.appendChild(DOM.text(shortContent));
+        if (isOID) {
+            var oid = oids[content];
+            if (oid) {
+                if (oid.d) {
+                    var oidd = DOM.tag("span", "oid description");
+                    oidd.appendChild(DOM.text(oid.d));
+                    preview.appendChild(oidd);
+                }
+                if (oid.c) {
+                    var oidc = DOM.tag("span", "oid comment");
+                    oidc.appendChild(DOM.text("(" + oid.c + ")"));
+                    preview.appendChild(oidc);
+                }
+            }
+        }
         head.appendChild(preview);
         content = DOM.breakLines(content, lineLength);
         content = content.replace(/</g, "&lt;");
@@ -86,13 +103,10 @@ ASN1.prototype.toDOM = function (spaces) {
     //TODO if (this.tag.isUniversal() && this.tag.tagNumber == 0x03) s += "Unused bits: "
     if (content !== null) {
         s += "<br>Value:<br><b>" + content + "</b>";
-        if ((typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06))) {
-            var oid = oids[content];
-            if (oid) {
-                if (oid.d) s += "<br>" + oid.d;
-                if (oid.c) s += "<br>" + oid.c;
-                if (oid.w) s += "<br>(warning!)";
-            }
+        if (isOID && oid) {
+            if (oid.d) s += "<br>" + oid.d;
+            if (oid.c) s += "<br>" + oid.c;
+            if (oid.w) s += "<br>(warning!)";
         }
     }
     value.innerHTML = s;
@@ -152,10 +166,24 @@ ASN1.prototype.toHexDOM = function (root) {
     };
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
-    if (this.sub === null)
-        node.appendChild(DOM.text(
-            this.stream.hexDump(this.posContent(), this.posEnd())));
-    else if (this.sub.length > 0) {
+    if (this.sub === null) {
+        var start = this.posContent();
+        var end = this.posEnd();
+        if (end - start < 10 * 16)
+            node.appendChild(DOM.text(
+                this.stream.hexDump(start, end)));
+        else {
+            var end1 = start + 5 * 16 - (start & 0xF);
+            var start2 = end - 16 - (end & 0xF);
+            node.appendChild(DOM.text(
+                this.stream.hexDump(start, end1)));
+            var sub = DOM.tag("span", "skip");
+            sub.appendChild(DOM.text("\u2026 skipping " + (start2 - end1) + " bytes \u2026\n"));
+            node.appendChild(sub);
+            node.appendChild(DOM.text(
+                this.stream.hexDump(start2, end)));
+        }
+    } else if (this.sub.length > 0) {
         var first = this.sub[0];
         var last = this.sub[this.sub.length - 1];
         this.toHexDOM_sub(node, "intro", this.stream, this.posContent(), first.posStart());

@@ -69,6 +69,11 @@ html, body {
     color: #505050;
     font-weight: normal;
 }
+.preview > .oid {
+    margin-left: 1em;
+    color: #808080;
+    font-weight: normal;
+}
 .spaces {
     font-size: 0px;
 }
@@ -88,6 +93,7 @@ html, body {
 #dump .ulen            { color: darkgreen; }
 #dump .intro           { color: blue; }
 #dump .outro           { color: darkgreen; }
+#dump .skip            { color: #666666; }
 #dump .hexCurrent      { background-color: #808080; }
 #dump .hexCurrent .hex { background-color: #A0A0A0; }
 #file { display: none; }
