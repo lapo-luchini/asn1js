@@ -13,27 +13,12 @@
   <div id="tree"></div>
 </div>
 <form>
-  <textarea id="area" style="width: 100%;" rows="8">
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIAwggHvMIIB
-WKADAgECAhAvoXazbunwSfREtACZZhlFMA0GCSqGSIb3DQEBBQUAMAwxCjAIBgNVBAMMAWEwHhcN
-MDgxMDE1MTUwMzQxWhcNMDkxMDE1MTUwMzQxWjAMMQowCAYDVQQDDAFhMIGfMA0GCSqGSIb3DQEB
-AQUAA4GNADCBiQKBgQCJUwlwhu5hR8X01f+vG0mKPRHsVRjpZNxSEmsmFPdDiD9kylE3ertTDf0g
-RkpIvWfNJ+eymuxoXF0Qgl5gXAVuSrjupGD6J+VapixJiwLXJHokmDihLs3zfGARz08O3qnO5ofB
-y0pRxq5isu/bAAcjoByZ1sI/g0iAuotC1UFObwIDAQABo1IwUDAOBgNVHQ8BAf8EBAMCBPAwHQYD
-VR0OBBYEFEIGXQB4h+04Z3y/n7Nv94+CqPitMB8GA1UdIwQYMBaAFEIGXQB4h+04Z3y/n7Nv94+C
-qPitMA0GCSqGSIb3DQEBBQUAA4GBAE0G7tAiaacJxvP3fhEj+yP9VDxL0omrRRAEaMXwWaBf/Ggk
-1T/u+8/CDAdjuGNCiF6ctooKc8u8KpnZJsGqnpGQ4n6L2KjTtRUDh+hija0eJRBFdirPQe2HAebQ
-GFnmOk6Mn7KiQfBIsOzXim/bFqaBSbf06bLTQNwFouSO+jwOAAAxggElMIIBIQIBATAgMAwxCjAI
-BgNVBAMMAWECEC+hdrNu6fBJ9ES0AJlmGUUwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTA4MTAxNTE1MDM0M1owIwYJKoZIhvcNAQkEMRYEFAAA
-AAAAAAAAAAAAAAAAAAAAAAAAMA0GCSqGSIb3DQEBAQUABIGAdB7ShyMGf5lVdZtvwKlnYLHMUqJW
-uBnFk7aQwHAmg3JnH6OcgId2F+xfg6twXm8hhUBkhHPlHGoWa5kQtN9n8rz3NorzvcM/1Xv9+0Ea
-l7NYSn2Hb0C0DMj2XNIYH2C6CLIHkmy1egzUvzsomZPTkx5nGDWm+8WHCjWb9A6lyrMAAAAAAAA=
-</textarea>
+  <textarea id="area" style="width: 100%;" rows="8"></textarea>
   <br>
   <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
-  <input type="button" value="decode" onclick="decodeArea();">
-  <input type="button" value="clear" onclick="clearAll();">
+  <input id="butDecode" type="button" value="decode">
+  <input id="butClear" type="button" value="clear">
+  <input id="butExample" type="button" value="example">
   <input type="file" id="file">
 </form>
 <div id="help">

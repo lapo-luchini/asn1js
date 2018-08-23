@@ -26,11 +26,11 @@ function decode(der) {
         tree.appendChild(asn1.toDOM());
         if (wantHex.checked)
             dump.appendChild(asn1.toHexDOM());
-        var hex = (der.length < maxLength) ? asn1.toHexString() : '';
-        if (area.value === '') 
-            area.value = hex;
+        var b64 = (der.length < maxLength) ? asn1.toB64String() : '';
+        if (area.value === '')
+            area.value = Base64.pretty(b64);
         try {
-            window.location.hash = hash = '#' + hex;
+            window.location.hash = hash = '#' + b64;
         } catch (e) { // fails with "Access Denied" on IE with URLs longer than ~2048 chars
             window.location.hash = hash = '#';
         }
@@ -38,10 +38,9 @@ function decode(der) {
         text(tree, e);
     }
 }
-function decodeArea() {
+function decodeText(val) {
     try {
-        var val = area.value,
-            der = reHex.test(val) ? Hex.decode(val) : Base64.unarmor(val);
+        var der = reHex.test(val) ? Hex.decode(val) : Base64.unarmor(val);
         decode(der);
     } catch (e) {
         text(tree, e);
@@ -63,15 +62,21 @@ function decodeBinaryString(str) {
         dump.innerHTML = '';
     }
 }
-function clearAll() {
+// set up buttons
+id('butDecode').onclick = function () { decodeText(area.value); };
+id('butClear').onclick = function () {
     area.value = '';
     tree.innerHTML = '';
     dump.innerHTML = '';
     hash = window.location.hash = '';
 }
+id('butExample').onclick = function () {
+    var demo = 'MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIAwggHvMIIBWKADAgECAhAvoXazbunwSfREtACZZhlFMA0GCSqGSIb3DQEBBQUAMAwxCjAIBgNVBAMMAWEwHhcNMDgxMDE1MTUwMzQxWhcNMDkxMDE1MTUwMzQxWjAMMQowCAYDVQQDDAFhMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCJUwlwhu5hR8X01f-vG0mKPRHsVRjpZNxSEmsmFPdDiD9kylE3ertTDf0gRkpIvWfNJ-eymuxoXF0Qgl5gXAVuSrjupGD6J-VapixJiwLXJHokmDihLs3zfGARz08O3qnO5ofBy0pRxq5isu_bAAcjoByZ1sI_g0iAuotC1UFObwIDAQABo1IwUDAOBgNVHQ8BAf8EBAMCBPAwHQYDVR0OBBYEFEIGXQB4h-04Z3y_n7Nv94-CqPitMB8GA1UdIwQYMBaAFEIGXQB4h-04Z3y_n7Nv94-CqPitMA0GCSqGSIb3DQEBBQUAA4GBAE0G7tAiaacJxvP3fhEj-yP9VDxL0omrRRAEaMXwWaBf_Ggk1T_u-8_CDAdjuGNCiF6ctooKc8u8KpnZJsGqnpGQ4n6L2KjTtRUDh-hija0eJRBFdirPQe2HAebQGFnmOk6Mn7KiQfBIsOzXim_bFqaBSbf06bLTQNwFouSO-jwOAAAxggElMIIBIQIBATAgMAwxCjAIBgNVBAMMAWECEC-hdrNu6fBJ9ES0AJlmGUUwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTA4MTAxNTE1MDM0M1owIwYJKoZIhvcNAQkEMRYEFAAAAAAAAAAAAAAAAAAAAAAAAAAAMA0GCSqGSIb3DQEBAQUABIGAdB7ShyMGf5lVdZtvwKlnYLHMUqJWuBnFk7aQwHAmg3JnH6OcgId2F-xfg6twXm8hhUBkhHPlHGoWa5kQtN9n8rz3NorzvcM_1Xv9-0Eal7NYSn2Hb0C0DMj2XNIYH2C6CLIHkmy1egzUvzsomZPTkx5nGDWm-8WHCjWb9A6lyrMAAAAAAAA';
+    decodeText(demo);
+};
 // this is only used if window.FileReader
 function read(f) {
-    area.value = ''; // clear text area, will get hex content
+    area.value = ''; // clear text area, will get b64 content
     var r = new FileReader();
     r.onloadend = function () {
         if (r.error)
@@ -93,8 +98,8 @@ function loadFromHash() {
         // Firefox is not consistent with other browsers and return an
         // already-decoded hash string so we risk double-decoding here,
         // but since % is not allowed in base64 nor hexadecimal, it's ok
-        area.value = decodeURIComponent(hash.substr(1));
-        decodeArea();
+        var val = decodeURIComponent(hash.substr(1));
+        decodeText(val);
     }
 }
 function stop(e) {
