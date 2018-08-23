@@ -69,6 +69,16 @@ Base64.decode = function (a) {
     return out;
 };
 
+Base64.pretty = function (str) {
+    // fix padding
+    if (str.length % 4 > 0)
+        str = (str + '===').slice(0, str.length + str.length % 4);
+    // convert RFC 3548 to standard Base64
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    // 80 column width
+    return str.replace(/(.{80})/g, '$1\n');
+};
+
 Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+\/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+\/=\s]+)====/;
 Base64.unarmor = function (a) {
     var m = Base64.re.exec(a);
