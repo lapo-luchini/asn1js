@@ -17,7 +17,8 @@
 "use strict";
 
 var Base64 = {},
-    decoder;
+    decoder, // populated on first usage
+    haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
 
 Base64.decode = function (a) {
     var i;
@@ -33,8 +34,8 @@ Base64.decode = function (a) {
         decoder['-'] = decoder['+'];
         decoder['_'] = decoder['/'];
     }
-    var out = [];
-    var bits = 0, char_count = 0;
+    var out = haveU8 ? new Uint8Array(a.length * 3 >> 2) : [];
+    var bits = 0, char_count = 0, len = 0;
     for (i = 0; i < a.length; ++i) {
         var c = a.charAt(i);
         if (c == '=')
@@ -46,9 +47,9 @@ Base64.decode = function (a) {
             throw 'Illegal character at offset ' + i;
         bits |= c;
         if (++char_count >= 4) {
-            out[out.length] = (bits >> 16);
-            out[out.length] = (bits >> 8) & 0xFF;
-            out[out.length] = bits & 0xFF;
+            out[len++] = (bits >> 16);
+            out[len++] = (bits >> 8) & 0xFF;
+            out[len++] = bits & 0xFF;
             bits = 0;
             char_count = 0;
         } else {
@@ -59,13 +60,15 @@ Base64.decode = function (a) {
     case 1:
         throw "Base64 encoding incomplete: at least 2 bits missing";
     case 2:
-        out[out.length] = (bits >> 10);
+        out[len++] = (bits >> 10);
         break;
     case 3:
-        out[out.length] = (bits >> 16);
-        out[out.length] = (bits >> 8) & 0xFF;
+        out[len++] = (bits >> 16);
+        out[len++] = (bits >> 8) & 0xFF;
         break;
     }
+    if (haveU8 && out.length > len) // in case it was originally longer because of ignored characters
+        out = out.subarray(0, len);
     return out;
 };
 

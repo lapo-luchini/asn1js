@@ -17,7 +17,8 @@
 "use strict";
 
 var Hex = {},
-    decoder;
+    decoder, // populated on first usage
+    haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
 
 Hex.decode = function(a) {
     var i;
@@ -33,9 +34,10 @@ Hex.decode = function(a) {
         for (i = 0; i < ignore.length; ++i)
             decoder[ignore.charAt(i)] = -1;
     }
-    var out = [],
+    var out = haveU8 ? new Uint8Array(a.length >> 1) : [],
         bits = 0,
-        char_count = 0;
+        char_count = 0,
+        len = 0;
     for (i = 0; i < a.length; ++i) {
         var c = a.charAt(i);
         if (c == '=')
@@ -47,7 +49,7 @@ Hex.decode = function(a) {
             throw 'Illegal character at offset ' + i;
         bits |= c;
         if (++char_count >= 2) {
-            out[out.length] = bits;
+            out[len++] = bits;
             bits = 0;
             char_count = 0;
         } else {
@@ -56,6 +58,8 @@ Hex.decode = function(a) {
     }
     if (char_count)
         throw "Hex encoding incomplete: 4 bits missing";
+    if (haveU8 && out.length > len) // in case it was originally longer because of ignored characters
+        out = out.subarray(0, len);
     return out;
 };
 
