@@ -62,6 +62,27 @@ Stream.prototype.hexDump = function (start, end, raw) {
     }
     return s;
 };
+var b64Safe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+Stream.prototype.b64Dump = function (start, end) {
+    var extra = (end - start) % 3,
+        s = '',
+        i, c;
+    for (i = start; i + 2 < end; i += 3) {
+        c = this.get(i) << 16 | this.get(i + 1) << 8 | this.get(i + 2);
+        s += b64Safe.charAt(c >> 18 & 0x3F);
+        s += b64Safe.charAt(c >> 12 & 0x3F);
+        s += b64Safe.charAt(c >>  6 & 0x3F);
+        s += b64Safe.charAt(c       & 0x3F);
+    }
+    if (extra > 0) {
+        c = this.get(i) << 16;
+        if (extra > 1) c |= this.get(i + 1) << 8;
+        s += b64Safe.charAt(c >> 18 & 0x3F);
+        s += b64Safe.charAt(c >> 12 & 0x3F);
+        if (extra == 2) s += b64Safe.charAt(c >> 6 & 0x3F);
+    }
+    return s;
+};
 Stream.prototype.isASCII = function (start, end) {
     for (var i = start; i < end; ++i) {
         var c = this.get(i);
@@ -363,6 +384,9 @@ ASN1.prototype.posEnd = function () {
 };
 ASN1.prototype.toHexString = function () {
     return this.stream.hexDump(this.posStart(), this.posEnd(), true);
+};
+ASN1.prototype.toB64String = function () {
+    return this.stream.b64Dump(this.posStart(), this.posEnd());
 };
 ASN1.decodeLength = function (stream) {
     var buf = stream.get(),
