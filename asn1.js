@@ -361,7 +361,7 @@ ASN1.prototype.posContent = function () {
 ASN1.prototype.posEnd = function () {
     return this.stream.pos + this.header + Math.abs(this.length);
 };
-ASN1.prototype.toHexString = function (root) {
+ASN1.prototype.toHexString = function () {
     return this.stream.hexDump(this.posStart(), this.posEnd(), true);
 };
 ASN1.decodeLength = function (stream) {
