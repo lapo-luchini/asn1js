@@ -170,8 +170,8 @@ ASN1.prototype.toHexDOM = function (root) {
             this.className = "hex";
         }
     };
-    this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
-    this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
+    this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posLen());
+    this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posLen(), this.posContent());
     if (this.sub === null) {
         var start = this.posContent();
         var end = this.posEnd();

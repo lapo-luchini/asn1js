@@ -246,13 +246,14 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
     return s;
 };
 
-function ASN1(stream, header, length, tag, sub) {
+function ASN1(stream, header, length, tag, sub, tlen) {
     if (!(tag instanceof ASN1Tag)) throw 'Invalid tag value.';
     this.stream = stream;
     this.header = header;
     this.length = length;
     this.tag = tag;
     this.sub = sub;
+	this.tlen = tlen;
 }
 ASN1.prototype.typeName = function () {
     switch (this.tag.tagClass) {
@@ -382,6 +383,9 @@ ASN1.prototype.posContent = function () {
 ASN1.prototype.posEnd = function () {
     return this.stream.pos + this.header + Math.abs(this.length);
 };
+ASN1.prototype.posLen = function() {
+	return this.stream.pos + this.tlen;
+}
 ASN1.prototype.toHexString = function () {
     return this.stream.hexDump(this.posStart(), this.posEnd(), true);
 };
@@ -427,6 +431,7 @@ ASN1.decode = function (stream) {
         stream = new Stream(stream, 0);
     var streamStart = new Stream(stream),
         tag = new ASN1Tag(stream),
+		tlen = stream.pos - streamStart.pos,
         len = ASN1.decodeLength(stream),
         start = stream.pos,
         header = start - streamStart.pos,
@@ -481,7 +486,7 @@ ASN1.decode = function (stream) {
             throw "We can't skip over an invalid tag with undefined length at offset " + start;
         stream.pos = start + Math.abs(len);
     }
-    return new ASN1(streamStart, header, len, tag, sub);
+    return new ASN1(streamStart, header, len, tag, sub, tlen);
 };
 
 // export globals
