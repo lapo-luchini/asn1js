@@ -101,9 +101,9 @@ Stream.prototype.parseStringUTF = function (start, end) {
     var s = "";
     for (var i = start; i < end; ) {
         var c = this.get(i++);
-        if (c < 128)
+        if (c < 0x80)
             s += String.fromCharCode(c);
-        else if ((c > 191) && (c < 224))
+        else if ((c >= 0xC0) && (c < 0xE0))
             s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
         else
             s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
