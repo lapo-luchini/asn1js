@@ -113,15 +113,15 @@ Stream.prototype.parseStringUTF = function (start, end) {
     var s = "";
     for (var i = start; i < end; ) {
         var c = this.get(i++);
-        if (c < 0x80) // 0xxxxxxx
+        if (c < 0x80) // 0xxxxxxx (7 bit)
             s += String.fromCharCode(c);
         else if (c < 0xC0)
             throw new Error('Invalid UTF-8 starting byte: ' + c);
-        else if (c < 0xE0) // 110xxxxx 10xxxxxx
+        else if (c < 0xE0) // 110xxxxx 10xxxxxx (11 bit)
             s += String.fromCharCode(((c & 0x1F) << 6) | ex(this.get(i++)));
-        else if (c < 0xF0) // 1110xxxx 10xxxxxx 10xxxxxx
+        else if (c < 0xF0) // 1110xxxx 10xxxxxx 10xxxxxx (16 bit)
             s += String.fromCharCode(((c & 0x0F) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
-        else if (c < 0xF8) // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+        else if (c < 0xF8) // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx (21 bit)
             s += surrogate(((c & 0x07) << 18) | (ex(this.get(i++)) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
         else
             throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
