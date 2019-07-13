@@ -103,6 +103,13 @@ Stream.prototype.parseStringUTF = function (start, end) {
             throw new Error('Invalid UTF-8 continuation byte: ' + c);
         return (c & 0x3F);
     }
+    function surrogate(cp) {
+        if (cp < 0x10000)
+            throw new Error('UTF-8 overlong encoding, codepoint encoded in 4 bytes: ' + cp);
+        // we could use String.fromCodePoint(cp) but let's be nice to older browsers and use surrogate pairs
+        cp -= 0x10000;
+        return String.fromCharCode((cp >> 10) + 0xD800, (cp & 0x3FF) + 0xDC00);
+    }
     var s = "";
     for (var i = start; i < end; ) {
         var c = this.get(i++);
@@ -115,7 +122,7 @@ Stream.prototype.parseStringUTF = function (start, end) {
         else if (c < 0xF0) // 1110xxxx 10xxxxxx 10xxxxxx
             s += String.fromCharCode(((c & 0x0F) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
         else if (c < 0xF8) // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-            s += String.fromCharCode(((c & 0x07) << 18) | (ex(this.get(i++)) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
+            s += surrogate(((c & 0x07) << 18) | (ex(this.get(i++)) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
         else
             throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
     }
