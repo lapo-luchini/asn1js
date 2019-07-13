@@ -98,19 +98,26 @@ Stream.prototype.parseStringISO = function (start, end) {
     return s;
 };
 Stream.prototype.parseStringUTF = function (start, end) {
+    function ex(c) { // must be 10xxxxxx
+        if ((c < 0x80) || (c >= 0xC0))
+            throw new Error('Invalid UTF-8 continuation byte: ' + c);
+        return (c & 0x3F);
+    }
     var s = "";
     for (var i = start; i < end; ) {
         var c = this.get(i++);
-        if (c < 0x80)
+        if (c < 0x80) // 0xxxxxxx
             s += String.fromCharCode(c);
-        else if ((c >= 0xC0) && (c < 0xE0))
-            s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
-        else if ((c >= 0xE0) && (c < 0xF0))
-            s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
-        else if (c >= 0xF0)
-            s += String.fromCharCode(((c & 0x0F) << 18) | ((this.get(i++) & 0x3F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
+        else if (c < 0xC0)
+            throw new Error('Invalid UTF-8 starting byte: ' + c);
+        else if (c < 0xE0) // 110xxxxx 10xxxxxx
+            s += String.fromCharCode(((c & 0x1F) << 6) | ex(this.get(i++)));
+        else if (c < 0xF0) // 1110xxxx 10xxxxxx 10xxxxxx
+            s += String.fromCharCode(((c & 0x0F) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
+        else if (c < 0xF8) // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+            s += String.fromCharCode(((c & 0x07) << 18) | (ex(this.get(i++)) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
         else
-            throw new Error('Invalid UTF-8 starting character: ' + c);
+            throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
     }
     return s;
 };
