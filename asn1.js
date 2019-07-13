@@ -105,8 +105,12 @@ Stream.prototype.parseStringUTF = function (start, end) {
             s += String.fromCharCode(c);
         else if ((c >= 0xC0) && (c < 0xE0))
             s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
-        else
+        else if ((c >= 0xE0) && (c < 0xF0))
             s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
+        else if (c >= 0xF0)
+            s += String.fromCharCode(((c & 0x0F) << 18) | ((this.get(i++) & 0x3F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
+        else
+            throw new Error('Invalid UTF-8 starting character: ' + c);
     }
     return s;
 };
