@@ -197,7 +197,7 @@ Stream.prototype.parseInteger = function (start, end) {
     return s + n.toString();
 };
 Stream.prototype.parseBitString = function (start, end, maxLength) {
-    var unusedBit = this.get(start),
+    var unusedBit = Math.min(this.get(start), 7),
         lenBit = ((end - start - 1) << 3) - unusedBit,
         intro = "(" + lenBit + " bit)\n",
         s = "";
