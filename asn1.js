@@ -356,7 +356,7 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     case 0x16: // IA5String
     //case 0x19: // GraphicString
     case 0x1A: // VisibleString
-    //case 0x1B: // GeneralString
+    case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
         return stringCut(this.stream.parseStringISO(content, content + len), maxLength);
     case 0x1E: // BMPString
