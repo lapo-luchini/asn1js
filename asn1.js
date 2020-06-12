@@ -339,7 +339,8 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     //case 0x07: // ObjectDescriptor
     //case 0x08: // EXTERNAL
     //case 0x09: // REAL
-    //case 0x0A: // ENUMERATED
+    case 0x0A: // ENUMERATED
+        return this.stream.parseInteger(content, content + len);
     //case 0x0B: // EMBEDDED_PDV
     case 0x10: // SEQUENCE
     case 0x11: // SET
