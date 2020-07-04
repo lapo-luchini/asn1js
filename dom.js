@@ -170,6 +170,19 @@ ASN1.prototype.toHexDOM = function (root) {
             this.className = "hex";
         }
     };
+    if (root == node) {
+        var lineStart = this.posStart() & 0xF;
+        if (lineStart != 0) {
+            var skip = DOM.tag("span", "skip");
+            var skipStr = '';
+            for (var j = lineStart; j > 0; --j)
+                skipStr += '   ';
+            if (lineStart >= 8)
+                skipStr += ' ';
+            skip.innerText = skipStr;
+            node.appendChild(skip);
+        }
+    }
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posStart() + 1);
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posStart() + 1, this.posContent());
     if (this.sub === null) {

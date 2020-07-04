@@ -18,11 +18,12 @@ function text(el, string) {
     else
         el.innerText = string;
 }
-function decode(der) {
+function decode(der, offset) {
+    offset = offset || 0;
     tree.innerHTML = '';
     dump.innerHTML = '';
     try {
-        var asn1 = ASN1.decode(der);
+        var asn1 = ASN1.decode(der, offset);
         tree.appendChild(asn1.toDOM());
         if (wantHex.checked)
             dump.appendChild(asn1.toHexDOM());
@@ -33,6 +34,18 @@ function decode(der) {
             window.location.hash = hash = '#' + b64;
         } catch (e) { // fails with "Access Denied" on IE with URLs longer than ~2048 chars
             window.location.hash = hash = '#';
+        }
+        var endOffset = asn1.posEnd();
+        if (endOffset < der.length) {
+            var p = document.createElement('p');
+            p.innerText = 'Input contains ' + (der.length - endOffset) + ' more bytes to decode.';
+            var button = document.createElement('button');
+            button.innerText = 'try to decode';
+            button.onclick = function () {
+                decode(der, endOffset);
+            };
+            p.appendChild(button);
+            tree.prepend(p);
         }
     } catch (e) {
         text(tree, e);

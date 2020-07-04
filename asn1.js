@@ -441,9 +441,9 @@ ASN1Tag.prototype.isUniversal = function () {
 ASN1Tag.prototype.isEOC = function () {
     return this.tagClass === 0x00 && this.tagNumber === 0x00;
 };
-ASN1.decode = function (stream) {
+ASN1.decode = function (stream, offset) {
     if (!(stream instanceof Stream))
-        stream = new Stream(stream, 0);
+        stream = new Stream(stream, offset || 0);
     var streamStart = new Stream(stream),
         tag = new ASN1Tag(stream),
         len = ASN1.decodeLength(stream),
