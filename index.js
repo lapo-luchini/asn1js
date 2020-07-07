@@ -45,7 +45,7 @@ function decode(der, offset) {
                 decode(der, endOffset);
             };
             p.appendChild(button);
-            tree.prepend(p);
+            tree.insertBefore(p, tree.firstChild);
         }
     } catch (e) {
         text(tree, e);
@@ -130,7 +130,7 @@ if ('onhashchange' in window)
 loadFromHash();
 document.ondragover = stop;
 document.ondragleave = stop;
-if ('FileReader' in window) {
+if ('FileReader' in window && 'readAsBinaryString' in (new FileReader())) {
     file.style.display = 'block';
     file.onchange = load;
     document.ondrop = dragAccept;
