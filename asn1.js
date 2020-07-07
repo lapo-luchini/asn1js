@@ -197,15 +197,15 @@ Stream.prototype.parseInteger = function (start, end) {
     return s + n.toString();
 };
 Stream.prototype.parseBitString = function (start, end, maxLength) {
-    var unusedBit = this.get(start);
-    if (unusedBit > 7)
-        throw 'Invalid BitString with unusedBits=' + unusedBit;
-    var lenBit = ((end - start - 1) << 3) - unusedBit,
+    var unusedBits = this.get(start);
+    if (unusedBits > 7)
+        throw 'Invalid BitString with unusedBits=' + unusedBits;
+    var lenBit = ((end - start - 1) << 3) - unusedBits,
         intro = "(" + lenBit + " bit)\n",
         s = "";
     for (var i = start + 1; i < end; ++i) {
         var b = this.get(i),
-            skip = (i == end - 1) ? unusedBit : 0;
+            skip = (i == end - 1) ? unusedBits : 0;
         for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
         if (s.length > maxLength)
