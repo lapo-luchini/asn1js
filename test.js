@@ -10,6 +10,7 @@ tests = [
     ['0304066E5DC0', '(18 bit)\n011011100101110111', 'Bit string: DER encoding'],
     ['0304066E5DE0', '(18 bit)\n011011100101110111', 'Bit string: padded with "100000"'],
     ['038104066E5DC0', '(18 bit)\n011011100101110111', 'Bit string: long form of length octets'],
+    ['0304086E5DC0', 'Exception:\nInvalid BitString with unusedBits=8', 'Bit string: invalid unusedBits'],
     ['23090303006E5D030206C0', '(18 bit)\n011011100101110111', 'Bit string (constructed encoding): "0110111001011101" + "11"'],
     ['04080123456789ABCDEF', '(8 byte)\n0123456789ABCDEF', 'Octet string: DER encoding'],
     ['0481080123456789ABCDEF', '(8 byte)\n0123456789ABCDEF', 'Octet string: long form of length octets'],
