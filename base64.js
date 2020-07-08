@@ -1,5 +1,5 @@
 // Base64 JavaScript decoder
-// Copyright (c) 2008-2019 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2020 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
