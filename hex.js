@@ -21,6 +21,7 @@ var Hex = {},
     haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
 
 Hex.decode = function(a) {
+    var isString = (typeof a == 'string');
     var i;
     if (decoder === undefined) {
         var hex = "0123456789ABCDEF",
@@ -39,7 +40,7 @@ Hex.decode = function(a) {
         char_count = 0,
         len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = a.charCodeAt(i);
+        var c = isString ? a.charCodeAt(i) : a[i];
         c = decoder[c];
         if (c == -1)
             continue;

@@ -21,6 +21,7 @@ var Base64 = {},
     haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
 
 Base64.decode = function (a) {
+    var isString = (typeof a == 'string');
     var i;
     if (decoder === undefined) {
         var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
@@ -37,7 +38,7 @@ Base64.decode = function (a) {
     var out = haveU8 ? new Uint8Array(a.length * 3 >> 2) : [];
     var bits = 0, char_count = 0, len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = a.charCodeAt(i);
+        var c = isString ? a.charCodeAt(i) : a[i];
         if (c == 61) // '='.charCodeAt(0)
             break;
         c = decoder[c];
