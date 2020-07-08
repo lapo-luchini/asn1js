@@ -108,11 +108,12 @@ function load() {
 function loadFromHash() {
     if (window.location.hash && window.location.hash != hash) {
         hash = window.location.hash;
-        // Firefox is not consistent with other browsers and return an
+        // Firefox is not consistent with other browsers and returns an
         // already-decoded hash string so we risk double-decoding here,
         // but since % is not allowed in base64 nor hexadecimal, it's ok
         var val = decodeURIComponent(hash.substr(1));
-        decodeText(val);
+        if (val.length)
+            decodeText(val);
     }
 }
 function stop(e) {
