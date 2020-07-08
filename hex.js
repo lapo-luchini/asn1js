@@ -27,21 +27,19 @@ Hex.decode = function(a) {
             ignore = " \f\n\r\t\u00A0\u2028\u2029";
         decoder = [];
         for (i = 0; i < 16; ++i)
-            decoder[hex.charAt(i)] = i;
+            decoder[hex.charCodeAt(i)] = i;
         hex = hex.toLowerCase();
         for (i = 10; i < 16; ++i)
-            decoder[hex.charAt(i)] = i;
+            decoder[hex.charCodeAt(i)] = i;
         for (i = 0; i < ignore.length; ++i)
-            decoder[ignore.charAt(i)] = -1;
+            decoder[ignore.charCodeAt(i)] = -1;
     }
     var out = haveU8 ? new Uint8Array(a.length >> 1) : [],
         bits = 0,
         char_count = 0,
         len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = a.charAt(i);
-        if (c == '=')
-            break;
+        var c = a.charCodeAt(i);
         c = decoder[c];
         if (c == -1)
             continue;
