@@ -5,6 +5,31 @@ asn1js is a JavaScript generic ASN.1 parser/decoder that can decode any valid AS
 
 An example page that can decode Base64-encoded (raw base64, PEM armoring and `begin-base64` are recognized) or Hex-encoded (or local files with some browsers) is included and can be used both [online on the official website](https://lapo.it/asn1js/) or [offline (ZIP file)](https://lapo.it/asn1js/asn1js.zip).
 
+Usage with npm / yarn
+---------------------
+
+This package can be installed with either npm or yarn via the following commands:
+
+```
+npm install @lapo/asn1js
+# or with yarn
+yarn add @lapo/asn1js
+```
+
+Assuming a standard javascript bundler is setup you can import it like so:
+```js
+const ASN1 = require('@lapo/asn1js');
+// or with ES modules
+import ASN1 from '@lapo/asn1js';
+```
+
+A submodule of this package can also be imported:
+```js
+const ASN1 = require('@lapo/asn1js/hex');
+// or with ES modules
+import Hex from '@lapo/asn1js/hex';
+```
+
 ISC license
 -----------
 
