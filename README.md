@@ -33,7 +33,7 @@ import Hex from '@lapo/asn1js/hex';
 ISC license
 -----------
 
-ASN.1 JavaScript decoder Copyright (c) 2008-2019 Lapo Luchini <lapo@lapo.it>
+ASN.1 JavaScript decoder Copyright (c) 2008-2020 Lapo Luchini <lapo@lapo.it>
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
