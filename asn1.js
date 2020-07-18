@@ -253,7 +253,7 @@ function ASN1(stream, header, length, tag, sub, tlen) {
     this.length = length;
     this.tag = tag;
     this.sub = sub;
-	this.tlen = tlen;
+    this.tlen = tlen;
 }
 ASN1.prototype.typeName = function () {
     switch (this.tag.tagClass) {
@@ -384,7 +384,7 @@ ASN1.prototype.posEnd = function () {
     return this.stream.pos + this.header + Math.abs(this.length);
 };
 ASN1.prototype.posLen = function() {
-	return this.stream.pos + this.tlen;
+    return this.stream.pos + this.tlen;
 }
 ASN1.prototype.toHexString = function () {
     return this.stream.hexDump(this.posStart(), this.posEnd(), true);
@@ -431,7 +431,7 @@ ASN1.decode = function (stream) {
         stream = new Stream(stream, 0);
     var streamStart = new Stream(stream),
         tag = new ASN1Tag(stream),
-		tlen = stream.pos - streamStart.pos,
+        tlen = stream.pos - streamStart.pos,
         len = ASN1.decodeLength(stream),
         start = stream.pos,
         header = start - streamStart.pos,
