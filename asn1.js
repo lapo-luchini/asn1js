@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2018 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2020 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -98,15 +98,33 @@ Stream.prototype.parseStringISO = function (start, end) {
     return s;
 };
 Stream.prototype.parseStringUTF = function (start, end) {
+    function ex(c) { // must be 10xxxxxx
+        if ((c < 0x80) || (c >= 0xC0))
+            throw new Error('Invalid UTF-8 continuation byte: ' + c);
+        return (c & 0x3F);
+    }
+    function surrogate(cp) {
+        if (cp < 0x10000)
+            throw new Error('UTF-8 overlong encoding, codepoint encoded in 4 bytes: ' + cp);
+        // we could use String.fromCodePoint(cp) but let's be nice to older browsers and use surrogate pairs
+        cp -= 0x10000;
+        return String.fromCharCode((cp >> 10) + 0xD800, (cp & 0x3FF) + 0xDC00);
+    }
     var s = "";
     for (var i = start; i < end; ) {
         var c = this.get(i++);
-        if (c < 128)
+        if (c < 0x80) // 0xxxxxxx (7 bit)
             s += String.fromCharCode(c);
-        else if ((c > 191) && (c < 224))
-            s += String.fromCharCode(((c & 0x1F) << 6) | (this.get(i++) & 0x3F));
+        else if (c < 0xC0)
+            throw new Error('Invalid UTF-8 starting byte: ' + c);
+        else if (c < 0xE0) // 110xxxxx 10xxxxxx (11 bit)
+            s += String.fromCharCode(((c & 0x1F) << 6) | ex(this.get(i++)));
+        else if (c < 0xF0) // 1110xxxx 10xxxxxx 10xxxxxx (16 bit)
+            s += String.fromCharCode(((c & 0x0F) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
+        else if (c < 0xF8) // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx (21 bit)
+            s += surrogate(((c & 0x07) << 18) | (ex(this.get(i++)) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
         else
-            s += String.fromCharCode(((c & 0x0F) << 12) | ((this.get(i++) & 0x3F) << 6) | (this.get(i++) & 0x3F));
+            throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
     }
     return s;
 };
@@ -179,13 +197,15 @@ Stream.prototype.parseInteger = function (start, end) {
     return s + n.toString();
 };
 Stream.prototype.parseBitString = function (start, end, maxLength) {
-    var unusedBit = this.get(start),
-        lenBit = ((end - start - 1) << 3) - unusedBit,
+    var unusedBits = this.get(start);
+    if (unusedBits > 7)
+        throw 'Invalid BitString with unusedBits=' + unusedBits;
+    var lenBit = ((end - start - 1) << 3) - unusedBits,
         intro = "(" + lenBit + " bit)\n",
         s = "";
     for (var i = start + 1; i < end; ++i) {
         var b = this.get(i),
-            skip = (i == end - 1) ? unusedBit : 0;
+            skip = (i == end - 1) ? unusedBits : 0;
         for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
         if (s.length > maxLength)
@@ -322,7 +342,8 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     //case 0x07: // ObjectDescriptor
     //case 0x08: // EXTERNAL
     //case 0x09: // REAL
-    //case 0x0A: // ENUMERATED
+    case 0x0A: // ENUMERATED
+        return this.stream.parseInteger(content, content + len);
     //case 0x0B: // EMBEDDED_PDV
     case 0x10: // SEQUENCE
     case 0x11: // SET
@@ -339,7 +360,7 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     case 0x16: // IA5String
     //case 0x19: // GraphicString
     case 0x1A: // VisibleString
-    //case 0x1B: // GeneralString
+    case 0x1B: // GeneralString
     //case 0x1C: // UniversalString
         return stringCut(this.stream.parseStringISO(content, content + len), maxLength);
     case 0x1E: // BMPString
@@ -427,9 +448,9 @@ ASN1Tag.prototype.isUniversal = function () {
 ASN1Tag.prototype.isEOC = function () {
     return this.tagClass === 0x00 && this.tagNumber === 0x00;
 };
-ASN1.decode = function (stream) {
+ASN1.decode = function (stream, offset) {
     if (!(stream instanceof Stream))
-        stream = new Stream(stream, 0);
+        stream = new Stream(stream, offset || 0);
     var streamStart = new Stream(stream),
         tag = new ASN1Tag(stream),
         tagLen = stream.pos - streamStart.pos,

@@ -1,5 +1,5 @@
 // Base64 JavaScript decoder
-// Copyright (c) 2008-2018 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2020 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,24 +21,25 @@ var Base64 = {},
     haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
 
 Base64.decode = function (a) {
+    var isString = (typeof a == 'string');
     var i;
     if (decoder === undefined) {
         var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
             ignore = "= \f\n\r\t\u00A0\u2028\u2029";
         decoder = [];
         for (i = 0; i < 64; ++i)
-            decoder[b64.charAt(i)] = i;
+            decoder[b64.charCodeAt(i)] = i;
         for (i = 0; i < ignore.length; ++i)
-            decoder[ignore.charAt(i)] = -1;
+            decoder[ignore.charCodeAt(i)] = -1;
         // RFC 3548 URL & file safe encoding
-        decoder['-'] = decoder['+'];
-        decoder['_'] = decoder['/'];
+        decoder['-'.charCodeAt(0)] = decoder['+'.charCodeAt(0)];
+        decoder['_'.charCodeAt(0)] = decoder['/'.charCodeAt(0)];
     }
     var out = haveU8 ? new Uint8Array(a.length * 3 >> 2) : [];
     var bits = 0, char_count = 0, len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = a.charAt(i);
-        if (c == '=')
+        var c = isString ? a.charCodeAt(i) : a[i];
+        if (c == 61) // '='.charCodeAt(0)
             break;
         c = decoder[c];
         if (c == -1)

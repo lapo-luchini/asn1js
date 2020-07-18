@@ -1,5 +1,5 @@
 // Hex JavaScript decoder
-// Copyright (c) 2008-2018 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2020 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,27 +21,26 @@ var Hex = {},
     haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
 
 Hex.decode = function(a) {
+    var isString = (typeof a == 'string');
     var i;
     if (decoder === undefined) {
         var hex = "0123456789ABCDEF",
             ignore = " \f\n\r\t\u00A0\u2028\u2029";
         decoder = [];
         for (i = 0; i < 16; ++i)
-            decoder[hex.charAt(i)] = i;
+            decoder[hex.charCodeAt(i)] = i;
         hex = hex.toLowerCase();
         for (i = 10; i < 16; ++i)
-            decoder[hex.charAt(i)] = i;
+            decoder[hex.charCodeAt(i)] = i;
         for (i = 0; i < ignore.length; ++i)
-            decoder[ignore.charAt(i)] = -1;
+            decoder[ignore.charCodeAt(i)] = -1;
     }
     var out = haveU8 ? new Uint8Array(a.length >> 1) : [],
         bits = 0,
         char_count = 0,
         len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = a.charAt(i);
-        if (c == '=')
-            break;
+        var c = isString ? a.charCodeAt(i) : a[i];
         c = decoder[c];
         if (c == -1)
             continue;

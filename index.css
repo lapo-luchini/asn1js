@@ -80,6 +80,9 @@ html, body {
 #tree {
     font-family: monospace;
 }
+#tree > p {
+    font-family: Arial, Helvetica, sans-serif;
+}
 #dump {
     z-index: 1;
     background-color: #C0C0C0;
@@ -93,7 +96,7 @@ html, body {
 #dump .ulen            { color: darkgreen; }
 #dump .intro           { color: blue; }
 #dump .outro           { color: darkgreen; }
-#dump .skip            { color: #666666; }
+#dump .skip            { color: #666666; background-color: #C0C0C0; }
 #dump .hexCurrent      { background-color: #808080; }
 #dump .hexCurrent .hex { background-color: #A0A0A0; }
 #file { display: none; }
