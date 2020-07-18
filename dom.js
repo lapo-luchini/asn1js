@@ -13,7 +13,7 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(function (undefined) {
+(function () {
 "use strict";
 
 var ASN1 = (typeof module !== 'undefined') ? require('./asn1.js') : window.ASN1,
