@@ -13,12 +13,15 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(function () {
+(typeof define != 'undefined' ? define : function (factory) { 'use strict';
+    if (typeof module == 'object') module.exports = factory();
+    else window.base64 = factory();
+})(function () {
 "use strict";
 
 var Base64 = {},
     decoder, // populated on first usage
-    haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
+    haveU8 = (typeof Uint8Array == 'function');
 
 Base64.decode = function (a) {
     var isString = (typeof a == 'string');
@@ -97,6 +100,6 @@ Base64.unarmor = function (a) {
     return Base64.decode(a);
 };
 
-// export globals
-if (typeof module !== 'undefined') { module.exports = Base64; } else { window.Base64 = Base64; }
-})();
+return Base64;
+
+});

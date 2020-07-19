@@ -13,12 +13,15 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(function () {
+(typeof define != 'undefined' ? define : function (factory) { 'use strict';
+    if (typeof module == 'object') module.exports = factory();
+    else window.hex = factory();
+})(function () {
 "use strict";
 
 var Hex = {},
     decoder, // populated on first usage
-    haveU8 = ('Uint8Array' in (typeof window == 'object' ? window : global));
+    haveU8 = (typeof Uint8Array == 'function');
 
 Hex.decode = function(a) {
     var isString = (typeof a == 'string');
@@ -62,6 +65,6 @@ Hex.decode = function(a) {
     return out;
 };
 
-// export globals
-if (typeof module !== 'undefined') { module.exports = Hex; } else { window.Hex = Hex; }
-})();
+return Hex;
+
+});

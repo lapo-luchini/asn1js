@@ -15,22 +15,28 @@
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
   "eslintConfig": {
     "env": {
+      "amd": true,
       "browser": true,
       "node": true
     },
     "extends": [ "eslint:recommended" ],
     "rules": {
       "strict": [ "error", "function" ],
-      "indent": [ "error", 4, { "outerIIFEBody": 0 } ],
+      "indent": [ "error", 4, { "ignoredNodes": [ "Program > ExpressionStatement > CallExpression > FunctionExpression > BlockStatement > ExpressionStatement[directive='use strict']:first-child" ] } ],
       "linebreak-style": [ "error", "unix" ],
       "semi": [ "warn", "always" ],
       "comma-dangle": [ "error", "never" ]
     },
     "overrides": [
       {
-        "files": [ "index.js", "test.js" ],
+        "files": [ "test.js" ],
         "rules": {
           "strict": [ "error", "global" ]
+        }
+      }, {
+        "files": [ "oids.js" ],
+        "rules": {
+          "indent": "off"
         }
       }
     ]

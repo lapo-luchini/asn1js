@@ -13,11 +13,14 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(function () {
+(typeof define != 'undefined' ? define : function (factory) { 'use strict';
+    if (typeof module == 'object') module.exports = factory(function (name) { return require('./' + name); });
+    else window.asn1 = factory(function (name) { return window[name]; });
+})(function (require) {
 "use strict";
 
-var Int10 = (typeof module !== 'undefined') ? require('./int10.js') : window.Int10,
-    oids = (typeof module !== 'undefined') ? require('./oids.js') : window.oids,
+var Int10 = require('int10'),
+    oids = require('oids'),
     ellipsis = "\u2026",
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
@@ -511,6 +514,6 @@ ASN1.decode = function (stream, offset) {
     return new ASN1(streamStart, header, len, tag, tagLen, sub);
 };
 
-// export globals
-if (typeof module !== 'undefined') { module.exports = ASN1; } else { window.ASN1 = ASN1; }
-})();
+return ASN1;
+
+});

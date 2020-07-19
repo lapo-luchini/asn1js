@@ -13,7 +13,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(function () {
+(typeof define != 'undefined' ? define : function (factory) { 'use strict';
+    if (typeof module == 'object') module.exports = factory();
+    else window.int10 = factory();
+})(function () {
 "use strict";
 
 var max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
@@ -82,6 +85,6 @@ Int10.prototype.simplify = function () {
     return (b.length == 1) ? b[0] : this;
 };
 
-// export globals
-if (typeof module !== 'undefined') { module.exports = Int10; } else { window.Int10 = Int10; }
-})();
+return Int10;
+
+});
