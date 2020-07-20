@@ -10,7 +10,7 @@ Usage with `npm` / `yarn`
 
 This package can be installed with either npm or yarn via the following commands:
 
-```
+```sh
 npm install @lapo/asn1js
 # or with yarn
 yarn add @lapo/asn1js
