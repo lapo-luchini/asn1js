@@ -45,7 +45,6 @@ Int10.prototype.mulAdd = function (m, c) {
 };
 
 Int10.prototype.sub = function (c) {
-    // assert(m <= 256)
     var b = this.buf,
         l = b.length,
         i, t;
