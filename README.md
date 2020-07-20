@@ -27,7 +27,7 @@ import ASN1 from '@lapo/asn1js';
 A submodule of this package can also be imported:
 
 ```js
-const ASN1 = require('@lapo/asn1js/hex');
+const Hex = require('@lapo/asn1js/hex');
 // or with ES modules
 import Hex from '@lapo/asn1js/hex';
 ```
