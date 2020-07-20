@@ -1,6 +1,6 @@
 {
   "name": "@lapo/asn1js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Generic ASN.1 parser/decoder that can decode any valid ASN.1 DER or BER structures.",
   "main": "asn1.js",
   "repository": {
