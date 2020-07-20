@@ -23,6 +23,10 @@ var Hex = {},
     decoder, // populated on first usage
     haveU8 = (typeof Uint8Array == 'function');
 
+/**
+ * Decodes an hexadecimal value.
+ * @param {string|Array|Uint8Array} a - a string representing hexadecimal data, or an array representation of its charcodes
+ */
 Hex.decode = function(a) {
     var isString = (typeof a == 'string');
     var i;

@@ -21,10 +21,19 @@
 
 var max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
 
+/**
+ * Arbitrary length base-10 value.
+ * @param {number} value - Optional initial value (will be 0 otherwise).
+ */
 function Int10(value) {
     this.buf = [+value || 0];
 }
 
+/**
+ * Multiply value by m and add c.
+ * @param {number} m - multiplier, must be < =256
+ * @param {number} c - value to add
+ */
 Int10.prototype.mulAdd = function (m, c) {
     // assert(m <= 256)
     var b = this.buf,
@@ -44,6 +53,10 @@ Int10.prototype.mulAdd = function (m, c) {
         b[i] = c;
 };
 
+/**
+ * Subtract value.
+ * @param {number} c - value to subtract
+ */
 Int10.prototype.sub = function (c) {
     var b = this.buf,
         l = b.length,
@@ -61,6 +74,10 @@ Int10.prototype.sub = function (c) {
         b.pop();
 };
 
+/**
+ * Convert to decimal string representation.
+ * @param {*} base - optional value, only value accepted is 10
+ */
 Int10.prototype.toString = function (base) {
     if ((base || 10) != 10)
         throw 'only base 10 is supported';
@@ -71,6 +88,10 @@ Int10.prototype.toString = function (base) {
     return s;
 };
 
+/**
+ * Convert to Number value representation.
+ * Will probably overflow 2^53 and thus become approximate.
+ */
 Int10.prototype.valueOf = function () {
     var b = this.buf,
         v = 0;
@@ -79,6 +100,9 @@ Int10.prototype.valueOf = function () {
     return v;
 };
 
+/**
+ * Return value as a simple Number (if it is <= 10000000000000), or return this.
+ */
 Int10.prototype.simplify = function () {
     var b = this.buf;
     return (b.length == 1) ? b[0] : this;
