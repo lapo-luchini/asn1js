@@ -21,3 +21,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm test
+    - name: ESLint check
+      uses: hallee/eslint-action@1.0.3
+      with:
+        repo-token: ${{secrets.GITHUB_TOKEN}}
