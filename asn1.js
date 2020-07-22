@@ -213,7 +213,7 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
         if (s.length > maxLength)
             return stringCut(s, maxLength);
     }
-    return { size: lenBit, bits: s };
+    return { size: lenBit, str: s };
 };
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
     if (this.isASCII(start, end))
@@ -227,7 +227,7 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
         s += this.hexByte(this.get(i));
     if (len > maxLength)
         s += ellipsis;
-    return { size: len, hex: s };
+    return { size: len, str: s };
 };
 Stream.prototype.parseOID = function (start, end, maxLength) {
     var s = '',
@@ -315,6 +315,17 @@ ASN1.prototype.typeName = function () {
     case 3: return "Private_" + this.tag.tagNumber.toString();
     }
 };
+function recurse(el, parser, maxLength) {
+    if (!el.sub)
+        return el.stream[parser](el.posContent(), el.posContent() + Math.abs(el.length), maxLength);
+    var d = { size: 0, str: '' };
+    el.sub.forEach(function (el) {
+        var d1 = recurse(el, parser, maxLength - d.str.length);
+        d.size += d1.size;
+        d.str += d1.str;
+    });
+    return d;
+}
 /** A string preview of the content (intended for humans). */
 ASN1.prototype.content = function (maxLength) {
     if (this.tag === undefined)
@@ -334,30 +345,11 @@ ASN1.prototype.content = function (maxLength) {
     case 0x02: // INTEGER
         return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
-        var d;
-        if (!this.sub)
-            d = this.stream.parseBitString(content, content + len, maxLength);
-        else {
-            d = { size: 0, bits: '' };
-            this.sub.forEach(function (el) {
-                var d1 = el.stream.parseBitString(el.posContent(), el.posContent() + Math.abs(el.length), maxLength - d.bits.length);
-                d.size += d1.size;
-                d.bits += d1.bits;
-            });
-        }
-        return "(" + d.size + " bit)\n" + d.bits;
+        var d = recurse(this, 'parseBitString', maxLength);
+        return "(" + d.size + " bit)\n" + d.str;
     case 0x04: // OCTET_STRING
-        if (!this.sub)
-            d = this.stream.parseOctetString(content, content + len, maxLength);
-        else {
-            d = { size: 0, hex: '' };
-            this.sub.forEach(function (el) {
-                var d1 = el.stream.parseOctetString(el.posContent(), el.posContent() + Math.abs(el.length), maxLength - d.hex.length);
-                d.size += d1.size;
-                d.hex += d1.hex;
-            });
-        }
-        return "(" + d.size + " byte)\n" + d.hex;
+        var d = recurse(this, 'parseOctetString', maxLength);
+        return "(" + d.size + " byte)\n" + d.str;
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
         return this.stream.parseOID(content, content + len, maxLength);
