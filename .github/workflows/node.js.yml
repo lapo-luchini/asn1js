@@ -21,8 +21,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm test
-    - name: Style check
-      uses: samuelmeuli/lint-action@v1
-      with:
-        github_token: ${{secrets.GITHUB_TOKEN}}
-        eslint: true
+    - run: npx eslint *.js
