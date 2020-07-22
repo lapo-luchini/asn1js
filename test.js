@@ -53,6 +53,8 @@ tests = [
     // T-REC-X.690-201508
     ['0307040A3B5F291CD0', '(44 bit)\n00001010001110110101111100101001000111001101', 'Example 8.6.4.2: bit string (primitive encoding)'],
     ['23800303000A3B0305045F291CD00000', '(44 bit)\n00001010001110110101111100101001000111001101', 'Example 8.6.4.2: bit string (constructed encoding)'],
+    // recursive constructed
+    ['23800303000A3B230A0302005F030404291CD00000', '(44 bit)\n00001010001110110101111100101001000111001101', 'Bit string (recursive constructed)'],
 ];
 
 var run = 0,
