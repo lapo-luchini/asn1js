@@ -52,6 +52,8 @@ tests = [
     ['0C0E4C61706FE280997320F09F9A972E', 'Lapo’s 🚗.', 'UTF-8 4-byte sequence']
 ];
 
+var run = 0,
+    error = 0;
 tests.forEach(function (t) {
     var input = t[0],
         expected = t[1],
@@ -63,8 +65,13 @@ tests.forEach(function (t) {
     } catch (e) {
         result = 'Exception:\n' + e;
     }
+    ++run;
     if (result == expected)
         console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
-    else
+    else {
+        ++error;
         console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment + '\n' + result);
+    }
 });
+console.log('Errors: ' + error + '/' + run + '.');
+process.exit(error ? 1 : 0);

@@ -13,6 +13,9 @@
   "bugs": { "url": "https://github.com/lapo-luchini/asn1js/issues" },
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
+  "scripts" : {
+    "test" : "node test"
+  },
   "eslintConfig": {
     "env": {
       "amd": true,
