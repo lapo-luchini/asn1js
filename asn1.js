@@ -204,7 +204,6 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
     if (unusedBits > 7)
         throw 'Invalid BitString with unusedBits=' + unusedBits;
     var lenBit = ((end - start - 1) << 3) - unusedBits,
-        intro = "(" + lenBit + " bit)\n",
         s = "";
     for (var i = start + 1; i < end; ++i) {
         var b = this.get(i),
@@ -212,15 +211,15 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
         for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
         if (s.length > maxLength)
-            return intro + stringCut(s, maxLength);
+            return stringCut(s, maxLength);
     }
-    return intro + s;
+    return { size: lenBit, bits: s };
 };
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
     if (this.isASCII(start, end))
         return stringCut(this.parseStringISO(start, end), maxLength);
     var len = end - start,
-        s = "(" + len + " byte)\n";
+        s = "";
     maxLength /= 2; // we work in bytes
     if (len > maxLength)
         end = start + maxLength;
@@ -228,7 +227,7 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
         s += this.hexByte(this.get(i));
     if (len > maxLength)
         s += ellipsis;
-    return s;
+    return { size: len, hex: s };
 };
 Stream.prototype.parseOID = function (start, end, maxLength) {
     var s = '',
@@ -316,7 +315,8 @@ ASN1.prototype.typeName = function () {
     case 3: return "Private_" + this.tag.tagNumber.toString();
     }
 };
-ASN1.prototype.content = function (maxLength) { // a preview of the content (intended for humans)
+/** A string preview of the content (intended for humans). */
+ASN1.prototype.content = function (maxLength) {
     if (this.tag === undefined)
         return null;
     if (maxLength === undefined)
@@ -334,11 +334,30 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     case 0x02: // INTEGER
         return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
-        return this.sub ? "(" + this.sub.length + " elem)" :
-            this.stream.parseBitString(content, content + len, maxLength);
+        var d;
+        if (!this.sub)
+            d = this.stream.parseBitString(content, content + len, maxLength);
+        else {
+            d = { size: 0, bits: '' };
+            this.sub.forEach(function (el) {
+                var d1 = el.stream.parseBitString(el.posContent(), el.posContent() + Math.abs(el.length), maxLength - d.bits.length);
+                d.size += d1.size;
+                d.bits += d1.bits;
+            });
+        }
+        return "(" + d.size + " bit)\n" + d.bits;
     case 0x04: // OCTET_STRING
-        return this.sub ? "(" + this.sub.length + " elem)" :
-            this.stream.parseOctetString(content, content + len, maxLength);
+        if (!this.sub)
+            d = this.stream.parseOctetString(content, content + len, maxLength);
+        else {
+            d = { size: 0, hex: '' };
+            this.sub.forEach(function (el) {
+                var d1 = el.stream.parseOctetString(el.posContent(), el.posContent() + Math.abs(el.length), maxLength - d.hex.length);
+                d.size += d1.size;
+                d.hex += d1.hex;
+            });
+        }
+        return "(" + d.size + " byte)\n" + d.hex;
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
         return this.stream.parseOID(content, content + len, maxLength);
