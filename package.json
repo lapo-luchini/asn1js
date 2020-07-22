@@ -34,7 +34,8 @@
       {
         "files": [ "test.js" ],
         "rules": {
-          "strict": [ "error", "global" ]
+          "strict": [ "error", "global" ],
+          "comma-dangle": [ "error", "always-multiline" ]
         }
       }, {
         "files": [ "oids.js" ],
