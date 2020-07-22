@@ -348,7 +348,7 @@ ASN1.prototype.content = function (maxLength) {
         var d = recurse(this, 'parseBitString', maxLength);
         return "(" + d.size + " bit)\n" + d.str;
     case 0x04: // OCTET_STRING
-        var d = recurse(this, 'parseOctetString', maxLength);
+        d = recurse(this, 'parseOctetString', maxLength);
         return "(" + d.size + " byte)\n" + d.str;
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
@@ -372,9 +372,9 @@ ASN1.prototype.content = function (maxLength) {
     case 0x14: // TeletexString
     case 0x15: // VideotexString
     case 0x16: // IA5String
-    //case 0x19: // GraphicString
     case 0x1A: // VisibleString
     case 0x1B: // GeneralString
+    //case 0x19: // GraphicString
     //case 0x1C: // UniversalString
         return stringCut(this.stream.parseStringISO(content, content + len), maxLength);
     case 0x1E: // BMPString

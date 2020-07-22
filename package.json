@@ -24,6 +24,9 @@
       "node": true
     },
     "extends": [ "eslint:recommended" ],
+    "globals": {
+      "Uint8Array": "readonly"
+    },
     "rules": {
       "strict": [ "error", "function" ],
       "indent": [ "error", 4, { "ignoredNodes": [ "Program > ExpressionStatement > CallExpression > FunctionExpression > BlockStatement > ExpressionStatement[directive='use strict']:first-child" ] } ],
