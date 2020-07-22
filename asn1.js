@@ -204,7 +204,6 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
     if (unusedBits > 7)
         throw 'Invalid BitString with unusedBits=' + unusedBits;
     var lenBit = ((end - start - 1) << 3) - unusedBits,
-        intro = "(" + lenBit + " bit)\n",
         s = "";
     for (var i = start + 1; i < end; ++i) {
         var b = this.get(i),
@@ -212,15 +211,15 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
         for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
         if (s.length > maxLength)
-            return intro + stringCut(s, maxLength);
+            return stringCut(s, maxLength);
     }
-    return intro + s;
+    return { size: lenBit, str: s };
 };
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
     if (this.isASCII(start, end))
         return stringCut(this.parseStringISO(start, end), maxLength);
     var len = end - start,
-        s = "(" + len + " byte)\n";
+        s = "";
     maxLength /= 2; // we work in bytes
     if (len > maxLength)
         end = start + maxLength;
@@ -228,7 +227,7 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
         s += this.hexByte(this.get(i));
     if (len > maxLength)
         s += ellipsis;
-    return s;
+    return { size: len, str: s };
 };
 Stream.prototype.parseOID = function (start, end, maxLength) {
     var s = '',
@@ -316,7 +315,19 @@ ASN1.prototype.typeName = function () {
     case 3: return "Private_" + this.tag.tagNumber.toString();
     }
 };
-ASN1.prototype.content = function (maxLength) { // a preview of the content (intended for humans)
+function recurse(el, parser, maxLength) {
+    if (!el.sub)
+        return el.stream[parser](el.posContent(), el.posContent() + Math.abs(el.length), maxLength);
+    var d = { size: 0, str: '' };
+    el.sub.forEach(function (el) {
+        var d1 = recurse(el, parser, maxLength - d.str.length);
+        d.size += d1.size;
+        d.str += d1.str;
+    });
+    return d;
+}
+/** A string preview of the content (intended for humans). */
+ASN1.prototype.content = function (maxLength) {
     if (this.tag === undefined)
         return null;
     if (maxLength === undefined)
@@ -334,11 +345,11 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     case 0x02: // INTEGER
         return this.stream.parseInteger(content, content + len);
     case 0x03: // BIT_STRING
-        return this.sub ? "(" + this.sub.length + " elem)" :
-            this.stream.parseBitString(content, content + len, maxLength);
+        var d = recurse(this, 'parseBitString', maxLength);
+        return "(" + d.size + " bit)\n" + d.str;
     case 0x04: // OCTET_STRING
-        return this.sub ? "(" + this.sub.length + " elem)" :
-            this.stream.parseOctetString(content, content + len, maxLength);
+        d = recurse(this, 'parseOctetString', maxLength);
+        return "(" + d.size + " byte)\n" + d.str;
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
         return this.stream.parseOID(content, content + len, maxLength);
@@ -361,9 +372,9 @@ ASN1.prototype.content = function (maxLength) { // a preview of the content (int
     case 0x14: // TeletexString
     case 0x15: // VideotexString
     case 0x16: // IA5String
-    //case 0x19: // GraphicString
     case 0x1A: // VisibleString
     case 0x1B: // GeneralString
+    //case 0x19: // GraphicString
     //case 0x1C: // UniversalString
         return stringCut(this.stream.parseStringISO(content, content + len), maxLength);
     case 0x1E: // BMPString

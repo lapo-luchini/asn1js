@@ -10,7 +10,7 @@ Usage with `npm` / `yarn`
 
 This package can be installed with either npm or yarn via the following commands:
 
-```
+```sh
 npm install @lapo/asn1js
 # or with yarn
 yarn add @lapo/asn1js
@@ -27,7 +27,7 @@ import ASN1 from '@lapo/asn1js';
 A submodule of this package can also be imported:
 
 ```js
-const ASN1 = require('@lapo/asn1js/hex');
+const Hex = require('@lapo/asn1js/hex');
 // or with ES modules
 import Hex from '@lapo/asn1js/hex';
 ```

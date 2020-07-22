@@ -50,7 +50,7 @@ awk -v url="$URL" '
     }
     END {
         print "\"END\": \"\""
-        print "}});"
+        print "};});"
     }
 ' >oids.js
 echo Conversion completed.

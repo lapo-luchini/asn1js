@@ -1,6 +1,6 @@
 {
   "name": "@lapo/asn1js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Generic ASN.1 parser/decoder that can decode any valid ASN.1 DER or BER structures.",
   "main": "asn1.js",
   "repository": {
@@ -13,6 +13,10 @@
   "bugs": { "url": "https://github.com/lapo-luchini/asn1js/issues" },
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
+  "scripts" : {
+    "lint" : "npx eslint *.js",
+    "test" : "node test"
+  },
   "eslintConfig": {
     "env": {
       "amd": true,
@@ -20,6 +24,9 @@
       "node": true
     },
     "extends": [ "eslint:recommended" ],
+    "globals": {
+      "Uint8Array": "readonly"
+    },
     "rules": {
       "strict": [ "error", "function" ],
       "indent": [ "error", 4, { "ignoredNodes": [ "Program > ExpressionStatement > CallExpression > FunctionExpression > BlockStatement > ExpressionStatement[directive='use strict']:first-child" ] } ],
@@ -31,7 +38,8 @@
       {
         "files": [ "test.js" ],
         "rules": {
-          "strict": [ "error", "global" ]
+          "strict": [ "error", "global" ],
+          "comma-dangle": [ "error", "always-multiline" ]
         }
       }, {
         "files": [ "oids.js" ],

@@ -49,9 +49,16 @@ tests = [
     ['0620FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7F',   '2.26959946667150639794667015087019630673637144422540572481103610249135', 'OID derLen20c'],
     ['0621818080808080808080808080808080808080808080808080808080808080808000', '2.26959946667150639794667015087019630673637144422540572481103610249136', 'OID derLen21c'],
     // UTF-8
-    ['0C0E4C61706FE280997320F09F9A972E', 'Lapo’s 🚗.', 'UTF-8 4-byte sequence']
+    ['0C0E4C61706FE280997320F09F9A972E', 'Lapo’s 🚗.', 'UTF-8 4-byte sequence'],
+    // T-REC-X.690-201508
+    ['0307040A3B5F291CD0', '(44 bit)\n00001010001110110101111100101001000111001101', 'Example 8.6.4.2: bit string (primitive encoding)'],
+    ['23800303000A3B0305045F291CD00000', '(44 bit)\n00001010001110110101111100101001000111001101', 'Example 8.6.4.2: bit string (constructed encoding)'],
+    // recursive constructed
+    ['23800303000A3B230A0302005F030404291CD00000', '(44 bit)\n00001010001110110101111100101001000111001101', 'Bit string (recursive constructed)'],
 ];
 
+var run = 0,
+    error = 0;
 tests.forEach(function (t) {
     var input = t[0],
         expected = t[1],
@@ -63,8 +70,13 @@ tests.forEach(function (t) {
     } catch (e) {
         result = 'Exception:\n' + e;
     }
+    ++run;
     if (result == expected)
         console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
-    else
+    else {
+        ++error;
         console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment + '\n' + result);
+    }
 });
+console.log('Errors: ' + error + '/' + run + '.');
+process.exit(error ? 1 : 0);
