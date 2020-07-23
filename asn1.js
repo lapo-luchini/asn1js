@@ -316,7 +316,12 @@ ASN1.prototype.typeName = function () {
     }
 };
 function recurse(el, parser, maxLength) {
-    if (!el.sub)
+    var differentTags = false;
+    if (el.sub) el.sub.forEach(function (e1) {
+        if (e1.tag.tagClass != el.tag.tagClass || e1.tag.tagNumber != el.tag.tagNumber)
+            differentTags = true;
+    });
+    if (!el.sub || differentTags)
         return el.stream[parser](el.posContent(), el.posContent() + Math.abs(el.length), maxLength);
     var d = { size: 0, str: '' };
     el.sub.forEach(function (el) {
@@ -337,7 +342,8 @@ ASN1.prototype.content = function (maxLength) {
     if (!this.tag.isUniversal()) {
         if (this.sub !== null)
             return "(" + this.sub.length + " elem)";
-        return this.stream.parseOctetString(content, content + len, maxLength);
+        var d1 = this.stream.parseOctetString(content, content + len, maxLength);
+        return "(" + d1.size + " byte)\n" + d1.str;
     }
     switch (this.tag.tagNumber) {
     case 0x01: // BOOLEAN
