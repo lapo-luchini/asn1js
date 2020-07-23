@@ -87,6 +87,7 @@ function decodeBinaryString(str) {
 id('butDecode').onclick = function () { decodeText(area.value); };
 id('butClear').onclick = function () {
     area.value = '';
+    file.value = '';
     tree.innerHTML = '';
     dump.innerHTML = '';
     hash = window.location.hash = '';
