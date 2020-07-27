@@ -217,12 +217,20 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
 };
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
     var len = end - start,
-        s = "";
-    if (this.isASCII(start, end))
-        return { size: len, str: stringCut(this.parseStringISO(start, end), maxLength) };
+        s;
+    try {
+        s = this.parseStringUTF(start, end);
+        for (i = 0; i < s.length; ++i)
+            if (s.charCodeAt(i) < 32)
+                throw new Error('Unprintable character at index ' + i + ' (code ' + s.charCodeAt(i) + ")");
+        return { size: len, str: s };
+    } catch (e) {
+        // ignore
+    }
     maxLength /= 2; // we work in bytes
     if (len > maxLength)
         end = start + maxLength;
+    s = '';
     for (var i = start; i < end; ++i)
         s += this.hexByte(this.get(i));
     if (len > maxLength)
