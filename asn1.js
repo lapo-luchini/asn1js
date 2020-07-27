@@ -216,10 +216,10 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
     return { size: lenBit, str: s };
 };
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
-    if (this.isASCII(start, end))
-        return stringCut(this.parseStringISO(start, end), maxLength);
     var len = end - start,
         s = "";
+    if (this.isASCII(start, end))
+        return { size: len, str: stringCut(this.parseStringISO(start, end), maxLength) };
     maxLength /= 2; // we work in bytes
     if (len > maxLength)
         end = start + maxLength;
