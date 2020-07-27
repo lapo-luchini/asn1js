@@ -211,7 +211,7 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
         for (var j = 7; j >= skip; --j)
             s += (b >> j) & 1 ? "1" : "0";
         if (s.length > maxLength)
-            return stringCut(s, maxLength);
+            s = stringCut(s, maxLength);
     }
     return { size: lenBit, str: s };
 };
