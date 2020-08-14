@@ -14,6 +14,7 @@ var ASN1 = require('asn1'),
     wantHex = id('wantHex'),
     area = id('area'),
     file = id('file'),
+    examples = id('examples'),
     hash = null;
 
 require('dom'); // side effect: augment ASN1
@@ -93,8 +94,20 @@ id('butClear').onclick = function () {
     hash = window.location.hash = '';
 };
 id('butExample').onclick = function () {
-    var demo = 'MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIAwggHvMIIBWKADAgECAhAvoXazbunwSfREtACZZhlFMA0GCSqGSIb3DQEBBQUAMAwxCjAIBgNVBAMMAWEwHhcNMDgxMDE1MTUwMzQxWhcNMDkxMDE1MTUwMzQxWjAMMQowCAYDVQQDDAFhMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCJUwlwhu5hR8X01f-vG0mKPRHsVRjpZNxSEmsmFPdDiD9kylE3ertTDf0gRkpIvWfNJ-eymuxoXF0Qgl5gXAVuSrjupGD6J-VapixJiwLXJHokmDihLs3zfGARz08O3qnO5ofBy0pRxq5isu_bAAcjoByZ1sI_g0iAuotC1UFObwIDAQABo1IwUDAOBgNVHQ8BAf8EBAMCBPAwHQYDVR0OBBYEFEIGXQB4h-04Z3y_n7Nv94-CqPitMB8GA1UdIwQYMBaAFEIGXQB4h-04Z3y_n7Nv94-CqPitMA0GCSqGSIb3DQEBBQUAA4GBAE0G7tAiaacJxvP3fhEj-yP9VDxL0omrRRAEaMXwWaBf_Ggk1T_u-8_CDAdjuGNCiF6ctooKc8u8KpnZJsGqnpGQ4n6L2KjTtRUDh-hija0eJRBFdirPQe2HAebQGFnmOk6Mn7KiQfBIsOzXim_bFqaBSbf06bLTQNwFouSO-jwOAAAxggElMIIBIQIBATAgMAwxCjAIBgNVBAMMAWECEC-hdrNu6fBJ9ES0AJlmGUUwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTA4MTAxNTE1MDM0M1owIwYJKoZIhvcNAQkEMRYEFAAAAAAAAAAAAAAAAAAAAAAAAAAAMA0GCSqGSIb3DQEBAQUABIGAdB7ShyMGf5lVdZtvwKlnYLHMUqJWuBnFk7aQwHAmg3JnH6OcgId2F-xfg6twXm8hhUBkhHPlHGoWa5kQtN9n8rz3NorzvcM_1Xv9-0Eal7NYSn2Hb0C0DMj2XNIYH2C6CLIHkmy1egzUvzsomZPTkx5nGDWm-8WHCjWb9A6lyrMAAAAAAAA';
-    decodeText(demo);
+    console.log('Loading example:', examples.value);
+    var request = new XMLHttpRequest();
+    request.open('GET', 'examples/' + examples.value, true);
+    request.onreadystatechange = function() {
+        if (this.readyState !== 4)
+            return;
+        if (this.status >= 200 && this.status < 400) {
+            area.value = this.responseText;
+            decodeText(this.responseText);
+        } else {
+            console.log('Error loading example.');
+        }
+    };
+    request.send();
 };
 // this is only used if window.FileReader
 function read(f) {

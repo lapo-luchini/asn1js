@@ -5,6 +5,7 @@ FILES="
   index.css index.js index.html
   README.md LICENSE
   update.sh check.sh
+  examples
 "
 type gsha256sum >/dev/null && SHA256=gsha256sum || SHA256=sha256sum
 $SHA256 -t $FILES | gpg --clearsign > sha256sums.asc
