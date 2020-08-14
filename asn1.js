@@ -445,12 +445,12 @@ ASN1.prototype.toB64String = function () {
 ASN1.decodeLength = function (stream) {
     var buf = stream.get(),
         len = buf & 0x7F;
-    if (len == buf)
+    if (len == buf) // first bit was 0, short form
         return len;
+    if (len === 0) // long form with length 0 is a special case
+        return null; // undefined length
     if (len > 6) // no reason to use Int10, as it would be a huge buffer anyways
         throw "Length over 48 bits not supported at position " + (stream.pos - 1);
-    if (len === 0)
-        return null; // undefined
     buf = 0;
     for (var i = 0; i < len; ++i)
         buf = (buf * 256) + stream.get();
