@@ -1,5 +1,5 @@
 X.509 certificate based on Daniel J. Bernstein’s Curve25519 (as per RFC 8410).
-$ openssl req -x509 -newkey ed25519 -keyout test.key -out test.cer -days 3652
+$ openssl req -x509 -newkey ed25519 -keyout test.key -out test.cer -days 3652 -subj '/C=IT/L=Milano/CN=Test ed25519'
 -----BEGIN CERTIFICATE-----
 MIIBfzCCATGgAwIBAgIUfI5kSdcO2S0+LkpdL3b2VUJG10YwBQYDK2VwMDUxCzAJ
 BgNVBAYTAklUMQ8wDQYDVQQHDAZNaWxhbm8xFTATBgNVBAMMDFRlc3QgZWQyNTUx
