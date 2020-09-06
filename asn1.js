@@ -220,9 +220,12 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
         s;
     try {
         s = this.parseStringUTF(start, end);
-        for (i = 0; i < s.length; ++i)
-            if (s.charCodeAt(i) < 32)
+        var v;
+        for (i = 0; i < s.length; ++i) {
+            v = s.charCodeAt(i);
+            if (v < 32 && v != 9 && v != 10 && v != 13) // [\t\r\n] are (kinda) printable
                 throw new Error('Unprintable character at index ' + i + ' (code ' + s.charCodeAt(i) + ")");
+        }
         return { size: len, str: s };
     } catch (e) {
         // ignore
