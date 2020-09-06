@@ -32,6 +32,23 @@ const Hex = require('@lapo/asn1js/hex');
 import Hex from '@lapo/asn1js/hex';
 ```
 
+Usage with RequireJS
+--------------------
+
+Can be [tested on JSFiddle](https://jsfiddle.net/lapo/tmdq35ug/).
+
+```html
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script>
+require([
+  'https://unpkg.com/@lapo/asn1js/asn1.js',
+  'https://unpkg.com/@lapo/asn1js/hex.js'
+], function(ASN1, Hex) {
+  document.body.innerText = ASN1.decode(Hex.decode('06032B6570')).content();
+});
+</script>
+```
+
 ISC license
 -----------
 
