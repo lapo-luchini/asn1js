@@ -38,7 +38,7 @@ Usage with RequireJS
 Can be [tested on JSFiddle](https://jsfiddle.net/lapo/tmdq35ug/).
 
 ```html
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/requirejs/require.js"></script>
 <script>
 require([
   'https://unpkg.com/@lapo/asn1js/asn1.js',
