@@ -14,13 +14,13 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 (typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') factory(function (name) { return require('./' + name); });
-    else factory(function (name) { return window[name]; });
+    if (typeof module == 'object') factory(function (name) { return require(name); });
+    else factory(function (name) { return window[name.substring(2)]; });
 })(function (require) {
 "use strict";
 
-var ASN1 = require('asn1'),
-    oids = require('oids'),
+var ASN1 = require('./asn1'),
+    oids = require('./oids'),
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {

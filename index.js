@@ -1,12 +1,12 @@
 (typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') factory(function (name) { return require('./' + name); });
-    else factory(function (name) { return window[name]; });
+    if (typeof module == 'object') factory(function (name) { return require(name); });
+    else factory(function (name) { return window[name.substring(2)]; });
 })(function (require) {
 "use strict";
 
-var ASN1 = require('asn1'),
-    Base64 = require('base64'),
-    Hex = require('hex'),
+var ASN1 = require('./asn1'),
+    Base64 = require('./base64'),
+    Hex = require('./hex'),
     maxLength = 10240,
     reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
     tree = id('tree'),
