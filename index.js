@@ -17,7 +17,7 @@ var ASN1 = require('./asn1'),
     examples = id('examples'),
     hash = null;
 
-require('dom'); // side effect: augment ASN1
+require('./dom'); // side effect: augment ASN1
 function id(elem) {
     return document.getElementById(elem);
 }
