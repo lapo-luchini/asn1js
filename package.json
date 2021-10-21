@@ -14,7 +14,7 @@
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
   "scripts" : {
-    "lint" : "npx eslint *.js",
+    "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js",
     "test" : "node test"
   },
   "eslintConfig": {
