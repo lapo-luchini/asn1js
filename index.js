@@ -18,6 +18,8 @@ var ASN1 = require('./asn1'),
     hash = null;
 
 require('./dom'); // side effect: augment ASN1
+if (!window.console || !window.console.log) // IE8 with closed developer tools
+    window.console = { log: function () {} };
 function id(elem) {
     return document.getElementById(elem);
 }
