@@ -86,7 +86,7 @@ Base64.pretty = function (str) {
     return str.replace(/(.{80})/g, '$1\n');
 };
 
-Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+/=\s]+)====/;
+Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+/=\s]+)====|^([A-Za-z0-9+/=\s]+)$/;
 Base64.unarmor = function (a) {
     var m = Base64.re.exec(a);
     if (m) {
@@ -94,6 +94,8 @@ Base64.unarmor = function (a) {
             a = m[1];
         else if (m[2])
             a = m[2];
+        else if (m[3])
+            a = m[3];
         else
             throw "RegExp out of sync";
     }
