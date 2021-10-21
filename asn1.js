@@ -327,12 +327,15 @@ ASN1.prototype.typeName = function () {
     }
 };
 function recurse(el, parser, maxLength) {
-    var differentTags = false;
-    if (el.sub) el.sub.forEach(function (e1) {
-        if (e1.tag.tagClass != el.tag.tagClass || e1.tag.tagNumber != el.tag.tagNumber)
-            differentTags = true;
-    });
-    if (!el.sub || differentTags)
+    var avoidRecurse = true;
+    if (el.tag.tagConstructed && el.sub) {
+        avoidRecurse = false;
+        el.sub.forEach(function (e1) {
+            if (e1.tag.tagClass != el.tag.tagClass || e1.tag.tagNumber != el.tag.tagNumber)
+                avoidRecurse = true;
+        });
+    }
+    if (avoidRecurse)
         return el.stream[parser](el.posContent(), el.posContent() + Math.abs(el.length), maxLength);
     var d = { size: 0, str: '' };
     el.sub.forEach(function (el) {
