@@ -99,4 +99,5 @@ html, body {
 #dump .skip            { color: #666666; background-color: #C0C0C0; }
 #dump .hexCurrent      { background-color: #808080; }
 #dump .hexCurrent .hex { background-color: #A0A0A0; }
+#dump .hexCurrent .dlen { color: #004040; }
 #file { display: none; }
