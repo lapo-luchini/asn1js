@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-var Hex = require('./hex.js'),
-    ASN1 = require('./asn1.js'),
-    tests;
+const
+    Hex = require('./hex.js'),
+    ASN1 = require('./asn1.js');
 
-tests = [
+const tests = [
     // http://luca.ntop.org/Teaching/Appunti/asn1.html
     ['0304066E5DC0', '(18 bit)\n011011100101110111', 'Bit string: DER encoding'],
     ['0304066E5DE0', '(18 bit)\n011011100101110111', 'Bit string: padded with "100000"'],
@@ -61,13 +61,14 @@ tests = [
     ['0420041EE4E3B7ED350CC24D034E436D9A1CB15BB1E328D37062FB82E84618AB0A3C', '(32 byte)\n041EE4E3B7ED350CC24D034E436D9A1CB15BB1E328D37062FB82E84618AB0A3C', 'Do not mix encapsulated and structured octet strings'], // GitHub issue #47
 ];
 
-var run = 0,
+let
+    run = 0,
     error = 0;
 tests.forEach(function (t) {
-    var input = t[0],
+    const input = t[0],
         expected = t[1],
-        comment = t[2],
-        result = null;
+        comment = t[2];
+    let result;
     try {
         result = ASN1.decode(Hex.decode(input)).content();
         //TODO: check structure, not only first level content
