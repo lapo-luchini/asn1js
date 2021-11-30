@@ -36,7 +36,11 @@
     },
     "overrides": [
       {
-        "files": [ "test.js" ],
+        "files": [ "test.js", "parseRFC.js" ],
+        "parserOptions": {
+          "ecmaVersion": 6,
+          "sourceType": "module"
+        },
         "rules": {
           "strict": [ "error", "global" ],
           "comma-dangle": [ "error", "always-multiline" ]
