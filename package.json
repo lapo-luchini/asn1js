@@ -38,8 +38,7 @@
       {
         "files": [ "test.js", "parseRFC.js", "dumpASN1.js" ],
         "parserOptions": {
-          "ecmaVersion": 6,
-          "sourceType": "module"
+          "ecmaVersion": 6
         },
         "rules": {
           "strict": [ "error", "global" ],
