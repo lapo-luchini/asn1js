@@ -1,7 +1,6 @@
 #! /usr/bin/env node
 
 const
-    util = require('util'),
     fs = require('fs'),
     patches = { // to fix some known RFCs' ASN.1 syntax errors
         0: [
@@ -381,10 +380,7 @@ Parser.prototype.parseValue = function (type) {
     }
 };*/
 Parser.prototype.parseElementType = function () {
-    let x = {
-        name: this.parseIdentifier(),
-        type: this.parseType(),
-    };
+    let x = Object.assign({ id: this.parseIdentifier() }, this.parseType());
     // console.log('[debug] parseElementType 1:', x);
     if (this.tryToken('OPTIONAL'))
         x.optional = true;
