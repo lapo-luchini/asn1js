@@ -14,7 +14,7 @@
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
   "scripts" : {
-    "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js",
+    "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js parseRFC.js dumpASN1.js",
     "test" : "node test"
   },
   "eslintConfig": {
@@ -36,7 +36,7 @@
     },
     "overrides": [
       {
-        "files": [ "test.js", "parseRFC.js" ],
+        "files": [ "test.js", "parseRFC.js", "dumpASN1.js" ],
         "parserOptions": {
           "ecmaVersion": 6,
           "sourceType": "module"
