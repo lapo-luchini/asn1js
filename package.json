@@ -38,7 +38,7 @@
       {
         "files": [ "test.js", "parseRFC.js", "dumpASN1.js" ],
         "parserOptions": {
-          "ecmaVersion": 6
+          "ecmaVersion": 2020
         },
         "rules": {
           "strict": [ "error", "global" ],
