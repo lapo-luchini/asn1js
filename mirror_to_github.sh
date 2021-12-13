@@ -1,5 +1,6 @@
 #!/bin/sh
 cd `dirname "$0"`
+mtn sy
 if [ ! -d .git ]; then
     git init
     git remote add origin git@github.com:lapo-luchini/asn1js.git
