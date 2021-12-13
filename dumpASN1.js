@@ -2,6 +2,7 @@
 'use strict';
 
 const
+    fs = require('fs'),
     Base64 = require('./base64.js'),
     ASN1 = require('./asn1.js'),
     rfc = require('./rfcasn1.json'),
@@ -12,11 +13,11 @@ function translate(def) {
     if (def?.type?.type)
         def = def.type;
     while (def?.type == 'defined') {
-        let name = def.name;
+        const name = def.name;
         try {
-            def = rfc['1.3.6.1.5.5.7.0.18'].types[def.name].type;
+            def = rfc['1.3.6.1.5.5.7.0.18'].types[name].type;
         } catch (e) {
-            throw 'Type not found: ' + def.name;
+            throw 'Type not found: ' + name;
         }
     }
     return def ?? {};
@@ -62,7 +63,14 @@ function print(value, def, indent) {
             s += print(value.sub[i], deftype?.content?.[deftype?.typeOf ? 0 : i], indent);
     }
     return s;
-};
+}
 
-let result = ASN1.decode(Base64.decode(process.argv[2]));
+let content = fs.readFileSync(process.argv[2]);
+let result;
+try { // try PEM first
+    result = ASN1.decode(Base64.unarmor(content));
+} catch (e) { // try DER/BER then
+    result = ASN1.decode(Base64.unarmor(content));
+}
+content = null;
 console.log(print(result, rfc['1.3.6.1.5.5.7.0.18'].types.Certificate));
