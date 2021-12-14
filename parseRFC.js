@@ -454,7 +454,7 @@ if (num in patches)
         s = s.replace(p[0], p[1]);
 // fs.writeFileSync('rfc3161_patched.txt', s, 'utf8');
 // console.log(s);
-asn1 = JSON.parse(fs.readFileSync('rfcasn1.json', 'utf8'));
+asn1 = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 const reModuleDefinition = /\s[A-Z](?:[-]?[a-zA-Z0-9])*\s*\{[^}]+\}\s*DEFINITIONS/gm;
 let m;
 while ((m = reModuleDefinition.exec(s))) {
@@ -470,7 +470,7 @@ while ((m = reModuleDefinition.exec(s))) {
     }, 
     {}
 );*/
-fs.writeFileSync('rfcasn1.json', JSON.stringify(asn1, null, 2) + '\n', 'utf8');
+fs.writeFileSync(process.argv[3], JSON.stringify(asn1, null, 2) + '\n', 'utf8');
 // console.log('Module:', mod);
 /*while ((idx = s.indexOf('::=', idx + 1)) >= 0) {
     let line = s.lastIndexOf('\n', idx) + 1;

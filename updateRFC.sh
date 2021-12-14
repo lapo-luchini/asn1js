@@ -12,8 +12,9 @@ downloadRFC() {
 }
 echo '{}' > rfcasn1.json # start from scratch
 mkdir -p rfc
+cd rfc
 for n in 5280 3369 3161; do
-    ( cd rfc ; downloadRFC $n )
-    ./parseRFC.js rfc/rfc$n.txt
+    downloadRFC $n
+    ../parseRFC.js rfc$n.txt ../rfcasn1.json
 done
 echo Conversion completed.
