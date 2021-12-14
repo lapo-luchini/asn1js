@@ -66,11 +66,10 @@ function print(value, def, indent) {
 }
 
 let content = fs.readFileSync(process.argv[2]);
-let result;
 try { // try PEM first
-    result = ASN1.decode(Base64.unarmor(content));
+    content = Base64.unarmor(content);
 } catch (e) { // try DER/BER then
-    result = ASN1.decode(Base64.unarmor(content));
 }
+let result = ASN1.decode(content);
 content = null;
 console.log(print(result, rfc['1.3.6.1.5.5.7.0.18'].types.Certificate));
