@@ -1,5 +1,5 @@
 // Big integer base-10 printing library
-// Copyright (c) 2008-2021 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2022 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
