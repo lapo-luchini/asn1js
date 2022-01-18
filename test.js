@@ -3,18 +3,40 @@
 
 const
     Hex = require('./hex.js'),
-    ASN1 = require('./asn1.js');
+    ASN1 = require('./asn1.js'),
+    all = (process.argv[2] == 'all');
 
 const tests = [
-    // http://luca.ntop.org/Teaching/Appunti/asn1.html
-    ['0304066E5DC0', '(18 bit)\n011011100101110111', 'Bit string: DER encoding'],
-    ['0304066E5DE0', '(18 bit)\n011011100101110111', 'Bit string: padded with "100000"'],
-    ['038104066E5DC0', '(18 bit)\n011011100101110111', 'Bit string: long form of length octets'],
-    ['0304086E5DC0', 'Exception:\nInvalid BitString with unusedBits=8', 'Bit string: invalid unusedBits'],
-    ['23090303006E5D030206C0', '(18 bit)\n011011100101110111', 'Bit string (constructed encoding): "0110111001011101" + "11"'],
-    ['04080123456789ABCDEF', '(8 byte)\n0123456789ABCDEF', 'Octet string: DER encoding'],
-    ['0481080123456789ABCDEF', '(8 byte)\n0123456789ABCDEF', 'Octet string: long form of length octets'],
-    ['240C040401234567040489ABCDEF', '(8 byte)\n0123456789ABCDEF', 'Octet string (constructed encoding): 01…67 + 89…ef'],
+    // RSA Laboratories technical notes from https://luca.ntop.org/Teaching/Appunti/asn1.html
+    ['0304066E5DC0', '(18 bit)\n011011100101110111', 'ntop, bit string: DER encoding'],
+    ['0304066E5DE0', '(18 bit)\n011011100101110111', 'ntop, bit string: padded with "100000"'],
+    ['038104066E5DC0', '(18 bit)\n011011100101110111', 'ntop, bit string: long form of length octets'],
+    ['23090303006E5D030206C0', '(18 bit)\n011011100101110111', 'ntop, bit string (constructed encoding): "0110111001011101" + "11"'],
+    ['160D7465737431407273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: DER encoding'],
+    ['16810D7465737431407273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: long form of length octets'],
+    ['36131605746573743116014016077273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: constructed encoding: "test1" + "@" + "rsa.com"', 'constructed strings are currently unsupported'],
+    ['020100', '0', 'ntop, integer: 0'],
+    ['02017F', '127', 'ntop, integer: 127'],
+    ['02020080', '128', 'ntop, integer: 128'],
+    ['02020100', '256', 'ntop, integer: 256'],
+    ['020180', '-128', 'ntop, integer: -128'],
+    ['0202FF7F', '-129', 'ntop, integer: -129'],
+    ['0500', null, 'ntop, null: DER'],
+    ['058100', null, 'ntop, null: long form of length octets'],
+    ['06062A864886F70D', '1.2.840.113549', 'ntop, object identifier'],
+    ['04080123456789ABCDEF', '(8 byte)\n0123456789ABCDEF', 'ntop, octet string: DER encoding'],
+    ['0481080123456789ABCDEF', '(8 byte)\n0123456789ABCDEF', 'ntop, octet string: long form of length octets'],
+    ['240C040401234567040489ABCDEF', '(8 byte)\n0123456789ABCDEF', 'ntop, octet string (constructed encoding): 01…67 + 89…ef'],
+    ['130B5465737420557365722031', 'Test User 1', 'ntop, printable string: DER encoding'],
+    ['13810B5465737420557365722031', 'Test User 1', 'ntop, printable string: long form of length octets'],
+    ['330F130554657374201306557365722031', 'Test User 1', 'ntop, printable string: constructed encoding: "Test " + "User 1"', 'constructed strings are currently unsupported'],
+    ['140F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: DER encoding', 'T61 strings are currently not converted'],
+    ['14810F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: long form of length octets', 'T61 strings are currently not converted'],
+    ['34151405636CC2657314012014097075626C6971756573', 'clés publiques', 'ntop, t61string: constructed encoding: "clés" + " " + "publiques"', 'T61 strings are currently not converted'],
+    ['170D3931303530363233343534305A', '1991-05-06 23:45:40 UTC', 'ntop, utc time: UTC'],
+    ['17113931303530363136343534302D30373030', '1991-05-06 16:45:40 -07:00', 'ntop, utc time: PDT', 'timezones currently not supported'],
+    // inspired by http://luca.ntop.org/Teaching/Appunti/asn1.html
+    ['0304086E5DC0', 'Exception:\nInvalid BitString with unusedBits=8', 'bit string: invalid unusedBits'],
     // http://msdn.microsoft.com/en-us/library/windows/desktop/aa379076(v=vs.85).aspx
     ['30820319308202820201003023310F300D0603550403130654657374434E3110300E060355040A1307546573744F726730819F300D06092A864886F70D010101050003818D00308189028181008FE2412A08E851A88CB3E853E7D54950B3278A2BCBEAB54273EA0257CC6533EE882061A11756C12418E3A808D3BED931F3370B94B8CC43080B7024F79CB18D5DD66D82D0540984F89F970175059C89D4D5C91EC913D72A6B309119D6D442E0C49D7C9271E1B22F5C8DEEF0F1171ED25F315BB19CBC2055BF3A37424575DC90650203010001A08201B4301A060A2B0601040182370D0203310C160A362E302E353336312E323042060A2B0601040182370D0201313430321E260043006500720074006900660069006300610074006500540065006D0070006C0061007400651E080055007300650072305706092B0601040182371514314A30480201090C237669636833642E6A646F6D6373632E6E74746573742E6D6963726F736F66742E636F6D0C154A444F4D4353435C61646D696E6973747261746F720C07636572747265713074060A2B0601040182370D0202316630640201011E5C004D006900630072006F0073006F0066007400200045006E00680061006E006300650064002000430072007900700074006F0067007200610070006800690063002000500072006F00760069006400650072002000760031002E003003010030818206092A864886F70D01090E31753073301706092B0601040182371402040A1E08005500730065007230290603551D2504223020060A2B0601040182370A030406082B0601050507030406082B06010505070302300E0603551D0F0101FF0404030205A0301D0603551D0E041604143C0F73DAF8EF41D83AEABE922A5D2C966A7B9454300D06092A864886F70D01010505000381810047EB995ADF9E700DFBA73132C15F5C24C2E0BFC624AF15660EB86A2EAB2BC4971FE3CBDC63A525ECC7B428616636A1311BBFDDD0FCBF1794901DE55EC7115EC9559FEBA33E14C799A6CBBAA1460F39D444C4C84B760E205D6DA9349ED4D58742EB2426511490B40F065E5288327A9520A0FDF7E57D60DD72689BF57B058F6D1E',
         '(3 elem)', 'PKCS#10 request'],
@@ -63,11 +85,13 @@ const tests = [
 
 let
     run = 0,
+    expErr = 0,
     error = 0;
 tests.forEach(function (t) {
     const input = t[0],
         expected = t[1],
-        comment = t[2];
+        comment = t[2],
+        errorReason = t[3];
     let result;
     try {
         result = ASN1.decode(Hex.decode(input)).content();
@@ -76,12 +100,15 @@ tests.forEach(function (t) {
         result = 'Exception:\n' + e;
     }
     ++run;
-    if (result == expected)
-        console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
-    else {
+    if (result == expected) {
+        if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
+    } else if (errorReason) {
+        ++expErr;
+        console.log('\x1B[1m\x1B[33mEXP\x1B[39m\x1B[22m ' + comment + ' (' + errorReason + ')');
+    } else {
         ++error;
         console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment + '\n' + result);
     }
 });
-console.log('Errors: ' + error + '/' + run + '.');
+console.log(run + ' tested, ' + expErr + ' expected, ' + error + ' errors.');
 process.exit(error ? 1 : 0);
