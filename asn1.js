@@ -94,13 +94,13 @@ Stream.prototype.isASCII = function (start, end) {
     }
     return true;
 };
-Stream.prototype.parseStringISO = function (start, end) {
+Stream.prototype.parseStringISO = function (start, end, maxLength) {
     var s = "";
     for (var i = start; i < end; ++i)
         s += String.fromCharCode(this.get(i));
-    return s;
+    return { size: s.length, str: stringCut(s, maxLength) };
 };
-Stream.prototype.parseStringUTF = function (start, end) {
+Stream.prototype.parseStringUTF = function (start, end, maxLength) {
     function ex(c) { // must be 10xxxxxx
         if ((c < 0x80) || (c >= 0xC0))
             throw new Error('Invalid UTF-8 continuation byte: ' + c);
@@ -129,19 +129,19 @@ Stream.prototype.parseStringUTF = function (start, end) {
         else
             throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
     }
-    return s;
+    return { size: s.length, str: stringCut(s, maxLength) };
 };
 Stream.prototype.parseStringBMP = function (start, end) {
-    var str = "", hi, lo;
+    var s = "", hi, lo;
     for (var i = start; i < end; ) {
         hi = this.get(i++);
         lo = this.get(i++);
-        str += String.fromCharCode((hi << 8) | lo);
+        s += String.fromCharCode((hi << 8) | lo);
     }
-    return str;
+    return { size: s.length, str: stringCut(s, maxLength) };
 };
 Stream.prototype.parseTime = function (start, end, shortYear) {
-    var s = this.parseStringISO(start, end),
+    var s = this.parseStringISO(start, end).str,
         m = (shortYear ? reTimeS : reTimeL).exec(s);
     if (!m)
         return "Unrecognized time: " + s;
@@ -215,18 +215,21 @@ Stream.prototype.parseBitString = function (start, end, maxLength) {
     }
     return { size: lenBit, str: s };
 };
+function checkPrintable(s) {
+    var i, v;
+    for (i = 0; i < s.length; ++i) {
+        v = s.charCodeAt(i);
+        if (v < 32 && v != 9 && v != 10 && v != 13) // [\t\r\n] are (kinda) printable
+            throw new Error('Unprintable character at index ' + i + ' (code ' + s.str.charCodeAt(i) + ")");
+    }
+}
 Stream.prototype.parseOctetString = function (start, end, maxLength) {
     var len = end - start,
         s;
     try {
-        s = this.parseStringUTF(start, end);
-        var v;
-        for (i = 0; i < s.length; ++i) {
-            v = s.charCodeAt(i);
-            if (v < 32 && v != 9 && v != 10 && v != 13) // [\t\r\n] are (kinda) printable
-                throw new Error('Unprintable character at index ' + i + ' (code ' + s.charCodeAt(i) + ")");
-        }
-        return { size: len, str: s };
+        s = this.parseStringUTF(start, end, maxLength);
+        checkPrintable(s.str);
+        return { size: end - start, str: s.str };
     } catch (e) {
         // ignore
     }
@@ -386,7 +389,7 @@ ASN1.prototype.content = function (maxLength) {
         else
             return "(no elem)";
     case 0x0C: // UTF8String
-        return stringCut(this.stream.parseStringUTF(content, content + len), maxLength);
+        return recurse(this, 'parseStringUTF', maxLength).str;
     case 0x12: // NumericString
     case 0x13: // PrintableString
     case 0x14: // TeletexString
@@ -396,9 +399,9 @@ ASN1.prototype.content = function (maxLength) {
     case 0x1B: // GeneralString
     //case 0x19: // GraphicString
     //case 0x1C: // UniversalString
-        return stringCut(this.stream.parseStringISO(content, content + len), maxLength);
+        return recurse(this, 'parseStringISO', maxLength).str;
     case 0x1E: // BMPString
-        return stringCut(this.stream.parseStringBMP(content, content + len), maxLength);
+        return recurse(this, 'parseStringBMP', maxLength).str;
     case 0x17: // UTCTime
     case 0x18: // GeneralizedTime
         return this.stream.parseTime(content, content + len, (this.tag.tagNumber == 0x17));

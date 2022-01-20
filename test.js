@@ -14,7 +14,7 @@ const tests = [
     ['23090303006E5D030206C0', '(18 bit)\n011011100101110111', 'ntop, bit string (constructed encoding): "0110111001011101" + "11"'],
     ['160D7465737431407273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: DER encoding'],
     ['16810D7465737431407273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: long form of length octets'],
-    ['36131605746573743116014016077273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: constructed encoding: "test1" + "@" + "rsa.com"', 'constructed strings are currently unsupported'],
+    ['36131605746573743116014016077273612E636F6D', 'test1@rsa.com', 'ntop, ia5string: constructed encoding: "test1" + "@" + "rsa.com"'],
     ['020100', '0', 'ntop, integer: 0'],
     ['02017F', '127', 'ntop, integer: 127'],
     ['02020080', '128', 'ntop, integer: 128'],
@@ -29,7 +29,7 @@ const tests = [
     ['240C040401234567040489ABCDEF', '(8 byte)\n0123456789ABCDEF', 'ntop, octet string (constructed encoding): 01…67 + 89…ef'],
     ['130B5465737420557365722031', 'Test User 1', 'ntop, printable string: DER encoding'],
     ['13810B5465737420557365722031', 'Test User 1', 'ntop, printable string: long form of length octets'],
-    ['330F130554657374201306557365722031', 'Test User 1', 'ntop, printable string: constructed encoding: "Test " + "User 1"', 'constructed strings are currently unsupported'],
+    ['330F130554657374201306557365722031', 'Test User 1', 'ntop, printable string: constructed encoding: "Test " + "User 1"'],
     ['140F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: DER encoding', 'T61 strings are currently not converted'],
     ['14810F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: long form of length octets', 'T61 strings are currently not converted'],
     ['34151405636CC2657314012014097075626C6971756573', 'clés publiques', 'ntop, t61string: constructed encoding: "clés" + " " + "publiques"', 'T61 strings are currently not converted'],
@@ -104,7 +104,7 @@ tests.forEach(function (t) {
         if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
     } else if (errorReason) {
         ++expErr;
-        console.log('\x1B[1m\x1B[33mEXP\x1B[39m\x1B[22m ' + comment + ' (' + errorReason + ')');
+        console.log('\x1B[1m\x1B[33mEXP\x1B[39m\x1B[22m ' + comment + ' (' + errorReason + ')' + '\n' + result);
     } else {
         ++error;
         console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment + '\n' + result);
