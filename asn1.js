@@ -131,7 +131,7 @@ Stream.prototype.parseStringUTF = function (start, end, maxLength) {
     }
     return { size: s.length, str: stringCut(s, maxLength) };
 };
-Stream.prototype.parseStringBMP = function (start, end) {
+Stream.prototype.parseStringBMP = function (start, end, maxLength) {
     var s = "", hi, lo;
     for (var i = start; i < end; ) {
         hi = this.get(i++);
