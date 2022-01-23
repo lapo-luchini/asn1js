@@ -100,6 +100,45 @@ Stream.prototype.parseStringISO = function (start, end, maxLength) {
         s += String.fromCharCode(this.get(i));
     return { size: s.length, str: stringCut(s, maxLength) };
 };
+Stream.prototype.parseStringT61 = function (start, end, maxLength) {
+    // warning: this code is not very well tested so far
+    function merge(c, d) {
+        var table = [
+            ['', ''],
+            ['AEIOUaeiou', 'ÀÈÌÒÙàèìòù'], // Grave
+            ['ACEILNORSUYZacegilnorsuyz', 'ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź'], // Acute
+            ['ACEGHIJOSUWYaceghijosuwy', 'ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ'], // Circumflex
+            ['AINOUainou', 'ÃĨÑÕŨãĩñõũ'], // Tilde
+            ['AEIOUaeiou', 'ĀĒĪŌŪāēīōū'], // Macron
+            ['AGUagu', 'ĂĞŬăğŭ'], // Breve
+            ['CEGIZcegz', 'ĊĖĠİŻċėġż'], // Dot
+            ['AEIOUYaeiouy', 'ÄËÏÖÜŸäëïöüÿ'], // Umlaut or diæresis
+            ['', ''],
+            ['AUau', 'ÅŮåů'], // Ring
+            ['CGKLNRSTcklnrst', 'ÇĢĶĻŅŖŞŢçķļņŗşţ'], // Cedilla
+            ['', ''],
+            ['OUou', 'ŐŰőű'], // Double Acute
+            ['AEIUaeiu', 'ĄĘĮŲąęįų'], // Ogonek
+            ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'], // Caron
+        ];
+        var t = table[c - 0xC0];
+        var i = t[0].indexOf(String.fromCharCode(d));
+        return (i < 0) ? '\0' : t[1].charAt(i);
+    }
+    var s = "", c;
+    for (var i = start; i < end; ++i) {
+        c = this.get(i);
+        if (c >= 0xA4 && c <= 0xBF)
+            s += '$¥#§¤\0\0«\0\0\0\0°±²³×µ¶·÷\0\0»¼½¾¿'.charAt(c - 0xA4);
+        else if (c >= 0xE0 && c <= 0xFF)
+            s += 'ΩÆÐªĦ\0ĲĿŁØŒºÞŦŊŉĸæđðħıĳŀłøœßþŧŋ\0'.charAt(c - 0xE0);
+        else if (c >= 0xC0 && c <= 0xCF)
+            s += merge(c, this.get(++i));
+        else // using ISO 8859-1 for characters undefined (or equal) in T61
+            s += String.fromCharCode(c);
+    }
+    return { size: s.length, str: stringCut(s, maxLength) };
+};
 Stream.prototype.parseStringUTF = function (start, end, maxLength) {
     function ex(c) { // must be 10xxxxxx
         if ((c < 0x80) || (c >= 0xC0))
@@ -390,9 +429,10 @@ ASN1.prototype.content = function (maxLength) {
             return "(no elem)";
     case 0x0C: // UTF8String
         return recurse(this, 'parseStringUTF', maxLength).str;
+    case 0x14: // TeletexString
+        return recurse(this, 'parseStringT61', maxLength).str;
     case 0x12: // NumericString
     case 0x13: // PrintableString
-    case 0x14: // TeletexString
     case 0x15: // VideotexString
     case 0x16: // IA5String
     case 0x1A: // VisibleString

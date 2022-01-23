@@ -30,9 +30,9 @@ const tests = [
     ['130B5465737420557365722031', 'Test User 1', 'ntop, printable string: DER encoding'],
     ['13810B5465737420557365722031', 'Test User 1', 'ntop, printable string: long form of length octets'],
     ['330F130554657374201306557365722031', 'Test User 1', 'ntop, printable string: constructed encoding: "Test " + "User 1"'],
-    ['140F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: DER encoding', 'T61 strings are currently not converted'],
-    ['14810F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: long form of length octets', 'T61 strings are currently not converted'],
-    ['34151405636CC2657314012014097075626C6971756573', 'clés publiques', 'ntop, t61string: constructed encoding: "clés" + " " + "publiques"', 'T61 strings are currently not converted'],
+    ['140F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: DER encoding'],
+    ['14810F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: long form of length octets'],
+    ['34151405636CC2657314012014097075626C6971756573', 'clés publiques', 'ntop, t61string: constructed encoding: "clés" + " " + "publiques"'],
     ['170D3931303530363233343534305A', '1991-05-06 23:45:40 UTC', 'ntop, utc time: UTC'],
     ['17113931303530363136343534302D30373030', '1991-05-06 16:45:40 -07:00', 'ntop, utc time: PDT', 'timezones currently not supported'],
     // inspired by http://luca.ntop.org/Teaching/Appunti/asn1.html
