@@ -119,7 +119,7 @@ Stream.prototype.parseStringT61 = function (start, end, maxLength) {
             ['', ''],
             ['OUou', 'ŐŰőű'], // Double Acute
             ['AEIUaeiu', 'ĄĘĮŲąęįų'], // Ogonek
-            ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'], // Caron
+            ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'] // Caron
         ];
         var t = table[c - 0xC0];
         var i = t[0].indexOf(String.fromCharCode(d));
@@ -134,7 +134,7 @@ Stream.prototype.parseStringT61 = function (start, end, maxLength) {
             s += 'ΩÆÐªĦ\0ĲĿŁØŒºÞŦŊŉĸæđðħıĳŀłøœßþŧŋ\0'.charAt(c - 0xE0);
         else if (c >= 0xC0 && c <= 0xCF)
             s += merge(c, this.get(++i));
-        else // using ISO 8859-1 for characters undefined (or equal) in T61
+        else // using ISO 8859-1 for characters undefined (or equal) in T.61
             s += String.fromCharCode(c);
     }
     return { size: s.length, str: stringCut(s, maxLength) };
