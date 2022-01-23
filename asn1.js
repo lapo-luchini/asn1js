@@ -100,28 +100,28 @@ Stream.prototype.parseStringISO = function (start, end, maxLength) {
         s += String.fromCharCode(this.get(i));
     return { size: s.length, str: stringCut(s, maxLength) };
 };
+var tableT61 = [
+    ['', ''],
+    ['AEIOUaeiou', 'ÀÈÌÒÙàèìòù'], // Grave
+    ['ACEILNORSUYZacegilnorsuyz', 'ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź'], // Acute
+    ['ACEGHIJOSUWYaceghijosuwy', 'ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ'], // Circumflex
+    ['AINOUainou', 'ÃĨÑÕŨãĩñõũ'], // Tilde
+    ['AEIOUaeiou', 'ĀĒĪŌŪāēīōū'], // Macron
+    ['AGUagu', 'ĂĞŬăğŭ'], // Breve
+    ['CEGIZcegz', 'ĊĖĠİŻċėġż'], // Dot
+    ['AEIOUYaeiouy', 'ÄËÏÖÜŸäëïöüÿ'], // Umlaut or diæresis
+    ['', ''],
+    ['AUau', 'ÅŮåů'], // Ring
+    ['CGKLNRSTcklnrst', 'ÇĢĶĻŅŖŞŢçķļņŗşţ'], // Cedilla
+    ['', ''],
+    ['OUou', 'ŐŰőű'], // Double Acute
+    ['AEIUaeiu', 'ĄĘĮŲąęįų'], // Ogonek
+    ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'] // Caron
+];
 Stream.prototype.parseStringT61 = function (start, end, maxLength) {
     // warning: this code is not very well tested so far
     function merge(c, d) {
-        var table = [
-            ['', ''],
-            ['AEIOUaeiou', 'ÀÈÌÒÙàèìòù'], // Grave
-            ['ACEILNORSUYZacegilnorsuyz', 'ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź'], // Acute
-            ['ACEGHIJOSUWYaceghijosuwy', 'ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ'], // Circumflex
-            ['AINOUainou', 'ÃĨÑÕŨãĩñõũ'], // Tilde
-            ['AEIOUaeiou', 'ĀĒĪŌŪāēīōū'], // Macron
-            ['AGUagu', 'ĂĞŬăğŭ'], // Breve
-            ['CEGIZcegz', 'ĊĖĠİŻċėġż'], // Dot
-            ['AEIOUYaeiouy', 'ÄËÏÖÜŸäëïöüÿ'], // Umlaut or diæresis
-            ['', ''],
-            ['AUau', 'ÅŮåů'], // Ring
-            ['CGKLNRSTcklnrst', 'ÇĢĶĻŅŖŞŢçķļņŗşţ'], // Cedilla
-            ['', ''],
-            ['OUou', 'ŐŰőű'], // Double Acute
-            ['AEIUaeiu', 'ĄĘĮŲąęįų'], // Ogonek
-            ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'] // Caron
-        ];
-        var t = table[c - 0xC0];
+        var t = tableT61[c - 0xC0];
         var i = t[0].indexOf(String.fromCharCode(d));
         return (i < 0) ? '\0' : t[1].charAt(i);
     }
