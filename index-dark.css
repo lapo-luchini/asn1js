@@ -10,7 +10,7 @@
     --link-color: #58a6ff;
     --link-hover-color: #9b9bea;
     --header-bg-color: #161b22;
-    --help-bg-color: #000000;
+    --page-bg-color: #000000;
     --license-bg-color: #4b4a4a;
     --license-border-color: black;
     --sub-border-color: #383838;
@@ -20,7 +20,7 @@
     --dump-border-color: #505050;
 }
 html, body {
-    background-color: var(--main-bg-color);
+    background-color: var(--page-bg-color);
     color: var(--main-text-color);
     font-family: Arial, Helvetica, sans-serif;
     text-align: justify;
@@ -67,8 +67,12 @@ header {
     padding: 8px;
     padding-left: 16px;
 }
+#main-page {
+    background-color: var(--main-bg-color);
+    border: 0px;
+    padding: 15px;
+}
 #help {
-    background-color: var(--help-bg-color);
     margin: 0px;
     padding: 4px;
     padding-left: 20px;

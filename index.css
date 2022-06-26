@@ -10,7 +10,7 @@
     --link-color: darkblue;
     --link-hover-color: blue;
     --header-bg-color: #999999;
-    --help-bg-color: #6e6e6e;
+    --page-bg-color: #6e6e6e;
     --license-bg-color: #D0D0D0;
     --license-border-color: white;
     --sub-border-color: #E0E0E0;
@@ -20,7 +20,7 @@
     --dump-border-color: #E0E0E0;
 }
 html, body {
-    background-color: var(--main-bg-color);
+    background-color: var(--page-bg-color);
     color: var(--main-text-color);
     font-family: Arial, Helvetica, sans-serif;
     text-align: justify;
@@ -45,8 +45,12 @@ header {
     padding: 8px;
     padding-left: 16px;
 }
+#main-page {
+    background-color: var(--main-bg-color);
+    border: 0px;
+    padding: 15px;
+}
 #help {
-    background-color: var(--help-bg-color);
     margin: 0px;
     padding: 4px;
     padding-left: 20px;
