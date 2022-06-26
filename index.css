@@ -27,9 +27,21 @@ html, body {
     font-size: 10pt;
     margin: 0px;
 }
-input[type="file"] {
+input,
+textarea {
+    background-color: var(--input-bg-color);
+    color: var(--main-text-color);
+    border: 1px solid var(--input-border-color);
+}
+input[type="button"] {
+    background-color: var(--button-bg-color);
+    color: var(--main-text-color);
     border: 1px solid var(--button-border-color);
 }
+input[type="button"]:hover {
+    background-color: var(--button-bghover-color);
+}
+::file-selector-button,
 ::-webkit-file-upload-button {
     background-color: var(--button-bg-color);
     color: var(--main-text-color);
@@ -39,7 +51,18 @@ input[type="file"] {
 ::-webkit-file-upload-button:hover {
     background-color: var(--button-bghover-color);
 }
+::file-selector-button:hover {
+    background-color: var(--button-bghover-color);
+}
+select {
+    background-color: var(--input-bg-color);
+    color: var(--main-text-color);
+    border: 1px solid var(--input-border-color);
 
+}
+a {
+    color: var(--link-color);
+}
 header {
     background-color: var(--header-bg-color);
     padding: 8px;

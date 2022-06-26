@@ -44,6 +44,7 @@ input[type="button"] {
 input[type="button"]:hover {
     background-color: var(--button-bghover-color);
 }
+::file-selector-button,
 ::-webkit-file-upload-button {
     background-color: var(--button-bg-color);
     color: var(--main-text-color);
@@ -51,6 +52,9 @@ input[type="button"]:hover {
     border-right: 1px solid var(--button-border-color);
 }
 ::-webkit-file-upload-button:hover {
+    background-color: var(--button-bghover-color);
+}
+::file-selector-button:hover {
     background-color: var(--button-bghover-color);
 }
 select {
