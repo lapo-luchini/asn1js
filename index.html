@@ -7,8 +7,18 @@
   <link rel="stylesheet" href="index.css" type="text/css" id="theme-link">
 </head>
 <body>
-  <header>
-    <h1>ASN.1 JavaScript decoder</h1>
+  <header style="display:flex; flex: nowrap">
+    <div style="flex: auto">
+      <h1>ASN.1 JavaScript decoder</h1>
+    </div>
+    <div style="display: flex; align-items: center; padding-right: 10px;">
+      <select id="theme-select">
+        <option value="os">OS Theme</option>
+        <option value="dark">Dark Theme</option>
+        <option value="light">Light Theme</option>
+      </select>
+    </div>
+
   </header>
   <div style="margin: 15px">
     <div style="position: relative; padding-bottom: 1em;">
@@ -45,12 +55,6 @@
         </tr>
       </table>
       <br>
-      Theme: 
-      <select id="theme-select">
-        <option value="os">OS</option>
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
     </form>
     <br>
   </div>
