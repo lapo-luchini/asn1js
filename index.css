@@ -1,7 +1,55 @@
+:root {
+    --main-bg-color: #C0C0C0;
+    --main-text-color: #000000;
+    --headline-text-color: #8be9fd;
+    --button-border-color: #767676;
+    --button-bg-color: #efefef;
+    --button-bghover-color: #e5e5e5;
+    --input-border-color: #767676;
+    --input-bg-color: #ffffff;
+    --link-color: darkblue;
+    --link-hover-color: blue;
+    --header-bg-color: #999999;
+    --help-bg-color: #6e6e6e;
+    --license-bg-color: #D0D0D0;
+    --license-border-color: white;
+    --sub-border-color: #E0E0E0;
+    --preview-bg-color: #808080;
+    --preview-border-color: #505050;
+    --dump-bg-color: #C0C0C0;
+    --dump-border-color: #E0E0E0;
+}
 html, body {
-    background-color: #C0C0C0;
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
     font-family: Arial, Helvetica, sans-serif;
     text-align: justify;
+    font-size: 10pt;
+    margin: 0px;
+}
+input[type="file"] {
+    border: 1px solid var(--button-border-color);
+}
+::-webkit-file-upload-button {
+    background-color: var(--button-bg-color);
+    color: var(--main-text-color);
+    border: 0px;
+    border-right: 1px solid var(--button-border-color);
+}
+::-webkit-file-upload-button:hover {
+    background-color: var(--button-bghover-color);
+}
+
+header {
+    background-color: var(--header-bg-color);
+    padding: 8px;
+    padding-left: 16px;
+}
+#help {
+    background-color: var(--help-bg-color);
+    margin: 0px;
+    padding: 4px;
+    padding-left: 20px;
 }
 .tt {
     font-family: monospace;
@@ -14,8 +62,8 @@ html, body {
     position: absolute;
     bottom: 0em;
     /*white-space: pre;*/
-    background-color: #D0D0D0;
-    border: solid 1px white;
+    background-color: var(--license-bg-color);
+    border: solid 1px var(--license-border-color);
     padding: 2px;
     margin-left: 15%;
     margin-right: 15%;
@@ -29,18 +77,18 @@ html, body {
 }
 .sub {
     padding-left: 1.5em;
-    border-left: solid 1px #E0E0E0;
+    border-left: solid 1px var(--sub-border-color);
 }
 .head {
     height: 1em;
     white-space: nowrap;
 }
 .node:hover > .head, .node.hover > .head {
-    color: darkblue;
+    color: var(--link-color);
     font-weight: bold;
 }
 .node:hover > .head:hover, .node.hover > .head.hover {
-    color: blue;
+    color: var(--link-hover-color);
 }
 .node.collapsed {
     font-style: italic;
@@ -57,8 +105,8 @@ html, body {
     z-index: 2;
     top: 1.2em;
     left: 0;
-    background-color: #D0D0D0;
-    border: solid 1px white;
+    background-color: var(--button-bg-color);
+    border: solid 1px var(--button-border-color);
     padding: 2px;
 }
 .head:hover + .value, .head.hover + .value {
@@ -66,12 +114,12 @@ html, body {
 }
 .preview {
     margin-left: 1em;
-    color: #505050;
+    color: var(--preview-border-color);
     font-weight: normal;
 }
 .preview > .oid {
     margin-left: 1em;
-    color: #808080;
+    color: var(--preview-bg-color);
     font-weight: normal;
 }
 .spaces {
@@ -85,11 +133,11 @@ html, body {
 }
 #dump {
     z-index: 1;
-    background-color: #C0C0C0;
-    border: solid 1px #E0E0E0;
+    background-color: var(--dump-bg-color);
+    border: solid 1px var(--dump-border-color);
     font-family: monospace;
     white-space: pre;
-    padding: 2px;
+    padding: 5px;
 }
 #dump .tag             { color: blue; }
 #dump .dlen            { color: darkcyan; }

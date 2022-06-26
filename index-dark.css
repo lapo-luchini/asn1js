@@ -2,11 +2,22 @@
     --main-bg-color: #0d1116;
     --main-text-color: #f8f8f2;
     --headline-text-color: #8be9fd;
-    --button-border-color: #616469;
-    --input-border-color: #373b43;
+    --button-border-color: #505050;
+    --button-bg-color: #303030;
+    --button-bghover-color: #404040;
+    --input-border-color: #505050;
     --input-bg-color: #0c0e11;
     --link-color: #58a6ff;
+    --link-hover-color: #9b9bea;
     --header-bg-color: #161b22;
+    --help-bg-color: #000000;
+    --license-bg-color: #4b4a4a;
+    --license-border-color: black;
+    --sub-border-color: #383838;
+    --preview-bg-color: #989797;
+    --preview-border-color: #b5b3b3;
+    --dump-bg-color: #0c0e11;
+    --dump-border-color: #505050;
 }
 html, body {
     background-color: var(--main-bg-color);
@@ -26,14 +37,21 @@ textarea {
     border: 1px solid var(--input-border-color);
 }
 input[type="button"] {
-    background-color: var(--input-border-color);
+    background-color: var(--button-bg-color);
     color: var(--main-text-color);
     border: 1px solid var(--button-border-color);
 }
+input[type="button"]:hover {
+    background-color: var(--button-bghover-color);
+}
 ::-webkit-file-upload-button {
-    background-color: var(--input-border-color);
+    background-color: var(--button-bg-color);
     color: var(--main-text-color);
-    border: 1px solid var(--button-border-color);
+    border: 0px;
+    border-right: 1px solid var(--button-border-color);
+}
+::-webkit-file-upload-button:hover {
+    background-color: var(--button-bghover-color);
 }
 select {
     background-color: var(--input-bg-color);
@@ -50,7 +68,7 @@ header {
     padding-left: 16px;
 }
 #help {
-    background-color: black;
+    background-color: var(--help-bg-color);
     margin: 0px;
     padding: 4px;
     padding-left: 20px;
@@ -66,8 +84,8 @@ header {
     position: absolute;
     bottom: 0em;
     /*white-space: pre;*/
-    background-color: #4b4a4a;
-    border: solid 1px black;
+    background-color: var(--license-bg-color);
+    border: solid 1px var(--license-border-color);
     padding: 2px;
     margin-left: 15%;
     margin-right: 15%;
@@ -81,7 +99,7 @@ header {
 }
 .sub {
     padding-left: 1.5em;
-    border-left: solid 1px #383838;
+    border-left: solid 1px var(--sub-border-color);
 }
 .head {
     height: 1em;
@@ -92,7 +110,7 @@ header {
     font-weight: bold;
 }
 .node:hover > .head:hover, .node.hover > .head.hover {
-    color: rgb(155, 155, 234);
+    color: var(--link-hover-color);
 }
 .node.collapsed {
     font-style: italic;
@@ -109,7 +127,7 @@ header {
     z-index: 2;
     top: 1.2em;
     left: 0;
-    background-color: var(--input-border-color);
+    background-color: var(--button-bg-color);
     border: solid 1px var(--button-border-color);
     padding: 2px;
 }
@@ -118,12 +136,12 @@ header {
 }
 .preview {
     margin-left: 1em;
-    color: #b5b3b3;
+    color: var(--preview-border-color);
     font-weight: normal;
 }
 .preview > .oid {
     margin-left: 1em;
-    color: #989797;
+    color: var(--preview-bg-color);
     font-weight: normal;
 }
 .spaces {
@@ -137,8 +155,8 @@ header {
 }
 #dump {
     z-index: 1;
-    background-color: var(--input-bg-color);
-    border: solid 1px var(--input-border-color);
+    background-color: var(--dump-bg-color);
+    border: solid 1px var(--dump-border-color);
     font-family: monospace;
     white-space: pre;
     padding: 5px;
