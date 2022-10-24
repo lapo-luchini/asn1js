@@ -7,6 +7,7 @@ const
     ASN1 = require('./asn1.js'),
     rfc = require('./rfcasn1.json'),
     colYellow = "\x1b[33m",
+    colBlue = "\x1b[34m",
     colReset = "\x1b[0m";
 
 function translate(def) {
@@ -41,7 +42,7 @@ function print(value, def, indent) {
         def = null;
     let name = '';
     if (def) {
-        if (def.id) name += def.id;
+        if (def.id) name += colBlue + def.id + colReset;
         if (def.type == 'defined') name = (name ? name + ' ' : '') + def.name;
         if (name) name += ' ';
     }
