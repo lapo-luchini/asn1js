@@ -54,14 +54,28 @@ function print(value, def, indent) {
         s += " (constructed)";
     else if ((value.tag.isUniversal() && ((value.tag.tagNumber == 0x03) || (value.tag.tagNumber == 0x04))) && (value.sub !== null))
         s += " (encapsulates)";
-    var content = value.content();
+    let content = value.content();
     if (content)
         s += ": " + content.replace(/\n/g, '|');
     s += "\n";
     if (value.sub !== null) {
         indent += '  ';
-        for (var i = 0, max = value.sub.length; i < max; ++i)
-            s += print(value.sub[i], deftype?.content?.[deftype?.typeOf ? 0 : i], indent);
+        let j = deftype?.content ? 0 : -1;
+        for (let i = 0, max = value.sub.length; i < max; ++i) {
+            const subval = value.sub[i];
+            let type;
+            if (j >= 0) {
+                if (deftype?.typeOf)
+                    type = deftype.content[0];
+                else {
+                    let tn = subval.typeName().replaceAll('_', ' ');
+                    do {
+                        type = deftype.content[j++];
+                    } while (('optional' in type || 'default' in type) && type.name != tn);
+                }
+            }
+            s += print(subval, type, indent);
+        }
     }
     return s;
 }
