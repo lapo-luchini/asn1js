@@ -29,12 +29,16 @@ function translate(def) {
     return def ?? {};
 }
 
+function firstUpper(s) {
+    return s[0].toUpperCase() + s.slice(1);
+}
+
 function print(value, def, stats, indent) {
     if (indent === undefined) indent = '';
-    if (stats) {
-        stats.total ??= 0;
-        stats.recognized ??= 0;
-    }
+    stats ??= {};
+    stats.total ??= 0;
+    stats.recognized ??= 0;
+    stats.defs ??= {};
     // console.log(def);
     let deftype = translate(def);
     let tn = value.typeName();
@@ -83,6 +87,10 @@ function print(value, def, stats, indent) {
                     do {
                         type = deftype.content[j++];
                     } while (type && ('optional' in type || 'default' in type) && type.name != tn);
+                    if (type?.type == 'defined')
+                        stats.defs[type.id] = subval.content().split(/\n/);
+                    else if (type?.type?.definedBy) // hope current OIDs contain the type name (will need to parse from RFC itself)
+                        type = searchType(firstUpper(stats.defs[type.type.definedBy][1]));
                 }
             }
             s += print(subval, type, stats, indent);
@@ -101,3 +109,4 @@ content = null;
 let stats = {};
 console.log(print(result, searchType(process.argv[2]), stats));
 console.log('Stats:', (stats.recognized * 100 / stats.total).toFixed(2) + '%');
+console.log('Defs:', stats.defs);
