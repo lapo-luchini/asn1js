@@ -244,6 +244,7 @@ Parser.prototype.parseTaggedType = function () {
     let t = this.parseNumber();
     this.expectToken(']');
     let plicit = this.getRegEx('explicit/implicit', reTagType);
+    if (plicit == '') plicit = currentMod.tagDefault;
     let x = this.parseType();
     return {
         name: '[' + t + ']',
@@ -429,7 +430,7 @@ Parser.prototype.parseModuleDefinition = function (file) {
     currentMod = mod; // for deeply nested parsers
     mod.source = file;
     this.expectToken('DEFINITIONS');
-    mod.tagDefault = this.getRegEx('tag default', reTagDefault);
+    mod.tagDefault = this.getRegEx('tag default', reTagDefault).split(' ')[0];
     this.expectToken('::=');
     this.expectToken('BEGIN');
     //TODO this.tryToken('EXPORTS')
