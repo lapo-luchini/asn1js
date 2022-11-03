@@ -279,7 +279,7 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
         s += ellipsis;
     return { size: len, str: s };
 };
-Stream.prototype.parseOID = function (start, end, maxLength) {
+Stream.prototype.parseOID = function (start, end, maxLength, isRelative) {
     var s = '',
         n = new Int10(),
         bits = 0;
@@ -307,7 +307,14 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
     }
     if (bits > 0)
         s += ".incomplete";
-    if (typeof oids === 'object') {
+    if (isRelative) {
+        if (s.length > 2) {
+            const prefix = s.slice(0, 2);
+            if ("0." == prefix) {
+                s = s.slice(2);
+            }
+        }
+    } else if (typeof oids === 'object') {
         var oid = oids[s];
         if (oid) {
             if (oid.d) s += "\n" + oid.d;
@@ -344,6 +351,7 @@ ASN1.prototype.typeName = function () {
         case 0x0A: return "ENUMERATED";
         case 0x0B: return "EMBEDDED_PDV";
         case 0x0C: return "UTF8String";
+        case 0x0D: return "RELATIVE-OID"
         case 0x10: return "SEQUENCE";
         case 0x11: return "SET";
         case 0x12: return "NumericString";
@@ -411,13 +419,15 @@ ASN1.prototype.content = function (maxLength) {
         return "(" + d.size + " byte)\n" + d.str;
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
-        return this.stream.parseOID(content, content + len, maxLength);
+        return this.stream.parseOID(content, content + len, maxLength, false);
     //case 0x07: // ObjectDescriptor
     //case 0x08: // EXTERNAL
     //case 0x09: // REAL
     case 0x0A: // ENUMERATED
         return this.stream.parseInteger(content, content + len);
     //case 0x0B: // EMBEDDED_PDV
+    case 0x0D: // RELATIVE-OID
+        return this.stream.parseOID(content, content + len, maxLength, true);
     case 0x10: // SEQUENCE
     case 0x11: // SET
         if (this.sub !== null)

@@ -58,7 +58,7 @@ var ASN1 = require('./asn1'),
 
 ASN1.prototype.toDOM = function (spaces) {
     spaces = spaces || '';
-    var isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06));
+    var isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));
     var node = DOM.tag("div", "node");
     node.asn1 = this;
     var head = DOM.tag("div", "head");
