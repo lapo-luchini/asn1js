@@ -65,6 +65,7 @@ credits
 - BMPString support added by [Felipe Gasper](https://github.com/FGasper)
 - extended tag support added by [Péter Budai](https://www.peterbudai.eu/)
 - patches by [Gergely Nagy](https://github.com/ngg)
+- Relative OID support added by [Mistial Developer](https://github.com/mistial-dev)
 
 links
 -----
