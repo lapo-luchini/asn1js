@@ -290,7 +290,9 @@ Stream.prototype.parseOID = function (start, end, maxLength, isRelative) {
         if (!(v & 0x80)) { // finished
             if (s === '') {
                 n = n.simplify();
-                if (n instanceof Int10) {
+                if (isRelative) {
+                    s = (n instanceof Int10) ? n.toString() : "" + n;
+                } else if (n instanceof Int10) {
                     n.sub(80);
                     s = "2." + n.toString();
                 } else {
@@ -307,14 +309,7 @@ Stream.prototype.parseOID = function (start, end, maxLength, isRelative) {
     }
     if (bits > 0)
         s += ".incomplete";
-    if (isRelative) {
-        if (s.length > 2) {
-            const prefix = s.slice(0, 2);
-            if ("0." == prefix) {
-                s = s.slice(2);
-            }
-        }
-    } else if (typeof oids === 'object') {
+    if (typeof oids === 'object' && !isRelative) {
         var oid = oids[s];
         if (oid) {
             if (oid.d) s += "\n" + oid.d;
