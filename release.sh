@@ -4,7 +4,7 @@ FILES="
   asn1.js oids.js base64.js hex.js int10.js dom.js test.js
   index.css index.js index.html
   README.md LICENSE
-  update.sh check.sh
+  updateOID.sh check.sh
   examples
 "
 type gsha256sum >/dev/null && SHA256=gsha256sum || SHA256=sha256sum
