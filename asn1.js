@@ -319,6 +319,9 @@ Stream.prototype.parseOID = function (start, end, maxLength, isRelative) {
     }
     return s;
 };
+Stream.prototype.parseRelativeOID = function (start, end, maxLength) {
+    return this.parseOID(start, end, maxLength, true);
+};
 
 function ASN1(stream, header, length, tag, tagLen, sub) {
     if (!(tag instanceof ASN1Tag)) throw 'Invalid tag value.';
@@ -414,7 +417,7 @@ ASN1.prototype.content = function (maxLength) {
         return "(" + d.size + " byte)\n" + d.str;
     //case 0x05: // NULL
     case 0x06: // OBJECT_IDENTIFIER
-        return this.stream.parseOID(content, content + len, maxLength, false);
+        return this.stream.parseOID(content, content + len, maxLength);
     //case 0x07: // ObjectDescriptor
     //case 0x08: // EXTERNAL
     //case 0x09: // REAL
@@ -422,7 +425,7 @@ ASN1.prototype.content = function (maxLength) {
         return this.stream.parseInteger(content, content + len);
     //case 0x0B: // EMBEDDED_PDV
     case 0x0D: // RELATIVE-OID
-        return this.stream.parseOID(content, content + len, maxLength, true);
+        return this.stream.parseRelativeOID(content, content + len, maxLength);
     case 0x10: // SEQUENCE
     case 0x11: // SET
         if (this.sub !== null)
