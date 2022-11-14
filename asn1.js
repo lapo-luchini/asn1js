@@ -349,7 +349,7 @@ ASN1.prototype.typeName = function () {
         case 0x0A: return "ENUMERATED";
         case 0x0B: return "EMBEDDED_PDV";
         case 0x0C: return "UTF8String";
-        case 0x0D: return "RELATIVE-OID"
+        case 0x0D: return "RELATIVE_OID";
         case 0x10: return "SEQUENCE";
         case 0x11: return "SET";
         case 0x12: return "NumericString";
