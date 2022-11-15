@@ -1,6 +1,6 @@
 {
   "name": "@lapo/asn1js",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Generic ASN.1 parser/decoder that can decode any valid ASN.1 DER or BER structures.",
   "main": "asn1.js",
   "repository": {
@@ -38,7 +38,7 @@
       {
         "files": [ "test.js", "parseRFC.js", "dumpASN1.js" ],
         "parserOptions": {
-          "ecmaVersion": 2020
+          "ecmaVersion": 2021
         },
         "rules": {
           "strict": [ "error", "global" ],

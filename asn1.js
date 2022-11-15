@@ -22,8 +22,8 @@
 var Int10 = require('./int10'),
     oids = require('./oids'),
     ellipsis = "\u2026",
-    reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/,
-    reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|[-+](?:[0]\d|1[0-2])([0-5]\d)?)?$/;
+    reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
+    reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/;
 
 function stringCut(str, len) {
     if (str.length > len)
@@ -201,11 +201,8 @@ Stream.prototype.parseTime = function (start, end, shortYear) {
     }
     if (m[8]) {
         s += " UTC";
-        if (m[8] != 'Z') {
-            s += m[8];
-            if (m[9])
-                s += ":" + m[9];
-        }
+        if (m[9])
+            s += m[9] + ":" + (m[10] || "00");
     }
     return s;
 };
@@ -282,7 +279,7 @@ Stream.prototype.parseOctetString = function (start, end, maxLength) {
         s += ellipsis;
     return { size: len, str: s };
 };
-Stream.prototype.parseOID = function (start, end, maxLength) {
+Stream.prototype.parseOID = function (start, end, maxLength, isRelative) {
     var s = '',
         n = new Int10(),
         bits = 0;
@@ -293,7 +290,9 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
         if (!(v & 0x80)) { // finished
             if (s === '') {
                 n = n.simplify();
-                if (n instanceof Int10) {
+                if (isRelative) {
+                    s = (n instanceof Int10) ? n.toString() : "" + n;
+                } else if (n instanceof Int10) {
                     n.sub(80);
                     s = "2." + n.toString();
                 } else {
@@ -310,7 +309,7 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
     }
     if (bits > 0)
         s += ".incomplete";
-    if (typeof oids === 'object') {
+    if (typeof oids === 'object' && !isRelative) {
         var oid = oids[s];
         if (oid) {
             if (oid.d) s += "\n" + oid.d;
@@ -319,6 +318,9 @@ Stream.prototype.parseOID = function (start, end, maxLength) {
         }
     }
     return s;
+};
+Stream.prototype.parseRelativeOID = function (start, end, maxLength) {
+    return this.parseOID(start, end, maxLength, true);
 };
 
 function ASN1(stream, header, length, tag, tagLen, sub) {
@@ -347,6 +349,7 @@ ASN1.prototype.typeName = function () {
         case 0x0A: return "ENUMERATED";
         case 0x0B: return "EMBEDDED_PDV";
         case 0x0C: return "UTF8String";
+        case 0x0D: return "RELATIVE_OID";
         case 0x10: return "SEQUENCE";
         case 0x11: return "SET";
         case 0x12: return "NumericString";
@@ -421,6 +424,8 @@ ASN1.prototype.content = function (maxLength) {
     case 0x0A: // ENUMERATED
         return this.stream.parseInteger(content, content + len);
     //case 0x0B: // EMBEDDED_PDV
+    case 0x0D: // RELATIVE-OID
+        return this.stream.parseRelativeOID(content, content + len, maxLength);
     case 0x10: // SEQUENCE
     case 0x11: // SET
         if (this.sub !== null)

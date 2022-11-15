@@ -34,7 +34,7 @@ const tests = [
     ['14810F636CC26573207075626C6971756573', 'clés publiques', 'ntop, t61string: long form of length octets'],
     ['34151405636CC2657314012014097075626C6971756573', 'clés publiques', 'ntop, t61string: constructed encoding: "clés" + " " + "publiques"'],
     ['170D3931303530363233343534305A', '1991-05-06 23:45:40 UTC', 'ntop, utc time: UTC'],
-    ['17113931303530363136343534302D30373030', '1991-05-06 16:45:40 -07:00', 'ntop, utc time: PDT', 'timezones currently not supported'],
+    ['17113931303530363136343534302D30373030', '1991-05-06 16:45:40 UTC-07:00', 'ntop, utc time: PDT'],
     // inspired by http://luca.ntop.org/Teaching/Appunti/asn1.html
     ['0304086E5DC0', 'Exception:\nInvalid BitString with unusedBits=8', 'bit string: invalid unusedBits'],
     // http://msdn.microsoft.com/en-us/library/windows/desktop/aa379076(v=vs.85).aspx
@@ -70,6 +70,9 @@ const tests = [
     ['060A82808080808080808001', '2.18446744073709551537', 'OID root 64 bit + 1'],
     ['0620FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7F',   '2.26959946667150639794667015087019630673637144422540572481103610249135', 'OID derLen20c'],
     ['0621818080808080808080808080808080808080808080808080808080808080808000', '2.26959946667150639794667015087019630673637144422540572481103610249136', 'OID derLen21c'],
+    // relative OID
+    ['0D0A0102030405060708090A','1.2.3.4.5.6.7.8.9.10', 'Relative OID from GitHub PR 56'],
+    ['0D04C27B0302','8571.3.2', 'Relative OID from ISO/IEC 8825-1:2002 8.20.5'],
     // UTF-8
     ['0C0E4C61706FE280997320F09F9A972E', 'Lapo’s 🚗.', 'UTF-8 4-byte sequence'],
     // T-REC-X.690-201508
@@ -81,6 +84,8 @@ const tests = [
     ['040731323334353637', '(7 byte)\n1234567', 'Octet string with ASCII content'],
     ['0407312E3233E282AC', '(7 byte)\n1.23€', 'Octet string with UTF-8 content'],
     ['0420041EE4E3B7ED350CC24D034E436D9A1CB15BB1E328D37062FB82E84618AB0A3C', '(32 byte)\n041EE4E3B7ED350CC24D034E436D9A1CB15BB1E328D37062FB82E84618AB0A3C', 'Do not mix encapsulated and structured octet strings'], // GitHub issue #47
+    ['181531393835313130363231303632372E332D31323334', '1985-11-06 21:06:27.3 UTC-12:34', 'UTC offsets with minutes'], // GitHub issue #54
+    ['181331393835313130363231303632372E332B3134', '1985-11-06 21:06:27.3 UTC+14:00', 'UTC offset +13 and +14'], // GitHub issue #54
 ];
 
 let
