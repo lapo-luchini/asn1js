@@ -4,6 +4,40 @@
 })(function (require) {
 "use strict";
 
+// set dark theme depending on os settings
+const themeSelect = document.querySelector('#theme-select');
+function setTheme() {
+    const storedTheme = localStorage.getItem('theme');
+    let theme = 'os';
+    if (storedTheme) {
+        theme = storedTheme;
+    }
+
+    themeSelect.value = theme;
+
+    if (theme == 'os') {
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        if (prefersDarkScheme.matches) {
+            theme = 'dark';
+        } else {
+            theme = 'light';
+        }
+    }
+
+    const themeLink = document.querySelector('#theme-link');
+    if (theme == 'dark') {
+        themeLink.href = 'index-dark.css';
+    } else {
+        themeLink.href = 'index.css';
+    }
+}
+setTheme();
+themeSelect.addEventListener('change', function () {
+    const selectedTheme = themeSelect.value;
+    localStorage.setItem('theme', selectedTheme);
+    setTheme();
+});
+
 var ASN1 = require('./asn1'),
     Base64 = require('./base64'),
     Hex = require('./hex'),
@@ -30,6 +64,8 @@ function text(el, string) {
         el.innerText = string;
 }
 function decode(der, offset) {
+    window.derBuffer = der;  // store der buffer of asn1 in window to copy it into clipboard on dump click
+
     offset = offset || 0;
     tree.innerHTML = '';
     dump.innerHTML = '';

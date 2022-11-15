@@ -173,6 +173,13 @@ ASN1.prototype.toHexDOM = function (root) {
             this.className = "hex";
         }
     };
+    node.onclick = function (event) {
+        const pos = parseInt(this.getAttribute("pos"))
+        const end = parseInt(this.getAttribute("end"))
+        const hex = buf2hex(window.derBuffer.subarray(pos, end))
+        navigator.clipboard.writeText(hex)
+        event.stopPropagation()
+    };
     if (root == node) {
         var lineStart = this.posStart() & 0xF;
         if (lineStart != 0) {
@@ -186,6 +193,8 @@ ASN1.prototype.toHexDOM = function (root) {
             node.appendChild(skip);
         }
     }
+    node.setAttribute("pos", this.posStart())
+    node.setAttribute("end", this.posEnd())
     this.toHexDOM_sub(node, "tag", this.stream, this.posStart(), this.posLen());
     this.toHexDOM_sub(node, (this.length >= 0) ? "dlen" : "ulen", this.stream, this.posLen(), this.posContent());
     if (this.sub === null) {
@@ -216,5 +225,8 @@ ASN1.prototype.toHexDOM = function (root) {
         this.toHexDOM_sub(node, "outro", this.stream, this.posContent(), this.posEnd());
     return node;
 };
+function buf2hex(buffer) {
+    return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
+}
 
 });
