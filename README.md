@@ -71,6 +71,7 @@ links
 -----
 
 - [official website](https://lapo.it/asn1js/)
+- [dedicated domain](https://asn1js.eu/)
 - [InDefero tracker](http://idf.lapo.it/p/asn1js/)
 - [GitHub mirror](https://github.com/lapo-luchini/asn1js)
 - [Ohloh code stats](https://www.openhub.net/p/asn1js)
