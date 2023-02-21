@@ -522,6 +522,9 @@ function ASN1Tag(stream) {
             n.mulAdd(128, buf & 0x7F);
         } while (buf & 0x80);
         this.tagNumber = n.simplify();
+        if (this.tagNumber < 0x1F) {
+            throw 'Tag number ' + this.tagNumber + ' is smaller than 31, so it shall not use multi octet tag format';
+        }
     }
 }
 ASN1Tag.prototype.isUniversal = function () {
