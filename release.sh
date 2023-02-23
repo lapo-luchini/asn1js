@@ -2,7 +2,7 @@
 set -e
 FILES="
   asn1.js oids.js base64.js hex.js int10.js dom.js test.js
-  index.css index.js index.html
+  index.css index-dark.css index.js index.html
   README.md LICENSE
   updateOID.sh check.sh
   examples

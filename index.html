@@ -12,11 +12,14 @@
       <h1>ASN.1 JavaScript decoder</h1>
     </div>
     <div style="display: flex; align-items: center; padding-right: 10px;">
-      <select id="theme-select">
-        <option value="os">OS Theme</option>
-        <option value="dark">Dark Theme</option>
-        <option value="light">Light Theme</option>
-      </select>
+      <form>
+        <input id="butClear" type="button" value="clear">
+        <select id="theme-select">
+          <option value="os">OS Theme</option>
+          <option value="dark">Dark Theme</option>
+          <option value="light">Light Theme</option>
+        </select>
+      </form>
     </div>
 
   </header>
@@ -32,7 +35,6 @@
       <br>
       <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
       <input id="butDecode" type="button" value="decode">
-      <input id="butClear" type="button" value="clear">
       <br><br>
       <table>
         <tr>
