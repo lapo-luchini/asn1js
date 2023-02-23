@@ -12,11 +12,14 @@
       <h1>ASN.1 JavaScript decoder</h1>
     </div>
     <div style="display: flex; align-items: center; padding-right: 10px;">
-      <select id="theme-select">
-        <option value="os">OS Theme</option>
-        <option value="dark">Dark Theme</option>
-        <option value="light">Light Theme</option>
-      </select>
+      <form>
+        <input id="butClear" type="button" value="clear">
+        <select id="theme-select">
+          <option value="os">OS Theme</option>
+          <option value="dark">Dark Theme</option>
+          <option value="light">Light Theme</option>
+        </select>
+      </form>
     </div>
 
   </header>
@@ -32,7 +35,6 @@
       <br>
       <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
       <input id="butDecode" type="button" value="decode">
-      <input id="butClear" type="button" value="clear">
       <br><br>
       <table>
         <tr>
@@ -64,7 +66,6 @@
     <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><span class="tt">http://lapo.it/asn1js/</span></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <span class="tt">index.html</span> in a browser</p>
     <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br>
       Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br>
-      Clicking on the highlighted hex dump will copy the value into the clipboard.<br>
       Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
     <div class="license">
       <h3>Copyright</h3>
@@ -84,12 +85,13 @@
         ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
         OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </p></div>
-      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2022 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2023 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
     </div>
     <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
     <h3>Links</h3>
     <ul>
       <li><a href="http://lapo.it/asn1js/">official website</a></li>
+      <li><a href="http://asn1js.eu/">dedicated domain</a></li>
       <li><a href="http://idf.lapo.it/p/asn1js/">InDefero tracker</a></li>
       <li><a href="https://github.com/lapo-luchini/asn1js">github mirror</a></li>
       <li><a href="https://www.ohloh.net/p/asn1js">Ohloh code stats</a></li>
