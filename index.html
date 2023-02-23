@@ -4,76 +4,104 @@
   <meta charset="US-ASCII">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>ASN.1 JavaScript decoder</title>
-  <link rel="stylesheet" href="index.css" type="text/css">
+  <link rel="stylesheet" href="index.css" type="text/css" id="theme-link">
 </head>
 <body>
-<h1>ASN.1 JavaScript decoder</h1>
-<div style="position: relative; padding-bottom: 1em;">
-  <div id="dump" style="position: absolute; right: 0px;"></div>
-  <div id="tree"></div>
-</div>
-<form>
-  <textarea id="area" style="width: 100%;" rows="8"></textarea>
-  <br>
-  <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
-  <input id="butDecode" type="button" value="decode">
-  <input id="butClear" type="button" value="clear">
-  <input type="file" id="file">
-  <div>
-    Examples:
-    <select id="examples">
-      <option value="sig-p256-der.p7m">PKCS#7/CMS attached signature (DER)</option>
-      <option value="sig-p256-ber.p7m">PKCS#7/CMS attached signature (BER)</option>
-      <option value="sig-rsa1024-sha1.p7s">PKCS#7/CMS detached signature (old)</option>
-      <option value="letsencrypt-x3.cer">X.509 certificate: Let's Encrypt X3</option>
-      <option value="ed25519.cer">X.509 certificate: ed25519 (RFC 8410)</option>
-    </select>
-    <input id="butExample" type="button" value="load example">
-  </div>
-</form>
-<div id="help">
-  <h2>Instructions</h2>
-  <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <span class="tt">begin-base64</span> are recognized) or Hex-encoded. </p>
-  <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><span class="tt">http://lapo.it/asn1js/</span></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <span class="tt">index.html</span> in a browser</p>
-  <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br>
-    Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br>
-    Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
-  <div class="license">
-    <h3>Copyright</h3>
-    <div class="ref"><p class="hidden">
-      ASN.1 JavaScript decoder<br>
-      Copyright &copy; 2008-2022 Lapo Luchini &lt;lapo@lapo.it&gt;<br>
+  <header style="display:flex; flex: nowrap">
+    <div style="flex: auto">
+      <h1>ASN.1 JavaScript decoder</h1>
+    </div>
+    <div style="display: flex; align-items: center; padding-right: 10px;">
+      <select id="theme-select">
+        <option value="os">OS Theme</option>
+        <option value="dark">Dark Theme</option>
+        <option value="light">Light Theme</option>
+      </select>
+    </div>
+
+  </header>
+  <div id="main-page">
+    <div style="position: relative; padding-bottom: 1em;">
+      <div id="dump" style="position: absolute; right: 0px;"></div>
+      <div id="tree"></div>
+    </div>
+    <br>
+    <form>
+      <textarea id="area" style="width: 100%;" rows="8"></textarea>
       <br>
-      Permission to use, copy, modify, and/or distribute this software for any
-      purpose with or without fee is hereby granted, provided that the above
-      copyright notice and this permission notice appear in all copies.<br>
       <br>
-      THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-      WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-      MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-      ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-      WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-      ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-      OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-    </p></div>
-    <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2022 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+      <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
+      <input id="butDecode" type="button" value="decode">
+      <input id="butClear" type="button" value="clear">
+      <br><br>
+      <table>
+        <tr>
+          <td>
+            <input type="file" id="file">
+            </td>
+            <td>&nbsp;</td>
+            <td>
+            <div>Examples:
+              <select id="examples">
+                <option value="sig-p256-der.p7m">PKCS#7/CMS attached signature (DER)</option>
+                <option value="sig-p256-ber.p7m">PKCS#7/CMS attached signature (BER)</option>
+                <option value="sig-rsa1024-sha1.p7s">PKCS#7/CMS detached signature (old)</option>
+                <option value="letsencrypt-x3.cer">X.509 certificate: Let's Encrypt X3</option>
+                <option value="ed25519.cer">X.509 certificate: ed25519 (RFC 8410)</option>
+              </select>
+              <input id="butExample" type="button" value="load example">
+            </div>
+          </td>
+        </tr>
+      </table>
+      <br>
+    </form>
+    <br>
   </div>
-  <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
-  <h3>Links</h3>
-  <ul>
-    <li><a href="http://lapo.it/asn1js/">official website</a></li>
-    <li><a href="http://asn1js.eu/">dedicated domain</a></li>
-    <li><a href="http://idf.lapo.it/p/asn1js/">InDefero tracker</a></li>
-    <li><a href="https://github.com/lapo-luchini/asn1js">github mirror</a></li>
-    <li><a href="https://www.ohloh.net/p/asn1js">Ohloh code stats</a></li>
-  </ul>
-</div>
-<script type="text/javascript" src="hex.js"></script>
-<script type="text/javascript" src="base64.js"></script>
-<script type="text/javascript" src="oids.js"></script>
-<script type="text/javascript" src="int10.js"></script>
-<script type="text/javascript" src="asn1.js"></script>
-<script type="text/javascript" src="dom.js"></script>
-<script type="text/javascript" src="index.js"></script>
+  <div id="help">
+    <h2>Instructions</h2>
+    <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <span class="tt">begin-base64</span> are recognized) or Hex-encoded. </p>
+    <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><span class="tt">http://lapo.it/asn1js/</span></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <span class="tt">index.html</span> in a browser</p>
+    <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br>
+      Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br>
+      Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
+    <div class="license">
+      <h3>Copyright</h3>
+      <div class="ref"><p class="hidden">
+        ASN.1 JavaScript decoder<br>
+        Copyright &copy; 2008-2022 Lapo Luchini &lt;lapo@lapo.it&gt;<br>
+        <br>
+        Permission to use, copy, modify, and/or distribute this software for any
+        purpose with or without fee is hereby granted, provided that the above
+        copyright notice and this permission notice appear in all copies.<br>
+        <br>
+        THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+        WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+        ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+        WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+        ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+        OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+      </p></div>
+      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2023 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+    </div>
+    <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
+    <h3>Links</h3>
+    <ul>
+      <li><a href="http://lapo.it/asn1js/">official website</a></li>
+      <li><a href="http://asn1js.eu/">dedicated domain</a></li>
+      <li><a href="http://idf.lapo.it/p/asn1js/">InDefero tracker</a></li>
+      <li><a href="https://github.com/lapo-luchini/asn1js">github mirror</a></li>
+      <li><a href="https://www.ohloh.net/p/asn1js">Ohloh code stats</a></li>
+    </ul>
+  </div>
+
+  <script type="text/javascript" src="hex.js"></script>
+  <script type="text/javascript" src="base64.js"></script>
+  <script type="text/javascript" src="oids.js"></script>
+  <script type="text/javascript" src="int10.js"></script>
+  <script type="text/javascript" src="asn1.js"></script>
+  <script type="text/javascript" src="dom.js"></script>
+  <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

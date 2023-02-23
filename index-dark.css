@@ -1,23 +1,23 @@
 :root {
-    --main-bg-color: #C0C0C0;
-    --main-text-color: #000000;
+    --main-bg-color: #0d1116;
+    --main-text-color: #f8f8f2;
     --headline-text-color: #8be9fd;
-    --button-border-color: #767676;
-    --button-bg-color: #efefef;
-    --button-bghover-color: #e5e5e5;
-    --input-border-color: #767676;
-    --input-bg-color: #ffffff;
-    --link-color: darkblue;
-    --link-hover-color: blue;
-    --header-bg-color: #999999;
-    --page-bg-color: #6e6e6e;
-    --license-bg-color: #D0D0D0;
-    --license-border-color: white;
-    --sub-border-color: #E0E0E0;
-    --preview-bg-color: #808080;
-    --preview-border-color: #505050;
-    --dump-bg-color: #C0C0C0;
-    --dump-border-color: #E0E0E0;
+    --button-border-color: #505050;
+    --button-bg-color: #303030;
+    --button-bghover-color: #404040;
+    --input-border-color: #505050;
+    --input-bg-color: #0c0e11;
+    --link-color: #58a6ff;
+    --link-hover-color: #9b9bea;
+    --header-bg-color: #161b22;
+    --page-bg-color: #000000;
+    --license-bg-color: #4b4a4a;
+    --license-border-color: black;
+    --sub-border-color: #383838;
+    --preview-bg-color: #989797;
+    --preview-border-color: #b5b3b3;
+    --dump-bg-color: #0c0e11;
+    --dump-border-color: #505050;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -26,6 +26,9 @@ html, body {
     text-align: justify;
     font-size: 10pt;
     margin: 0px;
+}
+h1 {
+    font-weight: 200;
 }
 input,
 textarea {
@@ -166,13 +169,14 @@ header {
     white-space: pre;
     padding: 5px;
 }
-#dump .tag             { color: blue; }
+#dump .tag             { color: #58a6ff; }
 #dump .dlen            { color: darkcyan; }
-#dump .ulen            { color: darkgreen; }
-#dump .intro           { color: blue; }
-#dump .outro           { color: darkgreen; }
-#dump .skip            { color: #666666; background-color: #C0C0C0; }
-#dump .hexCurrent      { background-color: #808080; }
-#dump .hexCurrent .hex { background-color: #A0A0A0; }
-#dump .hexCurrent .dlen { color: #004040; }
+#dump .ulen            { color: #00b6b6; }
+#dump .intro           { color: #58a6ff; }
+#dump .outro           { color: #00b6b6; }
+#dump .skip            { color: #707070; background-color: #222222; }
+#dump .hexCurrent      { background-color: #727272; }
+#dump .hexCurrent .hex { background-color: #474747; }
+#dump .hexCurrent .tag { color: #6db0fc; }
+#dump .hexCurrent .dlen { color: #00b6b6; }
 #file { display: none; }
