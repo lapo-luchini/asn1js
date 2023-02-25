@@ -16,6 +16,7 @@ var ASN1 = require('./asn1'),
   file = id('file'),
   examples = id('examples'),
   selectTheme = id('theme-select'),
+  selectTag = id('tags'),
   hash = null;
 
 require('./dom'); // side effect: augment ASN1
@@ -169,6 +170,17 @@ if ('FileReader' in window && 'readAsBinaryString' in new FileReader()) {
   file.style.display = 'block';
   file.onchange = load;
   document.ondrop = dragAccept;
+}
+for (var tag in tags) {
+  var date = tags[tag];
+  var el = document.createElement('option');
+  el.value = tag;
+  el.innerText = date + " " + tag;
+  selectTag.appendChild(el);
+}
+selectTag.onchange = function (ev) {
+  var tag = ev.target.selectedOptions[0].value;
+  window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html'
 }
 
 });

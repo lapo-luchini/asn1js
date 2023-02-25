@@ -14,8 +14,11 @@
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
   "scripts" : {
-    "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js parseRFC.js dumpASN1.js",
+    "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js index.js parseRFC.js dumpASN1.js",
     "test" : "node test"
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0"
   },
   "eslintConfig": {
     "env": {
