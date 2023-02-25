@@ -7,11 +7,11 @@
   <link rel="stylesheet" href="index.css" type="text/css" id="theme-link">
 </head>
 <body>
-  <header style="display:flex; flex: nowrap">
-    <div style="flex: auto">
+  <header>
+    <div class="title">
       <h1>ASN.1 JavaScript decoder</h1>
     </div>
-    <div style="display: flex; align-items: center; padding-right: 10px;">
+    <div class="menu">
       <form>
         <input id="butClear" type="button" value="clear">
         <select id="theme-select">
@@ -21,16 +21,14 @@
         </select>
       </form>
     </div>
-
   </header>
   <div id="main-page">
-    <div style="position: relative; padding-bottom: 1em;">
-      <div id="dump" style="position: absolute; right: 0px;"></div>
+    <div>
+      <div id="dump"></div>
       <div id="tree"></div>
     </div>
-    <br>
     <form>
-      <textarea id="area" style="width: 100%;" rows="8"></textarea>
+      <textarea id="area" rows="8"></textarea>
       <br>
       <br>
       <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
@@ -71,7 +69,7 @@
       <h3>Copyright</h3>
       <div class="ref"><p class="hidden">
         ASN.1 JavaScript decoder<br>
-        Copyright &copy; 2008-2022 Lapo Luchini &lt;lapo@lapo.it&gt;<br>
+        Copyright &copy; 2008-2023 Lapo Luchini &lt;lapo@lapo.it&gt;<br>
         <br>
         Permission to use, copy, modify, and/or distribute this software for any
         purpose with or without fee is hereby granted, provided that the above

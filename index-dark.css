@@ -27,6 +27,18 @@ html, body {
     font-size: 10pt;
     margin: 0px;
 }
+header {
+    display: flex;
+    flex: nowrap;
+}
+header > .title {
+    flex: auto;
+}
+header > .menu {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+}
 h1 {
     font-weight: 200;
 }
@@ -75,6 +87,10 @@ header {
     background-color: var(--main-bg-color);
     border: 0px;
     padding: 15px;
+}
+#main-page > div {
+    position: relative;
+    padding-bottom: 1em;
 }
 #help {
     margin: 0px;
@@ -162,6 +178,8 @@ header {
     font-family: Arial, Helvetica, sans-serif;
 }
 #dump {
+    position: absolute;
+    right: 0px;
     z-index: 1;
     background-color: var(--dump-bg-color);
     border: solid 1px var(--dump-border-color);
@@ -180,3 +198,4 @@ header {
 #dump .hexCurrent .tag { color: #6db0fc; }
 #dump .hexCurrent .dlen { color: #00b6b6; }
 #file { display: none; }
+#area { width: 100%; }
