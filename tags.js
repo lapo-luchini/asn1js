@@ -3,7 +3,7 @@
     else window.tags = factory();
 })(function () {
 "use strict";
-return{
+return {
     "1.2.4":"2022-11-14",
     "1.2.3":"2021-10-21",
     "1.2.2":"2021-10-21",

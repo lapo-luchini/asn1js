@@ -57,10 +57,10 @@ Parser.prototype.exception = function (s, pos) {
     throw new Error('[position ' + pos + '] ' + s + '\n' + ctx.replace(/\s/g, ' ') + '\n' + arrow);
 };
 Parser.prototype.peek = function () {
-    return (typeof this.enc == "string") ? this.enc.charCodeAt(this.pos) : this.enc[this.pos];
+    return (typeof this.enc == 'string') ? this.enc.charCodeAt(this.pos) : this.enc[this.pos];
 };
 Parser.prototype.peekChar = function () {
-    return (typeof this.enc == "string") ? this.enc.charAt(this.pos) : String.fromCharCode(this.enc[this.pos]);
+    return (typeof this.enc == 'string') ? this.enc.charAt(this.pos) : String.fromCharCode(this.enc[this.pos]);
 };
 Parser.prototype.isWhitespace = function () {
     let c = this.peekChar();
@@ -249,7 +249,7 @@ Parser.prototype.parseTaggedType = function () {
     return {
         name: '[' + t + ']',
         type: 'tag',
-        "class": tagClass,
+        'class': tagClass,
         explicit: (plicit == 'EXPLICIT'),
         content: [{ name: '', type: x }],
     };

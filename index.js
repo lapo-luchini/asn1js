@@ -4,7 +4,8 @@
 })(function (require) {
 'use strict';
 
-var ASN1 = require('./asn1'),
+const
+    ASN1 = require('./asn1'),
     Base64 = require('./base64'),
     Hex = require('./hex'),
     tags = require('./tags'),
@@ -17,8 +18,9 @@ var ASN1 = require('./asn1'),
     file = id('file'),
     examples = id('examples'),
     selectTheme = id('theme-select'),
-    selectTag = id('tags'),
-    hash = null;
+    selectTag = id('tags');
+
+let hash = null;
 
 require('./dom'); // side effect: augment ASN1
 if (!window.console || !window.console.log) // IE8 with closed developer tools
@@ -35,10 +37,10 @@ function decode(der, offset) {
     tree.innerHTML = '';
     dump.innerHTML = '';
     try {
-        var asn1 = ASN1.decode(der, offset);
+        let asn1 = ASN1.decode(der, offset);
         tree.appendChild(asn1.toDOM());
         if (wantHex.checked) dump.appendChild(asn1.toHexDOM());
-        var b64 = der.length < maxLength ? asn1.toB64String() : '';
+        let b64 = der.length < maxLength ? asn1.toB64String() : '';
         if (area.value === '') area.value = Base64.pretty(b64);
         try {
             window.location.hash = hash = '#' + b64;
@@ -46,11 +48,11 @@ function decode(der, offset) {
             // fails with "Access Denied" on IE with URLs longer than ~2048 chars
             window.location.hash = hash = '#';
         }
-        var endOffset = asn1.posEnd();
+        let endOffset = asn1.posEnd();
         if (endOffset < der.length) {
-            var p = document.createElement('p');
+            let p = document.createElement('p');
             p.innerText = 'Input contains ' + (der.length - endOffset) + ' more bytes to decode.';
-            var button = document.createElement('button');
+            let button = document.createElement('button');
             button.innerText = 'try to decode';
             button.onclick = function () {
                 decode(der, endOffset);
@@ -64,7 +66,7 @@ function decode(der, offset) {
 }
 function decodeText(val) {
     try {
-        var der = reHex.test(val) ? Hex.decode(val) : Base64.unarmor(val);
+        let der = reHex.test(val) ? Hex.decode(val) : Base64.unarmor(val);
         decode(der);
     } catch (e) {
         text(tree, e);
@@ -72,7 +74,7 @@ function decodeText(val) {
     }
 }
 function decodeBinaryString(str) {
-    var der;
+    let der;
     try {
         if (reHex.test(str)) der = Hex.decode(str);
         else if (Base64.re.test(str)) der = Base64.unarmor(str);
@@ -96,7 +98,7 @@ id('butClear').onclick = function () {
 };
 id('butExample').onclick = function () {
     console.log('Loading example:', examples.value);
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.open('GET', 'examples/' + examples.value, true);
     request.onreadystatechange = function () {
         if (this.readyState !== 4) return;
@@ -111,13 +113,13 @@ id('butExample').onclick = function () {
 };
 // set dark theme depending on OS settings
 function setTheme() {
-    var storedTheme = localStorage.getItem('theme');
-    var theme = 'os';
+    let storedTheme = localStorage.getItem('theme');
+    let theme = 'os';
     if (storedTheme)
         theme = storedTheme;
     selectTheme.value = theme;
     if (theme == 'os') {
-        var prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        let prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         theme = prefersDarkScheme.matches ? 'dark': 'light';
     }
     id('theme-link').href = (theme == 'dark') ? 'index-dark.css' : 'index.css';
@@ -130,7 +132,7 @@ selectTheme.addEventListener('change', function () {
 // this is only used if window.FileReader
 function read(f) {
     area.value = ''; // clear text area, will get b64 content
-    var r = new FileReader();
+    let r = new FileReader();
     r.onloadend = function () {
         if (r.error) alert("Your browser couldn't read the specified file (error code " + r.error.code + ').');
         else decodeBinaryString(r.result);
@@ -147,7 +149,7 @@ function loadFromHash() {
         // Firefox is not consistent with other browsers and returns an
         // already-decoded hash string so we risk double-decoding here,
         // but since % is not allowed in base64 nor hexadecimal, it's ok
-        var val = decodeURIComponent(hash.substr(1));
+        let val = decodeURIComponent(hash.substr(1));
         if (val.length) decodeText(val);
     }
 }
@@ -169,15 +171,15 @@ if ('FileReader' in window && 'readAsBinaryString' in new FileReader()) {
     file.onchange = load;
     document.ondrop = dragAccept;
 }
-for (var tag in tags) {
-    var date = tags[tag];
-    var el = document.createElement('option');
+for (let tag in tags) {
+    let date = tags[tag];
+    let el = document.createElement('option');
     el.value = tag;
-    el.innerText = date + " " + tag;
+    el.innerText = date + ' ' + tag;
     selectTag.appendChild(el);
 }
 selectTag.onchange = function (ev) {
-    var tag = ev.target.selectedOptions[0].value;
+    let tag = ev.target.selectedOptions[0].value;
     window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html';
 };
 

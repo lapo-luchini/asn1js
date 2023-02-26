@@ -22,6 +22,7 @@
   },
   "eslintConfig": {
     "env": {
+      "es6": true,
       "amd": true,
       "browser": true,
       "node": true
@@ -35,6 +36,8 @@
       "indent": [ "error", 4, { "ignoredNodes": [ "Program > ExpressionStatement > CallExpression > FunctionExpression > BlockStatement > ExpressionStatement[directive='use strict']:first-child" ] } ],
       "linebreak-style": [ "error", "unix" ],
       "semi": [ "warn", "always" ],
+      "quotes": [ "error", "single", { "avoidEscape": true } ],
+      "no-var": [ "warn" ],
       "comma-dangle": [ "error", "never" ]
     },
     "overrides": [
@@ -50,17 +53,14 @@
       }, {
         "files": [ "oids.js" ],
         "rules": {
-          "indent": "off"
-        }
-      }, {
-        "files": [ "oids.js" ],
-        "rules": {
-          "indent": "off"
+          "indent": "off",
+          "quotes": [ "warn", "double" ]
         }
       }, {
         "files": [ "tags.js" ],
         "rules": {
-          "comma-dangle": [ "error", "always-multiline" ]
+          "comma-dangle": [ "error", "always-multiline" ],
+          "quotes": [ "warn", "double" ]
         }
       }
     ]

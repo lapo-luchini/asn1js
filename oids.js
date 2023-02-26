@@ -2,11 +2,11 @@
 // which is made by Peter Gutmann and whose license states:
 //   You can use this code in whatever way you want,
 //   as long as you don't try to claim you wrote it.
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory();
+(typeof define != "undefined" ? define : function (factory) { "use strict";
+    if (typeof module == "object") module.exports = factory();
     else window.oids = factory();
 })(function () {
-'use strict';
+"use strict";
 return {
 "0.2.262.1.10": { "d": "Telesec", "c": "Deutsche Telekom" },
 "0.2.262.1.10.0": { "d": "extension", "c": "Telesec" },

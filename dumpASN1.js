@@ -6,9 +6,9 @@ const
     Base64 = require('./base64.js'),
     ASN1 = require('./asn1.js'),
     rfc = require('./rfcasn1.json'),
-    colYellow = "\x1b[33m",
-    colBlue = "\x1b[34m",
-    colReset = "\x1b[0m";
+    colYellow = '\x1b[33m',
+    colBlue = '\x1b[34m',
+    colReset = '\x1b[0m';
 
 function searchType(name) {
     for (const r of Object.values(rfc))
@@ -65,18 +65,18 @@ function print(value, def, stats, indent) {
         if (stats && name != '') ++stats.recognized;
         if (name) name += ' ';
     }
-    let s = indent + name + colYellow + value.typeName() + colReset + " @" + value.stream.pos;
+    let s = indent + name + colYellow + value.typeName() + colReset + ' @' + value.stream.pos;
     if (value.length >= 0)
-        s += "+";
+        s += '+';
     s += value.length;
     if (value.tag.tagConstructed)
-        s += " (constructed)";
+        s += ' (constructed)';
     else if ((value.tag.isUniversal() && ((value.tag.tagNumber == 0x03) || (value.tag.tagNumber == 0x04))) && (value.sub !== null))
-        s += " (encapsulates)";
+        s += ' (encapsulates)';
     let content = value.content();
     if (content)
-        s += ": " + content.replace(/\n/g, '|');
-    s += "\n";
+        s += ': ' + content.replace(/\n/g, '|');
+    s += '\n';
     if (value.sub !== null) {
         indent += '  ';
         if (def?.type?.type)

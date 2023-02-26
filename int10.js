@@ -17,9 +17,9 @@
     if (typeof module == 'object') module.exports = factory();
     else window.int10 = factory();
 })(function () {
-"use strict";
+'use strict';
 
-var max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
+let max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
 
 /**
  * Arbitrary length base-10 value.
@@ -36,7 +36,7 @@ function Int10(value) {
  */
 Int10.prototype.mulAdd = function (m, c) {
     // assert(m <= 256)
-    var b = this.buf,
+    let b = this.buf,
         l = b.length,
         i, t;
     for (i = 0; i < l; ++i) {
@@ -58,7 +58,7 @@ Int10.prototype.mulAdd = function (m, c) {
  * @param {number} c - value to subtract
  */
 Int10.prototype.sub = function (c) {
-    var b = this.buf,
+    let b = this.buf,
         l = b.length,
         i, t;
     for (i = 0; i < l; ++i) {
@@ -81,9 +81,9 @@ Int10.prototype.sub = function (c) {
 Int10.prototype.toString = function (base) {
     if ((base || 10) != 10)
         throw 'only base 10 is supported';
-    var b = this.buf,
+    let b = this.buf,
         s = b[b.length - 1].toString();
-    for (var i = b.length - 2; i >= 0; --i)
+    for (let i = b.length - 2; i >= 0; --i)
         s += (max + b[i]).toString().substring(1);
     return s;
 };
@@ -93,9 +93,9 @@ Int10.prototype.toString = function (base) {
  * Will probably overflow 2^53 and thus become approximate.
  */
 Int10.prototype.valueOf = function () {
-    var b = this.buf,
+    let b = this.buf,
         v = 0;
-    for (var i = b.length - 1; i >= 0; --i)
+    for (let i = b.length - 1; i >= 0; --i)
         v = v * max + b[i];
     return v;
 };
@@ -104,7 +104,7 @@ Int10.prototype.valueOf = function () {
  * Return value as a simple Number (if it is <= 10000000000000), or return this.
  */
 Int10.prototype.simplify = function () {
-    var b = this.buf;
+    let b = this.buf;
     return (b.length == 1) ? b[0] : this;
 };
 

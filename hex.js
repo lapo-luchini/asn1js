@@ -1,5 +1,5 @@
 // Hex JavaScript decoder
-// Copyright (c) 2008-2022 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -17,22 +17,24 @@
     if (typeof module == 'object') module.exports = factory();
     else window.hex = factory();
 })(function () {
-"use strict";
+'use strict';
 
-var Hex = {},
-    decoder, // populated on first usage
+const
+    Hex = {},
     haveU8 = (typeof Uint8Array == 'function');
+
+let decoder; // populated on first usage
 
 /**
  * Decodes an hexadecimal value.
  * @param {string|Array|Uint8Array} a - a string representing hexadecimal data, or an array representation of its charcodes
  */
 Hex.decode = function(a) {
-    var isString = (typeof a == 'string');
-    var i;
+    let isString = (typeof a == 'string');
+    let i;
     if (decoder === undefined) {
-        var hex = "0123456789ABCDEF",
-            ignore = " \f\n\r\t\u00A0\u2028\u2029";
+        let hex = '0123456789ABCDEF',
+            ignore = ' \f\n\r\t\u00A0\u2028\u2029';
         decoder = [];
         for (i = 0; i < 16; ++i)
             decoder[hex.charCodeAt(i)] = i;
@@ -42,12 +44,12 @@ Hex.decode = function(a) {
         for (i = 0; i < ignore.length; ++i)
             decoder[ignore.charCodeAt(i)] = -1;
     }
-    var out = haveU8 ? new Uint8Array(a.length >> 1) : [],
+    let out = haveU8 ? new Uint8Array(a.length >> 1) : [],
         bits = 0,
         char_count = 0,
         len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = isString ? a.charCodeAt(i) : a[i];
+        let c = isString ? a.charCodeAt(i) : a[i];
         c = decoder[c];
         if (c == -1)
             continue;
@@ -63,7 +65,7 @@ Hex.decode = function(a) {
         }
     }
     if (char_count)
-        throw "Hex encoding incomplete: 4 bits missing";
+        throw 'Hex encoding incomplete: 4 bits missing';
     if (haveU8 && out.length > len) // in case it was originally longer because of ignored characters
         out = out.subarray(0, len);
     return out;

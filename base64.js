@@ -1,5 +1,5 @@
 // Base64 JavaScript decoder
-// Copyright (c) 2008-2022 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -17,18 +17,20 @@
     if (typeof module == 'object') module.exports = factory();
     else window.base64 = factory();
 })(function () {
-"use strict";
+'use strict';
 
-var Base64 = {},
-    decoder, // populated on first usage
+const
+    Base64 = {},
     haveU8 = (typeof Uint8Array == 'function');
 
+let decoder; // populated on first usage
+
 Base64.decode = function (a) {
-    var isString = (typeof a == 'string');
-    var i;
+    let isString = (typeof a == 'string');
+    let i;
     if (decoder === undefined) {
-        var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-            ignore = "= \f\n\r\t\u00A0\u2028\u2029";
+        let b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+            ignore = '= \f\n\r\t\u00A0\u2028\u2029';
         decoder = [];
         for (i = 0; i < 64; ++i)
             decoder[b64.charCodeAt(i)] = i;
@@ -38,10 +40,10 @@ Base64.decode = function (a) {
         decoder['-'.charCodeAt(0)] = decoder['+'.charCodeAt(0)];
         decoder['_'.charCodeAt(0)] = decoder['/'.charCodeAt(0)];
     }
-    var out = haveU8 ? new Uint8Array(a.length * 3 >> 2) : [];
-    var bits = 0, char_count = 0, len = 0;
+    let out = haveU8 ? new Uint8Array(a.length * 3 >> 2) : [];
+    let bits = 0, char_count = 0, len = 0;
     for (i = 0; i < a.length; ++i) {
-        var c = isString ? a.charCodeAt(i) : a[i];
+        let c = isString ? a.charCodeAt(i) : a[i];
         if (c == 61) // '='.charCodeAt(0)
             break;
         c = decoder[c];
@@ -62,7 +64,7 @@ Base64.decode = function (a) {
     }
     switch (char_count) {
     case 1:
-        throw "Base64 encoding incomplete: at least 2 bits missing";
+        throw 'Base64 encoding incomplete: at least 2 bits missing';
     case 2:
         out[len++] = (bits >> 10);
         break;
@@ -88,7 +90,7 @@ Base64.pretty = function (str) {
 
 Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+/=\s]+)====|^([A-Za-z0-9+/=\s]+)$/;
 Base64.unarmor = function (a) {
-    var m = Base64.re.exec(a);
+    let m = Base64.re.exec(a);
     if (m) {
         if (m[1])
             a = m[1];
@@ -97,7 +99,7 @@ Base64.unarmor = function (a) {
         else if (m[3])
             a = m[3];
         else
-            throw "RegExp out of sync";
+            throw 'RegExp out of sync';
     }
     return Base64.decode(a);
 };
