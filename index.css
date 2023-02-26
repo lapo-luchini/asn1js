@@ -97,14 +97,13 @@ header {
 .tt {
     font-family: monospace;
 }
-.license .ref {
+.license {
     position: relative;
 }
 .license .hidden {
     visibility: hidden;
     position: absolute;
-    bottom: 0em;
-    /*white-space: pre;*/
+    top: 0px;
     background-color: #D0D0D0; /*minimal support for IE11*/
     background-color: var(--license-bg-color);
     border: solid 1px var(--license-border-color);
