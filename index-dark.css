@@ -19,175 +19,16 @@
     --dump-bg-color: #0c0e11;
     --dump-border-color: #505050;
 }
-html, body {
-    background-color: var(--page-bg-color);
-    color: var(--main-text-color);
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: justify;
-    font-size: 10pt;
-    margin: 0px;
-}
-header {
-    display: flex;
-    flex: nowrap;
-}
-header > .title {
-    flex: auto;
-}
-header > .menu {
-    display: flex;
-    align-items: center;
-    padding-right: 10px;
-}
 h1 {
     font-weight: 200;
 }
-input,
-textarea {
-    background-color: var(--input-bg-color);
-    color: var(--main-text-color);
-    border: 1px solid var(--input-border-color);
-}
-input[type="button"] {
-    background-color: var(--button-bg-color);
-    color: var(--main-text-color);
-    border: 1px solid var(--button-border-color);
-}
-input[type="button"]:hover {
-    background-color: var(--button-bghover-color);
-}
-::file-selector-button,
-::-webkit-file-upload-button {
-    background-color: var(--button-bg-color);
-    color: var(--main-text-color);
-    border: 0px;
-    border-right: 1px solid var(--button-border-color);
-}
-::-webkit-file-upload-button:hover {
-    background-color: var(--button-bghover-color);
-}
-::file-selector-button:hover {
-    background-color: var(--button-bghover-color);
-}
-select {
-    background-color: var(--input-bg-color);
-    color: var(--main-text-color);
-    border: 1px solid var(--input-border-color);
-
-}
-a {
-    color: var(--link-color);
-}
-header {
-    background-color: var(--header-bg-color);
-    padding: 8px;
-    padding-left: 16px;
-}
-#main-page {
-    background-color: var(--main-bg-color);
-    border: 0px;
-    padding: 15px;
-}
-#main-page > div {
-    position: relative;
-    padding-bottom: 1em;
-}
-#help {
-    margin: 0px;
-    padding: 4px;
-    padding-left: 20px;
-}
-.tt {
-    font-family: monospace;
-}
-.license .ref {
-    position: relative;
-}
 .license .hidden {
-    visibility: hidden;
-    position: absolute;
-    bottom: 0em;
-    /*white-space: pre;*/
     background-color: #4b4a4a; /*minimal support for IE11*/
     background-color: var(--license-bg-color);
-    border: solid 1px var(--license-border-color);
-    padding: 2px;
-    margin-left: 15%;
-    margin-right: 15%;
-}
-.license:hover .hidden {
-    /*display: block;*/
-    visibility: visible;
-}
-.node {
-    position: relative;
-}
-.sub {
-    padding-left: 1.5em;
-    border-left: solid 1px var(--sub-border-color);
-}
-.head {
-    height: 1em;
-    white-space: nowrap;
-}
-.node:hover > .head, .node.hover > .head {
-    color: var(--link-color);
-    font-weight: bold;
-}
-.node:hover > .head:hover, .node.hover > .head.hover {
-    color: var(--link-hover-color);
-}
-.node.collapsed {
-    font-style: italic;
-}
-.node.collapsed > .sub {
-    display: none;
-}
-.node.collapsed.hover > .sub {
-    display: block;
 }
 .value {
-    display: none;
-    position: absolute;
-    z-index: 2;
-    top: 1.2em;
-    left: 0;
     background-color: #303030; /*minimal support for IE11*/
     background-color: var(--button-bg-color);
-    border: solid 1px var(--button-border-color);
-    padding: 2px;
-}
-.head:hover + .value, .head.hover + .value {
-    display: block;
-}
-.preview {
-    margin-left: 1em;
-    color: var(--preview-border-color);
-    font-weight: normal;
-}
-.preview > .oid {
-    margin-left: 1em;
-    color: var(--preview-bg-color);
-    font-weight: normal;
-}
-.spaces {
-    font-size: 0px;
-}
-#tree {
-    font-family: monospace;
-}
-#tree > p {
-    font-family: Arial, Helvetica, sans-serif;
-}
-#dump {
-    position: absolute;
-    right: 0px;
-    z-index: 1;
-    background-color: var(--dump-bg-color);
-    border: solid 1px var(--dump-border-color);
-    font-family: monospace;
-    white-space: pre;
-    padding: 5px;
 }
 #dump .tag             { color: #58a6ff; }
 #dump .dlen            { color: darkcyan; }
@@ -199,5 +40,3 @@ header {
 #dump .hexCurrent .hex { background-color: #474747; }
 #dump .hexCurrent .tag { color: #6db0fc; }
 #dump .hexCurrent .dlen { color: #00b6b6; }
-#file { display: none; }
-#area { width: 100%; }

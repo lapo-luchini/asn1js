@@ -122,7 +122,16 @@ function setTheme() {
         let prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         theme = prefersDarkScheme.matches ? 'dark': 'light';
     }
-    id('theme-link').href = (theme == 'dark') ? 'index-dark.css' : 'index.css';
+    if (theme == 'dark') {
+        const css1 = id('theme-base');
+        const css2 = css1.cloneNode();
+        css2.id = 'theme-override';
+        css2.href = 'index-' + theme + '.css';
+        css1.parentElement.appendChild(css2);
+    } else {
+        const css2 = id('theme-override');
+        if (css2) css2.remove();
+    }
 }
 setTheme();
 selectTheme.addEventListener('change', function () {
