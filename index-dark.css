@@ -108,6 +108,7 @@ header {
     position: absolute;
     bottom: 0em;
     /*white-space: pre;*/
+    background-color: #4b4a4a; /*minimal support for IE11*/
     background-color: var(--license-bg-color);
     border: solid 1px var(--license-border-color);
     padding: 2px;
@@ -151,6 +152,7 @@ header {
     z-index: 2;
     top: 1.2em;
     left: 0;
+    background-color: #303030; /*minimal support for IE11*/
     background-color: var(--button-bg-color);
     border: solid 1px var(--button-border-color);
     padding: 2px;
