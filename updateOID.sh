@@ -10,7 +10,7 @@ elif [ ! -r dumpasn1.cfg ]; then
 fi
 cat dumpasn1.cfg | \
 tr -d '\r' | \
-awk -v url="$URL" '
+awk -v apos="'" -v q='"' -v url="$URL" '
     function clean() {
         oid = "";
         comment = "";
@@ -19,17 +19,16 @@ awk -v url="$URL" '
     }
     BEGIN {
         FS = "= *";
-        apos = sprintf("%c", 39);
         clean();
         print "// Converted from: " url;
         print "// which is made by Peter Gutmann and whose license states:";
         print "//   You can use this code in whatever way you want,";
         print "//   as long as you don" apos "t try to claim you wrote it.";
-        print "(typeof define != " apos "undefined" apos " ? define : function (factory) { " apos "use strict" apos ";";
-        print "    if (typeof module == " apos "object" apos ") module.exports = factory();";
+        print "(typeof define != " q "undefined" q " ? define : function (factory) { " q "use strict" q ";";
+        print "    if (typeof module == " q "object" q ") module.exports = factory();";
         print "    else window.oids = factory();";
         print "})(function () {";
-        print apos "use strict" apos ";";
+        print q "use strict" q ";";
         print "return {";
     }
     /^OID/         { oid = $2; }
