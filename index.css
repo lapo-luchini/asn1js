@@ -142,6 +142,9 @@ header {
 .node.collapsed.hover > .sub {
     display: block;
 }
+.name {
+    color: var(--preview-border-color);
+}
 .value {
     display: none;
     position: absolute;

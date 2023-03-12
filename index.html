@@ -32,29 +32,23 @@
       <br>
       <br>
       <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
+      <label title="can be slow with big files"><input type="checkbox" id="wantDef" checked="checked"> with definitions</label>
       <input id="butDecode" type="button" value="decode">
       <br><br>
       <table>
-        <tr>
-          <td>
-            <input type="file" id="file">
-            </td>
-            <td>&nbsp;</td>
-            <td>
-            <div>Examples:
-              <select id="examples">
-                <option value="sig-p256-der.p7m">PKCS#7/CMS attached signature (DER)</option>
-                <option value="sig-p256-ber.p7m">PKCS#7/CMS attached signature (BER)</option>
-                <option value="sig-rsa1024-sha1.p7s">PKCS#7/CMS detached signature (old)</option>
-                <option value="letsencrypt-x3.cer">X.509 certificate: Let's Encrypt X3</option>
-                <option value="ed25519.cer">X.509 certificate: ed25519 (RFC 8410)</option>
-              </select>
-              <input id="butExample" type="button" value="load example">
-            </div>
-          </td>
-        </tr>
+        <tr><td>Drag or load file:</td><td><input type="file" id="file"></td></tr>
+        <tr><td>Load examples:</td><td>
+          <select id="examples">
+            <option value="sig-p256-der.p7m">PKCS#7/CMS attached signature (DER)</option>
+            <option value="sig-p256-ber.p7m">PKCS#7/CMS attached signature (BER)</option>
+            <option value="sig-rsa1024-sha1.p7s">PKCS#7/CMS detached signature (old)</option>
+            <option value="letsencrypt-x3.cer">X.509 certificate: Let's Encrypt X3</option>
+            <option value="ed25519.cer">X.509 certificate: ed25519 (RFC 8410)</option>
+          </select>
+          <input id="butExample" type="button" value="load"><br>
+        </td></tr>
+        <tr><td>Definitions:</td><td><select id="definitions"></select></td></tr>
       </table>
-      <br>
     </form>
     <br>
   </div>
@@ -103,6 +97,8 @@
   <script type="text/javascript" src="hex.js"></script>
   <script type="text/javascript" src="base64.js"></script>
   <script type="text/javascript" src="oids.js"></script>
+  <script type="text/javascript" src="rfcdef.js"></script>
+  <script type="text/javascript" src="defs.js"></script>
   <script type="text/javascript" src="int10.js"></script>
   <script type="text/javascript" src="asn1.js"></script>
   <script type="text/javascript" src="dom.js"></script>

@@ -14,9 +14,9 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 (typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory();
-    else window.defs = factory();
-})(function () {
+    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
+    else window.defs = factory(function (name) { return window[name.substring(2)]; });
+})(function (require) {
 'use strict';
 
 const rfc = require('./rfcdef');
@@ -95,7 +95,7 @@ class Defs {
                         if (type?.type == 'defined')
                             stats.defs[type.id] = subval.content().split(/\n/);
                         else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) // hope current OIDs contain the type name (will need to parse from RFC itself)
-                            type = searchType(firstUpper(stats.defs[type.definedBy][1]));
+                            type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
                     }
                 }
                 Defs.match(subval, type, stats);
