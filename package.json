@@ -13,9 +13,10 @@
   "bugs": { "url": "https://github.com/lapo-luchini/asn1js/issues" },
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
-  "scripts" : {
-    "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js index.js parseRFC.js dumpASN1.js",
-    "test" : "node test"
+  "scripts": {
+    "lint": "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js index.js parseRFC.js dumpASN1.js",
+    "lint-action": "npx @action-validator/cli .github/workflows/node.js.yml",
+    "test": "node test"
   },
   "engines": {
     "node": ">=6.4.0"
