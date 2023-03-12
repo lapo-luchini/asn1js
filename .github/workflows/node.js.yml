@@ -12,13 +12,13 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 6.4.0, '*' ]
+        node-version: [ 6.4.0, latest ]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: pnpm/action-setup@v2
       with:
-        version: *
+        version: latest
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -26,4 +26,4 @@ jobs:
         cache: 'pnpm'
     - run: pnpm test all
     - run: pnpm lint
-      if: ${{ matrix.node-version == '*' }}
+      if: ${{ matrix.node-version == latest }}
