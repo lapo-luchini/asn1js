@@ -1,4 +1,5 @@
 #/bin/sh
+RFCs="5280 3369 3161"
 downloadRFC() {
     URL="https://www.ietf.org/rfc/rfc$1.txt"
     if [ -x /usr/bin/fetch ]; then
@@ -10,11 +11,25 @@ downloadRFC() {
         exit 1
     fi
 }
-echo '{}' > rfcasn1.json # start from scratch
+echo '{}' > rfcdef.json # start from scratch
 mkdir -p rfc
 cd rfc
-for n in 5280 3369 3161; do
+for n in $RFCs; do
     downloadRFC $n
-    ../parseRFC.js rfc$n.txt ../rfcasn1.json
+    ../parseRFC.js rfc$n.txt ../rfcdef.json
 done
+cd ..
+{
+    echo "// content parsed from the following RFCs: $RFCs"
+    cat - <<EOF
+(typeof define != "undefined" ? define : function (factory) { "use strict";
+    if (typeof module == "object") module.exports = factory();
+    else window.rfcdef = factory();
+})(function () {
+"use strict";
+EOF
+    echo -n "return "
+    cat rfcdef.json
+    echo ";});"
+} > rfcdef.js
 echo Conversion completed.

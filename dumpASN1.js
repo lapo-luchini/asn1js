@@ -3,9 +3,9 @@
 
 const
     fs = require('fs'),
-    Base64 = require('./base64.js'),
-    ASN1 = require('./asn1.js'),
-    rfc = require('./rfcasn1.json'),
+    Base64 = require('./base64'),
+    ASN1 = require('./asn1'),
+    rfc = require('./rfcdef'),
     colYellow = '\x1b[33m',
     colBlue = '\x1b[34m',
     colReset = '\x1b[0m';
@@ -48,37 +48,20 @@ function firstUpper(s) {
     return s[0].toUpperCase() + s.slice(1);
 }
 
-function print(value, def, stats, indent) {
-    if (indent === undefined) indent = '';
+function applyDef(value, def, stats) {
+    value.def = {};
     stats ??= {};
     stats.total ??= 0;
     stats.recognized ??= 0;
     stats.defs ??= {};
     let tn = value.typeName();
     def = translate(def, tn);
-    tn = tn.replaceAll('_', ' ');
     if (stats) ++stats.total;
-    let name = '';
     if (def?.type) {
-        if (def.id) name += colBlue + def.id + colReset;
-        if (typeof def.type == 'object' && def.name) name = (name ? name + ' ' : '') + def.name;
-        if (stats && name != '') ++stats.recognized;
-        if (name) name += ' ';
+        value.def = def;
+        if (stats && (def.id || def.name)) ++stats.recognized;
     }
-    let s = indent + name + colYellow + value.typeName() + colReset + ' @' + value.stream.pos;
-    if (value.length >= 0)
-        s += '+';
-    s += value.length;
-    if (value.tag.tagConstructed)
-        s += ' (constructed)';
-    else if ((value.tag.isUniversal() && ((value.tag.tagNumber == 0x03) || (value.tag.tagNumber == 0x04))) && (value.sub !== null))
-        s += ' (encapsulates)';
-    let content = value.content();
-    if (content)
-        s += ': ' + content.replace(/\n/g, '|');
-    s += '\n';
     if (value.sub !== null) {
-        indent += '  ';
         if (def?.type?.type)
             def = def.type;
         let j = def?.content ? 0 : -1;
@@ -101,8 +84,38 @@ function print(value, def, stats, indent) {
                         type = searchType(firstUpper(stats.defs[type.definedBy][1]));
                 }
             }
-            s += print(subval, type, stats, indent);
+            applyDef(subval, type, stats);
         }
+    }
+}
+
+function print(value, indent) {
+    if (indent === undefined) indent = '';
+    let tn = value.typeName();
+    const def = value.def;
+    tn = tn.replaceAll('_', ' ');
+    let name = '';
+    if (def?.type) {
+        if (def.id) name += colBlue + def.id + colReset;
+        if (typeof def.type == 'object' && def.name) name = (name ? name + ' ' : '') + def.name;
+        if (name) name += ' ';
+    }
+    let s = indent + name + colYellow + value.typeName() + colReset + ' @' + value.stream.pos;
+    if (value.length >= 0)
+        s += '+';
+    s += value.length;
+    if (value.tag.tagConstructed)
+        s += ' (constructed)';
+    else if ((value.tag.isUniversal() && ((value.tag.tagNumber == 0x03) || (value.tag.tagNumber == 0x04))) && (value.sub !== null))
+        s += ' (encapsulates)';
+    let content = value.content();
+    if (content)
+        s += ': ' + content.replace(/\n/g, '|');
+    s += '\n';
+    if (value.sub !== null) {
+        indent += '  ';
+        for (const subval of value.sub)
+            s += print(subval, indent);
     }
     return s;
 }
@@ -115,6 +128,8 @@ try { // try PEM first
 let result = ASN1.decode(content);
 content = null;
 let stats = {};
-console.log(print(result, searchType(process.argv[2]), stats));
+applyDef(result, searchType(process.argv[2]), stats);
+console.log(print(result));
 console.log('Stats:', (stats.recognized * 100 / stats.total).toFixed(2) + '%');
+// print(result, searchType(process.argv[2]), stats);
 // console.log('Defs:', stats.defs);
