@@ -348,6 +348,29 @@ function recurse(el, parser, maxLength) {
     return d;
 }
 
+class ASN1Tag {
+    constructor(stream) {
+        let buf = stream.get();
+        this.tagClass = buf >> 6;
+        this.tagConstructed = ((buf & 0x20) !== 0);
+        this.tagNumber = buf & 0x1F;
+        if (this.tagNumber == 0x1F) { // long tag
+            let n = new Int10();
+            do {
+                buf = stream.get();
+                n.mulAdd(128, buf & 0x7F);
+            } while (buf & 0x80);
+            this.tagNumber = n.simplify();
+        }
+    }
+    isUniversal() {
+        return this.tagClass === 0x00;
+    };
+    isEOC() {
+        return this.tagClass === 0x00 && this.tagNumber === 0x00;
+    };
+}
+
 class ASN1 {
     constructor(stream, header, length, tag, tagLen, sub) {
         if (!(tag instanceof ASN1Tag)) throw 'Invalid tag value.';
@@ -519,7 +542,9 @@ class ASN1 {
             buf = (buf * 256) + stream.get();
         return buf;
     };
-    static decode(stream, offset) {
+    static decode(stream, offset, type = ASN1) {
+        if (!(type.prototype instanceof ASN1))
+            throw 'Must pass a class that extends ASN1';
         if (!(stream instanceof Stream))
             stream = new Stream(stream, offset || 0);
         let streamStart = new Stream(stream),
@@ -537,14 +562,14 @@ class ASN1 {
                     if (end > stream.enc.length)
                         throw 'Container at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream';
                     while (stream.pos < end)
-                        sub[sub.length] = ASN1.decode(stream);
+                        sub[sub.length] = type.decode(stream);
                     if (stream.pos != end)
                         throw 'Content size is not correct for container at offset ' + start;
                 } else {
                     // undefined length
                     try {
                         for (;;) {
-                            let s = ASN1.decode(stream);
+                            let s = type.decode(stream);
                             if (s.tag.isEOC())
                                 break;
                             sub[sub.length] = s;
@@ -579,32 +604,9 @@ class ASN1 {
                 throw "We can't skip over an invalid tag with undefined length at offset " + start;
             stream.pos = start + Math.abs(len);
         }
-        return new ASN1(streamStart, header, len, tag, tagLen, sub);
+        return new type(streamStart, header, len, tag, tagLen, sub);
     };
 
-}
-
-class ASN1Tag {
-    constructor(stream) {
-        let buf = stream.get();
-        this.tagClass = buf >> 6;
-        this.tagConstructed = ((buf & 0x20) !== 0);
-        this.tagNumber = buf & 0x1F;
-        if (this.tagNumber == 0x1F) { // long tag
-            let n = new Int10();
-            do {
-                buf = stream.get();
-                n.mulAdd(128, buf & 0x7F);
-            } while (buf & 0x80);
-            this.tagNumber = n.simplify();
-        }
-    }
-    isUniversal() {
-        return this.tagClass === 0x00;
-    };
-    isEOC() {
-        return this.tagClass === 0x00 && this.tagNumber === 0x00;
-    };
 }
 
 return ASN1;
