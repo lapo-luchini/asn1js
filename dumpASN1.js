@@ -8,13 +8,22 @@ const
     rfc = require('./rfcdef'),
     colYellow = '\x1b[33m',
     colBlue = '\x1b[34m',
-    colReset = '\x1b[0m';
+    colReset = '\x1b[0m',
+    commonTypes = [
+        { description: 'X.509 certificate', ...moduleAndType(rfc['1.3.6.1.5.5.7.0.18'], 'Certificate') }, 
+        { description: 'CMS / PKCS#7 envelope', ...moduleAndType(rfc['1.2.840.113549.1.9.16.0.14'], 'ContentInfo') },
+    ];
+
+function moduleAndType(mod, name) {
+    return Object.assign({ module: { oid: mod.oid, name: mod.name, source: mod.source } }, mod.types[name]);
+}
 
 function searchType(name) {
-    for (const r of Object.values(rfc))
-        if (name in r.types) {
+    for (const mod of Object.values(rfc))
+        if (name in mod.types) {
             // console.log(name + ' found in ' + r.name);
-            return r.types[name];
+            // return r.types[name];
+            return moduleAndType(mod, name);
         }
     throw 'Type not found: ' + name;
 }
@@ -48,18 +57,14 @@ function firstUpper(s) {
     return s[0].toUpperCase() + s.slice(1);
 }
 
-function applyDef(value, def, stats) {
+function applyDef(value, def, stats = { total: 0, recognized: 0, defs: {} }) {
     value.def = {};
-    stats ??= {};
-    stats.total ??= 0;
-    stats.recognized ??= 0;
-    stats.defs ??= {};
     let tn = value.typeName();
     def = translate(def, tn);
-    if (stats) ++stats.total;
+    ++stats.total;
     if (def?.type) {
         value.def = def;
-        if (stats && (def.id || def.name)) ++stats.recognized;
+        if (def.id || def.name) ++stats.recognized;
     }
     if (value.sub !== null) {
         if (def?.type?.type)
@@ -87,6 +92,7 @@ function applyDef(value, def, stats) {
             applyDef(subval, type, stats);
         }
     }
+    return stats;
 }
 
 function print(value, indent) {
@@ -120,16 +126,29 @@ function print(value, indent) {
     return s;
 }
 
-let content = fs.readFileSync(process.argv[3]);
+let content = fs.readFileSync(process.argv[2]);
 try { // try PEM first
     content = Base64.unarmor(content);
 } catch (e) { // try DER/BER then
 }
 let result = ASN1.decode(content);
 content = null;
-let stats = {};
-applyDef(result, searchType(process.argv[2]), stats);
+const t0 = performance.now();
+const types = commonTypes
+    .map(type => {
+        const stats = applyDef(result, type);
+        return { type, match: stats.recognized / stats.total }
+    })
+    .sort((a, b) => b.match - a.match);
+const t1 = performance.now();
+console.log('Parsed in ' + (t1 - t0).toFixed(2) + ' ms; possible types:');
+for (const t of types)
+  console.log((t.match * 100).toFixed(2).padStart(6) + '% ' + t.type.description);
+applyDef(result, types[0].match >= 0.1 ? types[0].type : null);
+console.log('Parsed as:', result.def);
+// const type = searchType(process.argv[2]);
+// const stats = applyDef(result, type);
 console.log(print(result));
-console.log('Stats:', (stats.recognized * 100 / stats.total).toFixed(2) + '%');
-// print(result, searchType(process.argv[2]), stats);
-// console.log('Defs:', stats.defs);
+// console.log('Stats:', (stats.recognized * 100 / stats.total).toFixed(2) + '%');
+// // print(result, searchType(process.argv[2]), stats);
+// // console.log('Defs:', stats.defs);
