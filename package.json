@@ -17,6 +17,9 @@
     "lint" : "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js index.js parseRFC.js dumpASN1.js",
     "test" : "node test"
   },
+  "engines": {
+    "node": ">=6.4.0"
+  },
   "devDependencies": {
     "eslint": "^8.34.0"
   },
