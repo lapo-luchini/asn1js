@@ -97,9 +97,7 @@ function applyDef(value, def, stats = { total: 0, recognized: 0, defs: {} }) {
 
 function print(value, indent) {
     if (indent === undefined) indent = '';
-    let tn = value.typeName();
     const def = value.def;
-    tn = tn.replaceAll('_', ' ');
     let name = '';
     if (def?.type) {
         if (def.id) name += colBlue + def.id + colReset;
@@ -137,13 +135,13 @@ const t0 = performance.now();
 const types = commonTypes
     .map(type => {
         const stats = applyDef(result, type);
-        return { type, match: stats.recognized / stats.total }
+        return { type, match: stats.recognized / stats.total };
     })
     .sort((a, b) => b.match - a.match);
 const t1 = performance.now();
 console.log('Parsed in ' + (t1 - t0).toFixed(2) + ' ms; possible types:');
 for (const t of types)
-  console.log((t.match * 100).toFixed(2).padStart(6) + '% ' + t.type.description);
+    console.log((t.match * 100).toFixed(2).padStart(6) + '% ' + t.type.description);
 applyDef(result, types[0].match >= 0.1 ? types[0].type : null);
 console.log('Parsed as:', result.def);
 // const type = searchType(process.argv[2]);

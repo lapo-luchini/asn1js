@@ -25,6 +25,7 @@ const
     ellipsis = '\u2026',
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
+    hexDigits = '0123456789ABCDEF',
     b64Safe = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
     tableT61 = [
         ['', ''],
@@ -78,11 +79,10 @@ class Stream {
         if (pos >= this.enc.length)
             throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
         return (typeof this.enc == 'string') ? this.enc.charCodeAt(pos) : this.enc[pos];
-    };
-    hexDigits = '0123456789ABCDEF';
+    }
     hexByte(b) {
-        return this.hexDigits.charAt((b >> 4) & 0xF) + this.hexDigits.charAt(b & 0xF);
-    };
+        return hexDigits.charAt((b >> 4) & 0xF) + hexDigits.charAt(b & 0xF);
+    }
     hexDump(start, end, raw) {
         let s = '';
         for (let i = start; i < end; ++i) {
@@ -95,7 +95,7 @@ class Stream {
                 }
         }
         return s;
-    };
+    }
     b64Dump(start, end) {
         let extra = (end - start) % 3,
             s = '',
@@ -115,7 +115,7 @@ class Stream {
             if (extra == 2) s += b64Safe.charAt(c >> 6 & 0x3F);
         }
         return s;
-    };
+    }
     isASCII(start, end) {
         for (let i = start; i < end; ++i) {
             let c = this.get(i);
@@ -123,13 +123,13 @@ class Stream {
                 return false;
         }
         return true;
-    };
+    }
     parseStringISO(start, end, maxLength) {
         let s = '';
         for (let i = start; i < end; ++i)
             s += String.fromCharCode(this.get(i));
         return { size: s.length, str: stringCut(s, maxLength) };
-    };
+    }
     parseStringT61(start, end, maxLength) {
         // warning: this code is not very well tested so far
         function merge(c, d) {
@@ -150,7 +150,7 @@ class Stream {
                 s += String.fromCharCode(c);
         }
         return { size: s.length, str: stringCut(s, maxLength) };
-    };
+    }
     parseStringUTF(start, end, maxLength) {
         function ex(c) { // must be 10xxxxxx
             if ((c < 0x80) || (c >= 0xC0))
@@ -181,7 +181,7 @@ class Stream {
                 throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
         }
         return { size: s.length, str: stringCut(s, maxLength) };
-    };
+    }
     parseStringBMP(start, end, maxLength) {
         let s = '', hi, lo;
         for (let i = start; i < end; ) {
@@ -190,7 +190,7 @@ class Stream {
             s += String.fromCharCode((hi << 8) | lo);
         }
         return { size: s.length, str: stringCut(s, maxLength) };
-    };
+    }
     parseTime(start, end, shortYear) {
         let s = this.parseStringISO(start, end).str,
             m = (shortYear ? reTimeS : reTimeL).exec(s);
@@ -217,7 +217,7 @@ class Stream {
                 s += m[9] + ':' + (m[10] || '00');
         }
         return s;
-    };
+    }
     parseInteger(start, end) {
         let v = this.get(start),
             neg = (v > 127),
@@ -246,7 +246,7 @@ class Stream {
         for (let i = start + 1; i < end; ++i)
             n.mulAdd(256, this.get(i));
         return s + n.toString();
-    };
+    }
     parseBitString(start, end, maxLength) {
         let unusedBits = this.get(start);
         if (unusedBits > 7)
@@ -262,7 +262,7 @@ class Stream {
                 s = stringCut(s, maxLength);
         }
         return { size: lenBit, str: s };
-    };
+    }
     parseOctetString(start, end, maxLength) {
         let len = end - start,
             s;
@@ -282,7 +282,7 @@ class Stream {
         if (len > maxLength)
             s += ellipsis;
         return { size: len, str: s };
-    };
+    }
     parseOID(start, end, maxLength, isRelative) {
         let s = '',
             n = new Int10(),
@@ -322,10 +322,10 @@ class Stream {
             }
         }
         return s;
-    };
+    }
     parseRelativeOID(start, end, maxLength) {
         return this.parseOID(start, end, maxLength, true);
-    };
+    }
 }
 
 function recurse(el, parser, maxLength) {
@@ -365,10 +365,10 @@ class ASN1Tag {
     }
     isUniversal() {
         return this.tagClass === 0x00;
-    };
+    }
     isEOC() {
         return this.tagClass === 0x00 && this.tagNumber === 0x00;
-    };
+    }
 }
 
 class ASN1 {
@@ -419,7 +419,7 @@ class ASN1 {
         case 2: return '[' + this.tag.tagNumber.toString() + ']'; // Context
         case 3: return 'Private_' + this.tag.tagNumber.toString();
         }
-    };
+    }
     /** A string preview of the content (intended for humans). */
     content(maxLength) {
         if (this.tag === undefined)
@@ -484,10 +484,10 @@ class ASN1 {
             return this.stream.parseTime(content, content + len, (this.tag.tagNumber == 0x17));
         }
         return null;
-    };
+    }
     toString() {
         return this.typeName() + '@' + this.stream.pos + '[header:' + this.header + ',length:' + this.length + ',sub:' + ((this.sub === null) ? 'null' : this.sub.length) + ']';
-    };
+    }
     toPrettyString(indent) {
         if (indent === undefined) indent = '';
         let s = indent + this.typeName() + ' @' + this.stream.pos;
@@ -508,26 +508,26 @@ class ASN1 {
                 s += this.sub[i].toPrettyString(indent);
         }
         return s;
-    };
+    }
     posStart() {
         return this.stream.pos;
-    };
+    }
     posContent() {
         return this.stream.pos + this.header;
-    };
+    }
     posEnd() {
         return this.stream.pos + this.header + Math.abs(this.length);
-    };
+    }
     /** Position of the length. */
     posLen() {
         return this.stream.pos + this.tagLen;
-    };
+    }
     toHexString() {
         return this.stream.hexDump(this.posStart(), this.posEnd(), true);
-    };
+    }
     toB64String() {
         return this.stream.b64Dump(this.posStart(), this.posEnd());
-    };
+    }
     static decodeLength(stream) {
         let buf = stream.get(),
             len = buf & 0x7F;
@@ -541,9 +541,9 @@ class ASN1 {
         for (let i = 0; i < len; ++i)
             buf = (buf * 256) + stream.get();
         return buf;
-    };
+    }
     static decode(stream, offset, type = ASN1) {
-        if (!(type.prototype instanceof ASN1))
+        if (!(type == ASN1 || type.prototype instanceof ASN1))
             throw 'Must pass a class that extends ASN1';
         if (!(stream instanceof Stream))
             stream = new Stream(stream, offset || 0);
@@ -605,7 +605,7 @@ class ASN1 {
             stream.pos = start + Math.abs(len);
         }
         return new type(streamStart, header, len, tag, tagLen, sub);
-    };
+    }
 
 }
 

@@ -77,7 +77,7 @@ class Base64 {
         if (haveU8 && out.length > len) // in case it was originally longer because of ignored characters
             out = out.subarray(0, len);
         return out;
-    };
+    }
 
     static pretty(str) {
         // fix padding
@@ -87,9 +87,8 @@ class Base64 {
         str = str.replace(/-/g, '+').replace(/_/g, '/');
         // 80 column width
         return str.replace(/(.{80})/g, '$1\n');
-    };
+    }
 
-    static re = /-----BEGIN [^-]+-----([A-Za-z0-9+/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+/=\s]+)====|^([A-Za-z0-9+/=\s]+)$/;
     static unarmor(a) {
         let m = Base64.re.exec(a);
         if (m) {
@@ -103,9 +102,11 @@ class Base64 {
                 throw 'RegExp out of sync';
         }
         return Base64.decode(a);
-    };
+    }
 
 }
+
+Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+/=\s]+)====|^([A-Za-z0-9+/=\s]+)$/;
 
 return Base64;
 

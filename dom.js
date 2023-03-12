@@ -55,7 +55,7 @@ const
             }
             return o;
         }
-    };
+    }
 
 class ASN1DOM extends ASN1 {
 
@@ -134,18 +134,18 @@ class ASN1DOM extends ASN1 {
             node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
         };
         return node;
-    };
+    }
     fakeHover(current) {
         this.node.className += ' hover';
         if (current)
             this.head.className += ' hover';
-    };
+    }
     fakeOut(current) {
         let re = / ?hover/;
         this.node.className = this.node.className.replace(re, '');
         if (current)
             this.head.className = this.head.className.replace(re, '');
-    };
+    }
     toHexDOM_sub(node, className, stream, start, end) {
         if (start >= end)
             return;
@@ -153,7 +153,7 @@ class ASN1DOM extends ASN1 {
         sub.appendChild(DOM.text(
             stream.hexDump(start, end)));
         node.appendChild(sub);
-    };
+    }
     toHexDOM(root) {
         let node = DOM.tag('span', 'hex');
         if (root === undefined) root = node;
@@ -219,7 +219,7 @@ class ASN1DOM extends ASN1 {
         } else
             this.toHexDOM_sub(node, 'outro', this.stream, this.posContent(), this.posEnd());
         return node;
-    };
+    }
     static decode(stream, offset) {
         return ASN1.decode(stream, offset, ASN1DOM);
     }

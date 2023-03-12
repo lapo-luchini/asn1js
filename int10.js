@@ -52,7 +52,7 @@ class Int10 {
         }
         if (c > 0)
             b[i] = c;
-    };
+    }
 
     /**
      * Subtract value.
@@ -73,7 +73,7 @@ class Int10 {
         }
         while (b[b.length - 1] === 0)
             b.pop();
-    };
+    }
 
     /**
      * Convert to decimal string representation.
@@ -87,7 +87,7 @@ class Int10 {
         for (let i = b.length - 2; i >= 0; --i)
             s += (max + b[i]).toString().substring(1);
         return s;
-    };
+    }
 
     /**
      * Convert to Number value representation.
@@ -99,7 +99,7 @@ class Int10 {
         for (let i = b.length - 1; i >= 0; --i)
             v = v * max + b[i];
         return v;
-    };
+    }
 
     /**
      * Return value as a simple Number (if it is <= 10000000000000), or return this.
@@ -107,7 +107,7 @@ class Int10 {
     simplify() {
         let b = this.buf;
         return (b.length == 1) ? b[0] : this;
-    };
+    }
 
 }
 
