@@ -1,5 +1,5 @@
 // Big integer base-10 printing library
-// Copyright (c) 2008-2022 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,92 +21,95 @@
 
 let max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
 
-/**
- * Arbitrary length base-10 value.
- * @param {number} value - Optional initial value (will be 0 otherwise).
- */
-function Int10(value) {
-    this.buf = [+value || 0];
-}
+class Int10 {
+    /**
+     * Arbitrary length base-10 value.
+     * @param {number} value - Optional initial value (will be 0 otherwise).
+     */
+    constructor(value) {
+        this.buf = [+value || 0];
+    }
 
-/**
- * Multiply value by m and add c.
- * @param {number} m - multiplier, must be < =256
- * @param {number} c - value to add
- */
-Int10.prototype.mulAdd = function (m, c) {
-    // assert(m <= 256)
-    let b = this.buf,
-        l = b.length,
-        i, t;
-    for (i = 0; i < l; ++i) {
-        t = b[i] * m + c;
-        if (t < max)
-            c = 0;
-        else {
-            c = 0|(t / max);
-            t -= c * max;
+    /**
+     * Multiply value by m and add c.
+     * @param {number} m - multiplier, must be < =256
+     * @param {number} c - value to add
+     */
+    mulAdd(m, c) {
+        // assert(m <= 256)
+        let b = this.buf,
+            l = b.length,
+            i, t;
+        for (i = 0; i < l; ++i) {
+            t = b[i] * m + c;
+            if (t < max)
+                c = 0;
+            else {
+                c = 0|(t / max);
+                t -= c * max;
+            }
+            b[i] = t;
         }
-        b[i] = t;
-    }
-    if (c > 0)
-        b[i] = c;
-};
+        if (c > 0)
+            b[i] = c;
+    };
 
-/**
- * Subtract value.
- * @param {number} c - value to subtract
- */
-Int10.prototype.sub = function (c) {
-    let b = this.buf,
-        l = b.length,
-        i, t;
-    for (i = 0; i < l; ++i) {
-        t = b[i] - c;
-        if (t < 0) {
-            t += max;
-            c = 1;
-        } else
-            c = 0;
-        b[i] = t;
-    }
-    while (b[b.length - 1] === 0)
-        b.pop();
-};
+    /**
+     * Subtract value.
+     * @param {number} c - value to subtract
+     */
+    sub(c) {
+        let b = this.buf,
+            l = b.length,
+            i, t;
+        for (i = 0; i < l; ++i) {
+            t = b[i] - c;
+            if (t < 0) {
+                t += max;
+                c = 1;
+            } else
+                c = 0;
+            b[i] = t;
+        }
+        while (b[b.length - 1] === 0)
+            b.pop();
+    };
 
-/**
- * Convert to decimal string representation.
- * @param {*} base - optional value, only value accepted is 10
- */
-Int10.prototype.toString = function (base) {
-    if ((base || 10) != 10)
-        throw 'only base 10 is supported';
-    let b = this.buf,
-        s = b[b.length - 1].toString();
-    for (let i = b.length - 2; i >= 0; --i)
-        s += (max + b[i]).toString().substring(1);
-    return s;
-};
+    /**
+     * Convert to decimal string representation.
+     * @param {*} base - optional value, only value accepted is 10
+     */
+    toString(base) {
+        if ((base || 10) != 10)
+            throw 'only base 10 is supported';
+        let b = this.buf,
+            s = b[b.length - 1].toString();
+        for (let i = b.length - 2; i >= 0; --i)
+            s += (max + b[i]).toString().substring(1);
+        return s;
+    };
 
-/**
- * Convert to Number value representation.
- * Will probably overflow 2^53 and thus become approximate.
- */
-Int10.prototype.valueOf = function () {
-    let b = this.buf,
-        v = 0;
-    for (let i = b.length - 1; i >= 0; --i)
-        v = v * max + b[i];
-    return v;
-};
+    /**
+     * Convert to Number value representation.
+     * Will probably overflow 2^53 and thus become approximate.
+     */
+    valueOf() {
+        let b = this.buf,
+            v = 0;
+        for (let i = b.length - 1; i >= 0; --i)
+            v = v * max + b[i];
+        return v;
+    };
 
-/**
- * Return value as a simple Number (if it is <= 10000000000000), or return this.
- */
-Int10.prototype.simplify = function () {
-    let b = this.buf;
-    return (b.length == 1) ? b[0] : this;
-};
+    /**
+     * Return value as a simple Number (if it is <= 10000000000000), or return this.
+     */
+    simplify() {
+        let b = this.buf;
+        return (b.length == 1) ? b[0] : this;
+    };
+
+}
 
 return Int10;
 
