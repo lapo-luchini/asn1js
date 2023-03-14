@@ -143,7 +143,11 @@ header {
     display: block;
 }
 .name {
+    margin-right: 1em;
     color: var(--preview-border-color);
+}
+.name.id {
+    color: var(--main-text-color);
 }
 .value {
     display: none;
