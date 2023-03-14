@@ -65,11 +65,19 @@ class ASN1DOM extends ASN1 {
         let node = DOM.tag('div', 'node');
         node.asn1 = this;
         let head = DOM.tag('div', 'head');
-        head.innerHTML = "<span class='spaces'>" + spaces + '</span>' + this.typeName().replace(/_/g, ' ');
-        if (this.def && this.def.id) {
-            let name = DOM.tag('span', 'name');
-            name.innerText = this.def.id + ' ';
-            head.prepend(name);
+        const tn = this.typeName().replace(/_/g, ' ');
+        head.innerHTML = "<span class='spaces'>" + spaces + '</span>' + tn;
+        if (this.def) {
+            if (this.def.name && this.def.name != tn) {
+                let name = DOM.tag('span', 'name type');
+                name.innerText = this.def.name + ' ';
+                head.prepend(name);
+            }
+            if (this.def.id) {
+                let name = DOM.tag('span', 'name id');
+                name.innerText = this.def.id + ' ';
+                head.prepend(name);
+            }
         }
         let content = this.content(contentLength);
         let oid;
