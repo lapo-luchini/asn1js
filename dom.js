@@ -26,19 +26,17 @@ const
     contentLength = 8 * lineLength,
     DOM = {
         ellipsis: '\u2026',
-        tag: function (tagName, className) {
+        tag: function (tagName, className, text) {
             let t = document.createElement(tagName);
             t.className = className;
+            if (text) t.innerText = text;
             return t;
         },
         text: function (str) {
             return document.createTextNode(str);
         },
         space: function () {
-            let t = document.createElement('span');
-            t.className = 'spaces';
-            t.innerHTML = ' ';
-            return t;
+            return DOM.tag('span', 'spaces', ' ');
         },
         breakLines: function (str, length) {
             let lines = str.split(/\r?\n/),
@@ -65,20 +63,19 @@ class ASN1DOM extends ASN1 {
         let node = DOM.tag('div', 'node');
         node.asn1 = this;
         let head = DOM.tag('div', 'head');
-        const tn = this.typeName().replace(/_/g, ' ');
-        head.innerHTML = "<span class='spaces'>" + spaces + '</span>' + tn;
+        head.appendChild(DOM.tag('span', 'spaces', spaces));
+        const typeName = this.typeName().replace(/_/g, ' ');
         if (this.def) {
-            if (this.def.name && this.def.name != tn) {
-                let name = DOM.tag('span', 'name type');
-                name.innerText = this.def.name + ' ';
-                head.prepend(name);
-            }
             if (this.def.id) {
-                let name = DOM.tag('span', 'name id');
-                name.innerText = this.def.id + ' ';
-                head.prepend(name);
+                head.appendChild(DOM.tag('span', 'name id', this.def.id));
+                head.appendChild(DOM.space());
+            }
+            if (this.def.name && this.def.name != typeName) {
+                head.appendChild(DOM.tag('span', 'name type', this.def.name));
+                head.appendChild(DOM.space());
             }
         }
+        head.appendChild(DOM.text(typeName));
         let content = this.content(contentLength);
         let oid;
         if (content !== null) {
@@ -94,14 +91,12 @@ class ASN1DOM extends ASN1 {
                 if (oid) {
                     if (oid.d) {
                         preview.appendChild(DOM.space());
-                        let oidd = DOM.tag('span', 'oid description');
-                        oidd.appendChild(DOM.text(oid.d));
+                        let oidd = DOM.tag('span', 'oid description', oid.d);
                         preview.appendChild(oidd);
                     }
                     if (oid.c) {
                         preview.appendChild(DOM.space());
-                        let oidc = DOM.tag('span', 'oid comment');
-                        oidc.appendChild(DOM.text('(' + oid.c + ')'));
+                        let oidc = DOM.tag('span', 'oid comment', '(' + oid.c + ')');
                         preview.appendChild(oidc);
                     }
                 }
@@ -162,9 +157,7 @@ class ASN1DOM extends ASN1 {
     toHexDOM_sub(node, className, stream, start, end) {
         if (start >= end)
             return;
-        let sub = DOM.tag('span', className);
-        sub.appendChild(DOM.text(
-            stream.hexDump(start, end)));
+        let sub = DOM.tag('span', className, stream.hexDump(start, end));
         node.appendChild(sub);
     }
     toHexDOM(root) {
@@ -214,13 +207,9 @@ class ASN1DOM extends ASN1 {
             else {
                 let end1 = start + 5 * 16 - (start & 0xF);
                 let start2 = end - 16 - (end & 0xF);
-                node.appendChild(DOM.text(
-                    this.stream.hexDump(start, end1)));
-                let sub = DOM.tag('span', 'skip');
-                sub.appendChild(DOM.text('\u2026 skipping ' + (start2 - end1) + ' bytes \u2026\n'));
-                node.appendChild(sub);
-                node.appendChild(DOM.text(
-                    this.stream.hexDump(start2, end)));
+                node.appendChild(DOM.text(this.stream.hexDump(start, end1)));
+                node.appendChild(DOM.tag('span', 'skip', '\u2026 skipping ' + (start2 - end1) + ' bytes \u2026\n'));
+                node.appendChild(DOM.text(this.stream.hexDump(start2, end)));
             }
         } else if (this.sub.length > 0) {
             let first = this.sub[0];
