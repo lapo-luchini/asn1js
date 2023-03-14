@@ -18,6 +18,13 @@ const
             [ /^( +)--.*\n(?:\1 .*\n)+/mg, '' ],
             [ /addInfoNotAvailable \(17\)/g, '$&,' ],
         ],
+        5208: [ // currently unsupported
+            [ 'FROM InformationFramework informationFramework', 'FROM InformationFramework {joint-iso-itu-t(2) ds(5) module(1) usefulDefinitions(0) 3}' ],
+            [ ' {{PrivateKeyAlgorithms}}', '' ],
+            [ 'Version ::= INTEGER {v1(0)} (v1,...)', 'Version ::= INTEGER {v1(0)}' ],
+            [ ' {{KeyEncryptionAlgorithms}}', '' ],
+            [ /\.\.\. -- For local profiles/g, '' ],
+        ],
         5280: [ // currently unsupported
             [ 'videotex     (8) } (0..ub-integer-options)', 'videotex     (8) }' ],
             [ /OBJECT IDENTIFIER \( id-qt-cps \| id-qt-unotice \)/g, 'OBJECT IDENTIFIER' ],
@@ -460,7 +467,7 @@ if (num in patches)
 fs.writeFileSync(process.argv[2].replace(/[.]txt$/, '_patched.txt'), s, 'utf8');
 // console.log(s);
 asn1 = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
-const reModuleDefinition = /\s[A-Z](?:[-]?[a-zA-Z0-9])*\s*\{[^}]+\}\s*(^--.*|\s*)*DEFINITIONS/gm;
+const reModuleDefinition = /\s[A-Z](?:[-]?[a-zA-Z0-9])*\s*\{[^}]+\}\s*(^--.*|\n)*DEFINITIONS/gm;
 let m;
 while ((m = reModuleDefinition.exec(s))) {
     new Parser(s, m.index).parseModuleDefinition(process.argv[2]);

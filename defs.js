@@ -109,8 +109,9 @@ class Defs {
 Defs.RFC = rfc;
 
 Defs.commonTypes = [
-    ['X.509 certificate', '1.3.6.1.5.5.7.0.18', 'Certificate' ], 
+    [ 'X.509 certificate', '1.3.6.1.5.5.7.0.18', 'Certificate' ], 
     [ 'CMS / PKCS#7 envelope', '1.2.840.113549.1.9.16.0.14', 'ContentInfo' ],
+    [ 'PKCS#8 encrypted private key', '1.2.840.113549.1.8.1.1', 'EncryptedPrivateKeyInfo' ],
 ].map(arr => ({ description: arr[0], ...Defs.moduleAndType(rfc[arr[1]], arr[2]) }));
 
 return Defs;
