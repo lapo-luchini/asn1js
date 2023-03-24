@@ -21,10 +21,15 @@
 
 const rfc = require('./rfcdef');
 
-function translate(def, tn) {
+function translate(def, tn, stats) {
     if (def?.type == 'tag' && !def.explicit)
         // def.type = def.content[0].type;
         def = def.content[0].type;
+    if (def?.definedBy)
+        try {
+            // hope current OIDs contain the type name (will need to parse from RFC itself)
+            def = Defs.searchType(firstUpper(stats.defs[def.definedBy][1]));
+        } catch (e) {}
     while (def?.type == 'defined' || def?.type?.type == 'defined') {
         const name = def?.type?.type ? def.type.name : def.name;
         def = Object.assign({}, def);
@@ -69,7 +74,7 @@ class Defs {
     static match(value, def, stats = { total: 0, recognized: 0, defs: {} }) {
         value.def = {};
         let tn = value.typeName().replaceAll('_', ' ');
-        def = translate(def, tn);
+        def = translate(def, tn, stats);
         ++stats.total;
         if (def?.type) {
             // if (def.id || def.name) ++stats.recognized;
@@ -101,8 +106,7 @@ class Defs {
                             if (typeof v == 'string')
                                 v = v.split(/\n/);
                             stats.defs[type.id] = v;
-                        } else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) // hope current OIDs contain the type name (will need to parse from RFC itself)
-                            type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
+                        }
                     }
                 }
                 Defs.match(subval, type, stats);
