@@ -22,7 +22,6 @@
 const rfc = require('./rfcdef');
 
 function translate(def, tn) {
-    const id = def?.id;
     if (def?.type == 'tag' && !def.explicit)
         // def.type = def.content[0].type;
         def = def.content[0].type;
@@ -41,6 +40,7 @@ function translate(def, tn) {
             }
         }
     }
+    const id = def?.id;
     if (id)
         def = Object.assign({}, def, { id });
     return def ?? { type: {} };
@@ -68,12 +68,16 @@ class Defs {
 
     static match(value, def, stats = { total: 0, recognized: 0, defs: {} }) {
         value.def = {};
-        let tn = value.typeName();
+        let tn = value.typeName().replaceAll('_', ' ');
         def = translate(def, tn);
         ++stats.total;
         if (def?.type) {
+            // if (def.id || def.name) ++stats.recognized;
+            if (tn == def.type.name || tn == def.name || def.name == 'ANY')
+                ++stats.recognized;
+            else if (def.name)
+                def = Object.assign({ mismatch: 1 }, def);
             value.def = def;
-            if (def.id || def.name) ++stats.recognized;
         }
         if (value.sub !== null) {
             if (def?.type?.type)
@@ -85,16 +89,19 @@ class Defs {
                     if (def.typeOf)
                         type = def.content[0];
                     else {
-                        let tn = subval.typeName(); //.replaceAll('_', ' ');
+                        let tn = subval.typeName().replaceAll('_', ' ');
                         do {
                             type = def.content[j++];
                             // type = translate(type, tn);
                             if (type?.type?.type)
                                 type = type.type;
                         } while (type && ('optional' in type || 'default' in type) && type.name != 'ANY' && type.name != tn);
-                        if (type?.type == 'defined')
-                            stats.defs[type.id] = subval.content().split(/\n/);
-                        else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) // hope current OIDs contain the type name (will need to parse from RFC itself)
+                        if (type?.type == 'builtin' || type?.type == 'defined') {
+                            let v = subval.content();
+                            if (typeof v == 'string')
+                                v = v.split(/\n/);
+                            stats.defs[type.id] = v;
+                        } else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) // hope current OIDs contain the type name (will need to parse from RFC itself)
                             type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
                     }
                 }
@@ -112,6 +119,7 @@ Defs.commonTypes = [
     [ 'X.509 certificate', '1.3.6.1.5.5.7.0.18', 'Certificate' ], 
     [ 'CMS / PKCS#7 envelope', '1.2.840.113549.1.9.16.0.14', 'ContentInfo' ],
     [ 'PKCS#8 encrypted private key', '1.2.840.113549.1.8.1.1', 'EncryptedPrivateKeyInfo' ],
+    [ 'PKCS#8 private key', '1.2.840.113549.1.8.1.1', 'PrivateKeyInfo' ],
 ].map(arr => ({ description: arr[0], ...Defs.moduleAndType(rfc[arr[1]], arr[2]) }));
 
 return Defs;

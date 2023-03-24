@@ -74,6 +74,10 @@ class ASN1DOM extends ASN1 {
                 head.appendChild(DOM.tag('span', 'name type', this.def.name));
                 head.appendChild(DOM.space());
             }
+            if (this.def.mismatch) {
+                head.appendChild(DOM.tag('span', 'name type', '[?]'));
+                head.appendChild(DOM.space());
+            }
         }
         head.appendChild(DOM.text(typeName));
         let content = this.content(contentLength);
