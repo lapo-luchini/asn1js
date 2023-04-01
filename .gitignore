@@ -4,3 +4,10 @@ git-*.txt
 node_modules
 package-lock.json
 pnpm-lock.yaml
+
+# Artifacts from parseRFC.js
+# Maybe we should commit this to the repo?
+rfc*
+
+# From updateOID.sh
+dumpasn1.cfg

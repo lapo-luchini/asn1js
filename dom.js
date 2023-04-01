@@ -159,7 +159,7 @@ class ASN1DOM extends ASN1 {
             stream.hexDump(start, end)));
         node.appendChild(sub);
     }
-    toHexDOM(root) {
+    toHexDOM(root, trim=true) {
         let node = DOM.tag('span', 'hex');
         if (root === undefined) root = node;
         this.head.hexNode = node;
@@ -174,7 +174,7 @@ class ASN1DOM extends ASN1 {
             }
             this.asn1.fakeHover(current);
         };
-        node.onmouseout  = function () {
+        node.onmouseout = function () {
             let current = (root.selected == this.asn1);
             this.asn1.fakeOut(current);
             if (current) {
@@ -200,7 +200,7 @@ class ASN1DOM extends ASN1 {
         if (this.sub === null) {
             let start = this.posContent();
             let end = this.posEnd();
-            if (end - start < 10 * 16)
+            if (!trim || end - start < 10 * 16)
                 node.appendChild(DOM.text(
                     this.stream.hexDump(start, end)));
             else {
@@ -219,7 +219,7 @@ class ASN1DOM extends ASN1 {
             let last = this.sub[this.sub.length - 1];
             this.toHexDOM_sub(node, 'intro', this.stream, this.posContent(), first.posStart());
             for (let i = 0, max = this.sub.length; i < max; ++i)
-                node.appendChild(this.sub[i].toHexDOM(root));
+                node.appendChild(this.sub[i].toHexDOM(root, trim));
             this.toHexDOM_sub(node, 'outro', this.stream, last.posEnd(), this.posEnd());
         } else
             this.toHexDOM_sub(node, 'outro', this.stream, this.posContent(), this.posEnd());
