@@ -15,6 +15,7 @@ const
     tree = id('tree'),
     dump = id('dump'),
     wantHex = checkbox('wantHex'),
+    trimHex = checkbox('trimHex'),
     wantDef = checkbox('wantDef'),
     area = id('area'),
     file = id('file'),
@@ -46,7 +47,7 @@ function show(asn1) {
     tree.innerHTML = '';
     dump.innerHTML = '';
     tree.appendChild(asn1.toDOM());
-    if (wantHex.checked) dump.appendChild(asn1.toHexDOM());
+    if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
 function decode(der, offset) {
     offset = offset || 0;
