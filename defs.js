@@ -87,7 +87,11 @@ class Defs {
                     else {
                         let tn = subval.typeName(); //.replaceAll('_', ' ');
                         do {
-                            type = def.content[j++];
+                            if (def.content == "TODO:unknown") {
+                                type = {name: "ANY", type: "builtin"}
+                            } else {
+                                type = def.content[j++];
+                            }
                             // type = translate(type, tn);
                             if (type?.type?.type)
                                 type = type.type;
