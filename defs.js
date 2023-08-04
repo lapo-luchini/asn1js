@@ -91,7 +91,7 @@ class Defs {
                             // type = translate(type, tn);
                             if (type?.type?.type)
                                 type = type.type;
-                        } while (type && ('optional' in type || 'default' in type) && type.name != 'ANY' && type.name != tn);
+                        } while (type && typeof type == 'object' && ('optional' in type || 'default' in type) && type.name != 'ANY' && type.name != tn);
                         if (type?.type == 'defined')
                             stats.defs[type.id] = subval.content().split(/\n/);
                         else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) // hope current OIDs contain the type name (will need to parse from RFC itself)
