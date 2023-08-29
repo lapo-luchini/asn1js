@@ -95,7 +95,9 @@ class Defs {
                         if (type?.type == 'defined')
                             stats.defs[type.id] = subval.content().split(/\n/);
                         else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) // hope current OIDs contain the type name (will need to parse from RFC itself)
-                            type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
+                            try {
+                                type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
+                            } catch (e) {}
                     }
                 }
                 Defs.match(subval, type, stats);
