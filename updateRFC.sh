@@ -1,5 +1,5 @@
 #/bin/sh
-RFCs="5280 5208 3369 3161"
+RFCs="5280 5208 3369 3161 2986"
 downloadRFC() {
     URL="https://www.ietf.org/rfc/rfc$1.txt"
     if [ -x /usr/bin/fetch ]; then

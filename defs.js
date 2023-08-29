@@ -100,12 +100,16 @@ class Defs {
                             // type = translate(type, tn);
                             if (type?.type?.type)
                                 type = type.type;
-                        } while (type && ('optional' in type || 'default' in type) && type.name != 'ANY' && type.name != tn);
+                        } while (type && typeof type == 'object' && ('optional' in type || 'default' in type) && type.name != 'ANY' && type.name != tn);
                         if (type?.type == 'builtin' || type?.type == 'defined') {
                             let v = subval.content();
                             if (typeof v == 'string')
                                 v = v.split(/\n/);
                             stats.defs[type.id] = v;
+                        } else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) { // hope current OIDs contain the type name (will need to parse from RFC itself)
+                            try {
+                                type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
+                            } catch (e) {}
                         }
                     }
                 }
@@ -124,6 +128,7 @@ Defs.commonTypes = [
     [ 'CMS / PKCS#7 envelope', '1.2.840.113549.1.9.16.0.14', 'ContentInfo' ],
     [ 'PKCS#8 encrypted private key', '1.2.840.113549.1.8.1.1', 'EncryptedPrivateKeyInfo' ],
     [ 'PKCS#8 private key', '1.2.840.113549.1.8.1.1', 'PrivateKeyInfo' ],
+    [ 'PKCS#10 certification request', '1.2.840.113549.1.10.1.1', 'CertificationRequest' ],
 ].map(arr => ({ description: arr[0], ...Defs.moduleAndType(rfc[arr[1]], arr[2]) }));
 
 return Defs;
