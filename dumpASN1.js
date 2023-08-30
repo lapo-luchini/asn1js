@@ -58,7 +58,8 @@ const t1 = performance.now();
 console.log('Parsed in ' + (t1 - t0).toFixed(2) + ' ms; possible types:');
 for (const t of types)
     console.log((t.match * 100).toFixed(2).padStart(6) + '% ' + t.type.description);
-const stats = Defs.match(result, types[0].type);
+Defs.match(result, types[0].type);
+// const stats = Defs.match(result, types[0].type);
 // console.log('Stats:', stats);
 console.log('Parsed as:', result.def);
 // const type = searchType(process.argv[2]);
