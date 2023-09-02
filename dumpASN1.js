@@ -17,6 +17,7 @@ function print(value, indent) {
     if (def?.type) {
         if (def.id) name += colBlue + def.id + colReset;
         if (typeof def.type == 'object' && def.name) name = (name ? name + ' ' : '') + def.name;
+        if (def.mismatch) name = (name ? name + ' ' : '') + '[?]';
         if (name) name += ' ';
     }
     let s = indent + name + colYellow + value.typeName() + colReset + ' @' + value.stream.pos;
@@ -57,7 +58,9 @@ const t1 = performance.now();
 console.log('Parsed in ' + (t1 - t0).toFixed(2) + ' ms; possible types:');
 for (const t of types)
     console.log((t.match * 100).toFixed(2).padStart(6) + '% ' + t.type.description);
-Defs.match(result, types[0].match >= 0.1 ? types[0].type : null);
+Defs.match(result, types[0].type);
+// const stats = Defs.match(result, types[0].type);
+// console.log('Stats:', stats);
 console.log('Parsed as:', result.def);
 // const type = searchType(process.argv[2]);
 // const stats = applyDef(result, type);
