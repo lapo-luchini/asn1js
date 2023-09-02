@@ -67,6 +67,7 @@ credits
 - patches by [Gergely Nagy](https://github.com/ngg)
 - Relative OID support added by [Mistial Developer](https://github.com/mistial-dev)
 - dark mode support added by [Oliver Burgmaier](https://github.com/olibu/)
+- patches by [Nicolai Søborg](https://github.com/NicolaiSoeborg)
 
 links
 -----
