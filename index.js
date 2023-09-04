@@ -49,6 +49,18 @@ function show(asn1) {
     tree.appendChild(asn1.toDOM());
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
+function skipPadding(der, offset) {
+    let skip = 0;
+    while ((offset+skip) < der.length) {
+        let pos = offset+skip;
+        let b = (typeof der == 'string') ? der.charCodeAt(pos) : der[pos];
+        if (b != 0x00 && b != 0xFF) {
+            break;
+        }
+        skip += 1;
+    }
+    return skip;
+}
 function decode(der, offset) {
     offset = offset || 0;
     try {
@@ -94,10 +106,12 @@ function decode(der, offset) {
         }
         let endOffset = asn1.posEnd();
         if (endOffset < der.length) {
+            let skip = skipPadding(der, endOffset);
+            endOffset += skip;
             let p = document.createElement('p');
             p.innerText = 'Input contains ' + (der.length - endOffset) + ' more bytes to decode.';
             let button = document.createElement('button');
-            button.innerText = 'try to decode';
+            button.innerText = 'try to decode' + (skip > 0 ? ' (skip '+skip+' zeros)':'');
             button.onclick = function () {
                 decode(der, endOffset);
             };
