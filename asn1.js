@@ -292,7 +292,7 @@ class Stream {
         let len = end - start,
             s;
         try {
-            s = this.parseStringUTF(start, end, maxLength);
+            s = this.parseUTF8inner(start, end, maxLength);
             checkPrintable(s.str);
             return { size: end - start, str: s.str };
         } catch (e) {
