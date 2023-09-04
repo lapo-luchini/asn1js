@@ -151,7 +151,7 @@ class Stream {
         }
         return { size: s.length, str: stringCut(s, maxLength) };
     }
-    parseStringUTF(start, end, maxLength) {
+    parseUTF8inner(start, end) {
         function ex(c) { // must be 10xxxxxx
             if ((c < 0x80) || (c >= 0xC0))
                 throw new Error('Invalid UTF-8 continuation byte: ' + c);
@@ -179,6 +179,28 @@ class Stream {
                 s += surrogate(((c & 0x07) << 18) | (ex(this.get(i++)) << 12) | (ex(this.get(i++)) << 6) | ex(this.get(i++)));
             else
                 throw new Error('Invalid UTF-8 starting byte (since 2003 it is restricted to 4 bytes): ' + c);
+        }
+        return s;
+    }
+    parseInvalidString(start, end) {
+        let s = '';
+        for (let i = start; i < end; ) {
+            let c = this.get(i++);
+            // Printable ASCII subset
+            if (c >= 0x20 && c < 0x7F) {
+                s += String.fromCharCode(c);
+            } else {
+                s += '.';
+            }
+        }
+        return s;
+    }
+    parseStringUTF(start, end, maxLength) {
+        let s;
+        try {
+            s = this.parseUTF8inner(start, end)
+        } catch(e) {
+            s = '"' + this.parseInvalidString(start, end) + '" // ' + e;
         }
         return { size: s.length, str: stringCut(s, maxLength) };
     }
@@ -249,8 +271,11 @@ class Stream {
     }
     parseBitString(start, end, maxLength) {
         let unusedBits = this.get(start);
-        if (unusedBits > 7)
-            throw 'Invalid BitString with unusedBits=' + unusedBits;
+        let errNote = '';
+        if (unusedBits > 7) {
+            errNote = '// Invalid BitString with unusedBits=' + unusedBits;
+            unusedBits = 0;
+        }
         let lenBit = ((end - start - 1) << 3) - unusedBits,
             s = '';
         for (let i = start + 1; i < end; ++i) {
@@ -261,7 +286,7 @@ class Stream {
             if (s.length > maxLength)
                 s = stringCut(s, maxLength);
         }
-        return { size: lenBit, str: s };
+        return { size: lenBit, str: s+errNote };
     }
     parseOctetString(start, end, maxLength) {
         let len = end - start,
