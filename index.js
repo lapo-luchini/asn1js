@@ -105,9 +105,9 @@ function decode(der, offset) {
             window.location.hash = hash = '#';
         }
         let endOffset = asn1.posEnd();
+        let skip = skipPadding(der, endOffset);
+        endOffset += skip;
         if (endOffset < der.length) {
-            let skip = skipPadding(der, endOffset);
-            endOffset += skip;
             let p = document.createElement('p');
             p.innerText = 'Input contains ' + (der.length - endOffset) + ' more bytes to decode.';
             let button = document.createElement('button');
