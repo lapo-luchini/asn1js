@@ -16,6 +16,7 @@
   "scripts": {
     "lint": "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js index.js parseRFC.js dumpASN1.js",
     "lint-action": "npx @action-validator/cli .github/workflows/node.js.yml",
+    "serve": "echo 'Connect to http://localhost:3000/' ; npx statik --port 3000 .",
     "test": "node test"
   },
   "engines": {
