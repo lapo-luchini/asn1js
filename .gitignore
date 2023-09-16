@@ -1,13 +1,15 @@
-.DS_Store
-.vscode
-git-*.txt
-node_modules
+_MTN/
+.DS_Store/
+.vscode/
+node_modules/
 package-lock.json
 pnpm-lock.yaml
-
-# Artifacts from parseRFC.js
-# Maybe we should commit this to the repo?
-rfc*
-
-# From updateOID.sh
+# Artifacts from release.sh
+sha256sums.asc
+# Artifacts from mirror_to_github.sh
+git-*.txt
+# Artifacts from updateOID.sh
 dumpasn1.cfg
+# Artifacts from parseRFC.js
+rfc/
+rfcdef.json
