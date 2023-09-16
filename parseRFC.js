@@ -42,6 +42,9 @@ const
             [ 'videotex     (8) } (0..ub-integer-options)', 'videotex     (8) }' ],
             [ /OBJECT IDENTIFIER \( id-qt-cps \| id-qt-unotice \)/g, 'OBJECT IDENTIFIER' ],
         ],
+        4210: [
+            [ /^\s+-- .*\r?\n/mg, '' ], // comments
+        ],
     };
 
 // const reWhitespace = /(?:\s|--(?:[}-]?[^\n}-])*(?:\n|--))*/y;
