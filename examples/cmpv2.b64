@@ -1,0 +1,21 @@
+CMPv2 example as found on Wireshark page.
+
+Original link:
+https://wiki.wireshark.org/CMP
+
+Attachment found moved here:
+https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/cmp_IR_sequence_OpenSSL-Cryptlib.pcap
+
+begin-base64 644 cmpv2.der
+MIICPjCB1QIBAqQCMACkRjBEMQswCQYDVQQGEwJERTEMMAoGA1UEChMDTlNOMREwDwYDVQQLEwhQ
+RyBSREUgMzEUMBIGA1UEAxMLTWFydGluJ3MgQ0GgERgPMjAxMDA3MDUwNzM1MzhaoTwwOgYJKoZI
+hvZ9B0INMC0EEJ5EpSD3zKjvmzHEK5+aoAAwCQYFKw4DAhoFAAICAfQwCgYIKwYBBQUIAQKiCwQJ
+b/KGO0ILNJqApBIEEJGOKFG/9crkwU+z/I5ICa6lEgQQnnbd7EB2QjRCwOHt9QWdBKCCAUkwggFF
+MIIBQTCBqAIBADCBoqaBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAqVTOtjEEYELkomc3sMOy
+Too5a9YeC91IMn52cVx7doY4AeO6J9e8p+CtWNbzVF8aRgHUhh31m+/X3MkQOaY5i8nF33uxAxDL
+MDXttHjsqrF/tsgYuuHSs/Znz4PA1kLkdhKE9DLiGlCFaJH5QY5Hzl6bcS3ApuWCny0RRzIA1/cC
+AwEAAaGBkzANBgkqhkiG9w0BAQUFAAOBgQArOldjg75fDx7BaFp0oAknLDREvB1KyE+BV96R+lB+
+tRRhwv3dyc/GTvRw4GtaeDjWCjNPaDCl9ZvvVljaR2aMZvhaQV+DUmCMjFSP3DPiGuszBA6R2azX
+NKtnpJ3SGx2vk0+Iv05tXLhdnqQJZs5a3S3R30kn4Vw+4WQm3kb0fKAXAxUA9K8u+7hv5Rg6GDn6
+aoPxbUo6fpU=
+====
