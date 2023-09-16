@@ -83,8 +83,8 @@ class Parser {
             throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
         return this.enc.charAt(pos);
     }
-    exception(s, pos) {
-        if (pos == undefined) pos = this.pos;
+    exception(s) {
+        const pos = this.pos;
         let from = Math.max(pos - 30, this.start);
         let to   = Math.min(pos + 30, this.enc.length);
         let ctx  = '';
@@ -110,10 +110,10 @@ class Parser {
         throw new Error('[position ' + pos + ', line ' + line + ':' + column + '] ' + s + '\n' + ctx.replace(/\s/g, ' ') + '\n' + arrow);
     }
     peek() {
-        return (typeof this.enc == 'string') ? this.enc.charCodeAt(this.pos) : this.enc[this.pos];
+        return this.enc.charCodeAt(this.pos);
     }
     peekChar() {
-        return (typeof this.enc == 'string') ? this.enc.charAt(this.pos) : String.fromCharCode(this.enc[this.pos]);
+        return this.enc.charAt(this.pos);
     }
     isWhitespace() {
         let c = this.peekChar();
