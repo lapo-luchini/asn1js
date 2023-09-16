@@ -20,7 +20,11 @@ for n in $RFCs; do
 done
 cd ..
 {
-    echo "// content parsed from the following RFCs: $RFCs"
+    echo "// content parsed from ASN.1 definitions as found in the following RFCs: $RFCs"
+    echo "// Copyright (C) The IETF Trust (2008)"
+    echo "// as far as I can tell this file is allowed under the following clause:"
+    echo "//   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary."
+    echo "// https://trustee.ietf.org/about/faq/#reproducing-rfcs"
     cat - <<EOF
 (typeof define != "undefined" ? define : function (factory) { "use strict";
     if (typeof module == "object") module.exports = factory();
