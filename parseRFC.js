@@ -98,7 +98,16 @@ class Parser {
         arrow += '^';
         for (; i < to; ++i)
             ctx += this.getChar(i);
-        throw new Error('[position ' + pos + '] ' + s + '\n' + ctx.replace(/\s/g, ' ') + '\n' + arrow);
+        // calculate line/column
+        let line = 1;
+        let lastLF = 0;
+        for (let i = 0; i < pos; ++i)
+            if (this.enc.charAt(i) == '\n') {
+                ++line;
+                lastLF = i;
+            }
+        let column = pos - lastLF;
+        throw new Error('[position ' + pos + ', line ' + line + ':' + column + '] ' + s + '\n' + ctx.replace(/\s/g, ' ') + '\n' + arrow);
     }
     peek() {
         return (typeof this.enc == 'string') ? this.enc.charCodeAt(this.pos) : this.enc[this.pos];
