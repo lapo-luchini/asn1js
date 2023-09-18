@@ -4,8 +4,8 @@
 //   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary.
 // https://trustee.ietf.org/about/faq/#reproducing-rfcs
 (typeof define != "undefined" ? define : function (factory) { "use strict";
-    if (typeof module == "object") module.exports = factory();
-    else window.rfcdef = factory();
+  if (typeof module == "object") module.exports = factory();
+  else window.rfcdef = factory();
 })(function () {
 "use strict";
 return {

@@ -29,7 +29,7 @@ function translate(def, tn, stats) {
         try {
             // hope current OIDs contain the type name (will need to parse from RFC itself)
             def = Defs.searchType(firstUpper(stats.defs[def.definedBy][1]));
-        } catch (e) {}
+        } catch (e) { /*ignore*/ }
     while (def?.type == 'defined' || def?.type?.type == 'defined') {
         const name = def?.type?.type ? def.type.name : def.name;
         def = Object.assign({}, def);
@@ -109,7 +109,7 @@ class Defs {
                         } else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) { // hope current OIDs contain the type name (will need to parse from RFC itself)
                             try {
                                 type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
-                            } catch (e) {}
+                            } catch (e) { /*ignore*/ }
                         }
                     }
                 }

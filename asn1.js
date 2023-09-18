@@ -43,7 +43,7 @@ const
         ['', ''],
         ['OUou', 'ŐŰőű'], // Double Acute
         ['AEIUaeiu', 'ĄĘĮŲąęįų'], // Ogonek
-        ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'] // Caron
+        ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'], // Caron
     ];
 
 function stringCut(str, len) {

@@ -52,8 +52,8 @@ const
                 o += line;
             }
             return o;
-        }
-    }
+        },
+    };
 
 class ASN1DOM extends ASN1 {
 

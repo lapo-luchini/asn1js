@@ -27,8 +27,8 @@ cd ..
     echo "// https://trustee.ietf.org/about/faq/#reproducing-rfcs"
     cat - <<EOF
 (typeof define != "undefined" ? define : function (factory) { "use strict";
-    if (typeof module == "object") module.exports = factory();
-    else window.rfcdef = factory();
+  if (typeof module == "object") module.exports = factory();
+  else window.rfcdef = factory();
 })(function () {
 "use strict";
 EOF
