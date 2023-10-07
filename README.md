@@ -52,7 +52,7 @@ require([
 ISC license
 -----------
 
-ASN.1 JavaScript decoder Copyright (c) 2008-2022 Lapo Luchini <lapo@lapo.it>
+ASN.1 JavaScript decoder Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
@@ -67,6 +67,7 @@ credits
 - patches by [Gergely Nagy](https://github.com/ngg)
 - Relative OID support added by [Mistial Developer](https://github.com/mistial-dev)
 - dark mode support added by [Oliver Burgmaier](https://github.com/olibu/)
+- patches by [Nicolai Søborg](https://github.com/NicolaiSoeborg)
 
 links
 -----
