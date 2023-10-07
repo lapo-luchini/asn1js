@@ -5,24 +5,27 @@
 'use strict';
 
 const
-    ASN1 = require('./asn1'),
+    ASN1DOM = require('./dom'),
     Base64 = require('./base64'),
     Hex = require('./hex'),
+    Defs = require('./defs'),
     tags = require('./tags'),
     maxLength = 10240,
     reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
     tree = id('tree'),
     dump = id('dump'),
-    wantHex = id('wantHex'),
+    wantHex = checkbox('wantHex'),
+    trimHex = checkbox('trimHex'),
+    wantDef = checkbox('wantDef'),
     area = id('area'),
     file = id('file'),
     examples = id('examples'),
     selectTheme = id('theme-select'),
+    selectDefs = id('definitions'),
     selectTag = id('tags');
 
 let hash = null;
 
-require('./dom'); // side effect: augment ASN1
 if (!window.console || !window.console.log) // IE8 with closed developer tools
     window.console = { log: function () {} };
 function id(elem) {
@@ -32,14 +35,55 @@ function text(el, string) {
     if ('textContent' in el) el.textContent = string;
     else el.innerText = string;
 }
-function decode(der, offset) {
-    offset = offset || 0;
+function checkbox(name) {
+    const el = id(name);
+    const cfg = localStorage.getItem(name);
+    if (cfg === 'false')
+        el.checked = false;
+    el.onchange = () => localStorage.setItem(name, el.checked);
+    return el;
+}
+function show(asn1) {
     tree.innerHTML = '';
     dump.innerHTML = '';
+    tree.appendChild(asn1.toDOM());
+    if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
+}
+function decode(der, offset) {
+    offset = offset || 0;
     try {
-        let asn1 = ASN1.decode(der, offset);
-        tree.appendChild(asn1.toDOM());
-        if (wantHex.checked) dump.appendChild(asn1.toHexDOM());
+        const asn1 = ASN1DOM.decode(der, offset);
+        if (wantDef.checked) {
+            selectDefs.innerHTML = '';
+            const types = Defs.commonTypes
+                .map(type => {
+                    const stats = Defs.match(asn1, type);
+                    return { type, match: stats.recognized / stats.total };
+                })
+                .sort((a, b) => b.match - a.match);
+            for (const t of types) {
+                t.element = document.createElement('option');
+                t.element.innerText = (t.match * 100).toFixed(1) + '% ' + t.type.description;
+                selectDefs.appendChild(t.element);
+            }
+            let not = document.createElement('option');
+            not.innerText = 'no definition';
+            selectDefs.appendChild(not);
+            Defs.match(asn1, types[0].type);
+            selectDefs.onchange = () => {
+                for (const t of types) {
+                    if (t.element == selectDefs.selectedOptions[0]) {
+                        Defs.match(asn1, t.type);
+                        show(asn1);
+                        return;
+                    }
+                }
+                Defs.match(asn1, null);
+                show(asn1);
+            };
+        } else
+            selectDefs.innerHTML = '<option>no definition</option>';
+        show(asn1);
         let b64 = der.length < maxLength ? asn1.toB64String() : '';
         if (area.value === '') area.value = Base64.pretty(b64);
         try {
