@@ -57,6 +57,10 @@ const
 
 class ASN1DOM extends ASN1 {
 
+    buf2hex(buffer) {
+        return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
+    }
+
     toDOM(spaces) {
         spaces = spaces || '';
         let isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));
@@ -187,6 +191,14 @@ class ASN1DOM extends ASN1 {
                 this.className = 'hex';
             }
         };
+        // handler to copy the complete hex dump into the clipboard
+        node.onclick = function (event) {
+            const pos = parseInt(this.getAttribute('pos'));
+            const end = parseInt(this.getAttribute('end'));
+            const hex = this.asn1.buf2hex(window.derBuffer.subarray(pos, end));
+            navigator.clipboard.writeText(hex);
+            event.stopPropagation();
+        };      
         if (root == node) {
             let lineStart = this.posStart() & 0xF;
             if (lineStart != 0) {
@@ -200,6 +212,9 @@ class ASN1DOM extends ASN1 {
                 node.appendChild(skip);
             }
         }
+        // set the current start and end position as an attribute at the node to know the selected area
+        node.setAttribute('pos', this.posStart());
+        node.setAttribute('end', this.posEnd());    
         this.toHexDOM_sub(node, 'tag', this.stream, this.posStart(), this.posLen());
         this.toHexDOM_sub(node, (this.length >= 0) ? 'dlen' : 'ulen', this.stream, this.posLen(), this.posContent());
         if (this.sub === null) {
