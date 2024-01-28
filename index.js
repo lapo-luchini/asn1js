@@ -5,6 +5,7 @@
 'use strict';
 
 const
+    ASN1 = require('./asn1'),
     ASN1DOM = require('./dom'),
     Base64 = require('./base64'),
     Hex = require('./hex'),
@@ -238,5 +239,29 @@ selectTag.onchange = function (ev) {
     let tag = ev.target.selectedOptions[0].value;
     window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html';
 };
+
+// register context menu function
+document.getElementById('btnCopyHex').onclick = function (event) {
+    let contextMenu = document.getElementById('contextmenu');    
+    let node = contextMenu.node;
+    const pos = parseInt(node.getAttribute('pos'));
+    const end = parseInt(node.getAttribute('end'));
+    const hex = node.asn1.buf2hex(window.derBuffer.subarray(pos, end));
+    navigator.clipboard.writeText(hex);
+    contextMenu.style.visibility = 'hidden';
+    event.stopPropagation();
+};      
+
+document.getElementById('btnCopyString').onclick = function (event) {
+    let contextMenu = document.getElementById('contextmenu');    
+    let node = contextMenu.node;
+    const pos = parseInt(node.getAttribute('pos'));
+    const end = parseInt(node.getAttribute('end'));
+    // const hex = node.asn1.buf2hex(window.derBuffer.subarray(pos, end));
+    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
+    // navigator.clipboard.writeText(hex);
+    contextMenu.style.visibility = 'hidden';
+    event.stopPropagation();
+};      
 
 });

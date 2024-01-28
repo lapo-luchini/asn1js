@@ -193,10 +193,11 @@ class ASN1DOM extends ASN1 {
         };
         // handler to copy the complete hex dump into the clipboard
         node.onclick = function (event) {
-            const pos = parseInt(this.getAttribute('pos'));
-            const end = parseInt(this.getAttribute('end'));
-            const hex = this.asn1.buf2hex(window.derBuffer.subarray(pos, end));
-            navigator.clipboard.writeText(hex);
+            let contextMenu = document.getElementById('contextmenu');    
+            contextMenu.style.left = event.clientX + "px";
+            contextMenu.style.top = event.clientY + "px";
+            contextMenu.style.visibility = 'visible';
+            document.getElementById('contextmenu').node = this;
             event.stopPropagation();
         };      
         if (root == node) {
