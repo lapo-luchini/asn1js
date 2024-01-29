@@ -274,4 +274,15 @@ document.getElementById('btnCopyString').onclick = function (event) {
     event.stopPropagation();
 };
 
+document.getElementById('btnCopyPretty').onclick = function (event) {
+    let contextMenu = document.getElementById('contextmenu');
+    let node = contextMenu.node;
+    const pos = parseInt(node.getAttribute('pos'));
+    const end = parseInt(node.getAttribute('end'));
+    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
+    navigator.clipboard.writeText(result.toPrettyString());
+    contextMenu.style.visibility = 'hidden';
+    event.stopPropagation();
+};
+
 });
