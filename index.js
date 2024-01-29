@@ -242,7 +242,7 @@ selectTag.onchange = function (ev) {
 
 // register context menu function
 document.getElementById('btnCopyHex').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');    
+    let contextMenu = document.getElementById('contextmenu');
     let node = contextMenu.node;
     const pos = parseInt(node.getAttribute('pos'));
     const end = parseInt(node.getAttribute('end'));
@@ -250,18 +250,28 @@ document.getElementById('btnCopyHex').onclick = function (event) {
     navigator.clipboard.writeText(hex);
     contextMenu.style.visibility = 'hidden';
     event.stopPropagation();
-};      
+};
 
 document.getElementById('btnCopyString').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');    
+    let contextMenu = document.getElementById('contextmenu');
     let node = contextMenu.node;
     const pos = parseInt(node.getAttribute('pos'));
     const end = parseInt(node.getAttribute('end'));
-    // const hex = node.asn1.buf2hex(window.derBuffer.subarray(pos, end));
     let result = ASN1.decode(window.derBuffer.subarray(pos, end));
-    // navigator.clipboard.writeText(hex);
+    let type = result.typeName();
+    switch (type) {
+        case 'UTF8String':
+        case 'PrintableString':
+        case 'TeletexString':
+        case 'VideotexString':
+        case 'IA5String':
+        case 'UniversalString':
+            navigator.clipboard.writeText(result.content());
+            break;
+        default: alert('Selected value is not a String!');
+    }
     contextMenu.style.visibility = 'hidden';
     event.stopPropagation();
-};      
+};
 
 });
