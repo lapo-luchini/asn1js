@@ -215,6 +215,7 @@ header {
 
 #contextmenu {
     position: absolute;
+    visibility: hidden;
     top: 0;
     left: 0;
     padding: 2px;
