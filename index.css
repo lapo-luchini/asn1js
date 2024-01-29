@@ -126,13 +126,11 @@ header {
     height: 1em;
     white-space: nowrap;
 }
+.head.active::before,
 .head:hover::before {
     position: absolute;
-    content: '-';
+    content: '______';
     color: red;
-    border: solid 1px red;
-    border-radius: 20px;
-    background-color: black;
     /*TODO: use vars instead of hex*/
 }
 .node:hover > .head, .node.hover > .head {
