@@ -148,15 +148,18 @@ class ASN1DOM extends ASN1 {
         return node;
     }
     fakeHover(current) {
-        this.node.className += ' hover';
-        if (current)
-            this.head.className += ' hover';
+        this.node.classList.toggle("hover");
+        if (current) {
+            this.head.classList.toggle("hover");
+            this.head.classList.toggle("active");
+        }
     }
     fakeOut(current) {
-        let re = / ?hover/;
-        this.node.className = this.node.className.replace(re, '');
-        if (current)
-            this.head.className = this.head.className.replace(re, '');
+        this.node.classList.toggle("hover");
+        if (current) {
+            this.head.classList.toggle("hover");
+            this.head.classList.toggle("active");
+        }
     }
     toHexDOM_sub(node, className, stream, start, end) {
         if (start >= end)
