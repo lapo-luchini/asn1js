@@ -260,15 +260,12 @@ document.getElementById('btnCopyString').onclick = function (event) {
     let result = ASN1.decode(window.derBuffer.subarray(pos, end));
     let type = result.typeName();
     switch (type) {
-        case 'UTF8String':
-        case 'PrintableString':
-        case 'TeletexString':
-        case 'VideotexString':
-        case 'IA5String':
-        case 'UniversalString':
-            navigator.clipboard.writeText(result.content());
+        case 'SET':
+        case 'SEQUENCE':
+            alert('Selected value is not a String!');
             break;
-        default: alert('Selected value is not a String!');
+        default: 
+            navigator.clipboard.writeText(result.content());
     }
     contextMenu.style.visibility = 'hidden';
     event.stopPropagation();
