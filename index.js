@@ -5,6 +5,7 @@
 'use strict';
 
 const
+    ASN1 = require('./asn1'),
     ASN1DOM = require('./dom'),
     Base64 = require('./base64'),
     Hex = require('./hex'),
@@ -50,6 +51,9 @@ function show(asn1) {
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
 function decode(der, offset) {
+    // store the DER buffer of asn1 in window to copy it completely into clipboard on dumpcopy
+    window.derBuffer = der;
+
     offset = offset || 0;
     try {
         const asn1 = ASN1DOM.decode(der, offset);
@@ -234,6 +238,48 @@ for (let tag in tags) {
 selectTag.onchange = function (ev) {
     let tag = ev.target.selectedOptions[0].value;
     window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html';
+};
+
+// register context menu function
+document.getElementById('btnCopyHex').onclick = function (event) {
+    let contextMenu = document.getElementById('contextmenu');
+    let node = contextMenu.node;
+    const pos = parseInt(node.getAttribute('pos'));
+    const end = parseInt(node.getAttribute('end'));
+    const hex = node.asn1.buf2hex(window.derBuffer.subarray(pos, end));
+    navigator.clipboard.writeText(hex);
+    contextMenu.style.visibility = 'hidden';
+    event.stopPropagation();
+};
+
+document.getElementById('btnCopyString').onclick = function (event) {
+    let contextMenu = document.getElementById('contextmenu');
+    let node = contextMenu.node;
+    const pos = parseInt(node.getAttribute('pos'));
+    const end = parseInt(node.getAttribute('end'));
+    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
+    let type = result.typeName();
+    switch (type) {
+        case 'SET':
+        case 'SEQUENCE':
+            alert('Selected value is not a String!');
+            break;
+        default: 
+            navigator.clipboard.writeText(result.content());
+    }
+    contextMenu.style.visibility = 'hidden';
+    event.stopPropagation();
+};
+
+document.getElementById('btnCopyPretty').onclick = function (event) {
+    let contextMenu = document.getElementById('contextmenu');
+    let node = contextMenu.node;
+    const pos = parseInt(node.getAttribute('pos'));
+    const end = parseInt(node.getAttribute('end'));
+    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
+    navigator.clipboard.writeText(result.toPrettyString());
+    contextMenu.style.visibility = 'hidden';
+    event.stopPropagation();
 };
 
 });
