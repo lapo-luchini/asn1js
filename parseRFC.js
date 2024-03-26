@@ -1,8 +1,9 @@
 #! /usr/bin/env node
 'use strict';
 
+import * as fs from 'node:fs';
+
 const
-    fs = require('fs'),
     patches = { // to fix some known RFCs' ASN.1 syntax errors
         0: [
             [ /\n\n[A-Z].*\n\f\n[A-Z].*\n\n/g, '' ], // page change

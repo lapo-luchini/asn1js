@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-'use strict';
+
+import { ASN1 } from './asn1.js';
+import { Hex } from './hex.js';
 
 const
-    Hex = require('./hex.js'),
-    ASN1 = require('./asn1.js'),
     all = (process.argv[2] == 'all');
 
 const tests = [

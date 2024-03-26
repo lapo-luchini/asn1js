@@ -13,18 +13,12 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory();
-    else window.base64 = factory();
-})(function () {
-'use strict';
-
 const
     haveU8 = (typeof Uint8Array == 'function');
 
 let decoder; // populated on first usage
 
-class Base64 {
+export class Base64 {
 
     static decode(a) {
         let isString = (typeof a == 'string');
@@ -107,7 +101,3 @@ class Base64 {
 }
 
 Base64.re = /-----BEGIN [^-]+-----([A-Za-z0-9+/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+/=\s]+)====|^([A-Za-z0-9+/=\s]+)$/;
-
-return Base64;
-
-});

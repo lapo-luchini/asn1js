@@ -13,15 +13,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
-    else window.asn1 = factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { Int10 } from './int10.js';
+import { oids } from './oids.js';
 
 const
-    Int10 = require('./int10'),
-    oids = require('./oids'),
     ellipsis = '\u2026',
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
@@ -371,7 +366,7 @@ class ASN1Tag {
     }
 }
 
-class ASN1 {
+export class ASN1 {
     constructor(stream, header, length, tag, tagLen, sub) {
         if (!(tag instanceof ASN1Tag)) throw 'Invalid tag value.';
         this.stream = stream;
@@ -608,7 +603,3 @@ class ASN1 {
     }
 
 }
-
-return ASN1;
-
-});

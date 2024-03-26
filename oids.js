@@ -2,12 +2,7 @@
 // which is made by Peter Gutmann and whose license states:
 //   You can use this code in whatever way you want,
 //   as long as you don't try to claim you wrote it.
-(typeof define != "undefined" ? define : function (factory) { "use strict";
-    if (typeof module == "object") module.exports = factory();
-    else window.oids = factory();
-})(function () {
-"use strict";
-return {
+export const oids = {
 "0.2.262.1.10": { "d": "Telesec", "c": "Deutsche Telekom" },
 "0.2.262.1.10.0": { "d": "extension", "c": "Telesec" },
 "0.2.262.1.10.1": { "d": "mechanism", "c": "Telesec" },
@@ -2728,4 +2723,4 @@ return {
 "2.16.840.1.113733.1.7.23.6": { "d": "VeriSign EV policy", "c": "VeriSign Class 3 Public Primary Certification Authority" },
 "2.16.840.1.114171.500.9": { "d": "Wells Fargo EV policy", "c": "Wells Fargo WellsSecure Public Root Certificate Authority" },
 "END": ""
-};});
+};

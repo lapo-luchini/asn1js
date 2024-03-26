@@ -13,15 +13,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
-    else window.dom = factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { ASN1 } from './asn1.js';
+import { oids } from './oids.js';
 
 const
-    ASN1 = require('./asn1'),
-    oids = require('./oids'),
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
@@ -53,9 +48,9 @@ const
             }
             return o;
         }
-    }
+    };
 
-class ASN1DOM extends ASN1 {
+export class ASN1DOM extends ASN1 {
 
     toDOM(spaces) {
         spaces = spaces || '';
@@ -231,7 +226,3 @@ class ASN1DOM extends ASN1 {
     }
 
 }
-
-return ASN1DOM;
-
-});

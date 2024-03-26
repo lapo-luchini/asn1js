@@ -13,18 +13,12 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory();
-    else window.hex = factory();
-})(function () {
-'use strict';
-
 const
     haveU8 = (typeof Uint8Array == 'function');
 
 let decoder; // populated on first usage
 
-class Hex {
+export class Hex {
 
     /**
      * Decodes an hexadecimal value.
@@ -73,7 +67,3 @@ class Hex {
     }
 
 }
-
-return Hex;
-
-});
