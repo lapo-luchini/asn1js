@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-'use strict';
 
 import * as fs from 'node:fs';
 
