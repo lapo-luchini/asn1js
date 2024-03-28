@@ -13,7 +13,7 @@ This package can be installed with either npm or yarn via the following commands
 ```sh
 npm install @lapo/asn1js
 # or other tools
-npm install @lapo/asn1js
+pnpm install @lapo/asn1js
 yarn add @lapo/asn1js
 ```
 
@@ -28,6 +28,8 @@ A submodule of this package can also be imported:
 ```js
 import Hex from '@lapo/asn1js/hex';
 ```
+
+Unfortunately until [`require(esm)` gets released](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) it is necessary to use async `import()` when used from CommonJS (legacy NodeJS) code.
 
 Usage on the web
 --------------------
