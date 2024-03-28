@@ -3,12 +3,7 @@
 // as far as I can tell this file is allowed under the following clause:
 //   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary.
 // https://trustee.ietf.org/about/faq/#reproducing-rfcs
-(typeof define != "undefined" ? define : function (factory) { "use strict";
-  if (typeof module == "object") module.exports = factory();
-  else window.rfcdef = factory();
-})(function () {
-"use strict";
-return {
+export const rfcdef = {
   "1.3.6.1.5.5.7.0.18": {
     "name": "PKIX1Explicit88",
     "oid": "1.3.6.1.5.5.7.0.18",
@@ -9863,4 +9858,4 @@ return {
     }
   }
 }
-;});
+;

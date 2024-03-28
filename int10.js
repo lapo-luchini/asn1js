@@ -1,5 +1,5 @@
 // Big integer base-10 printing library
-// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2024 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,15 +13,9 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory();
-    else window.int10 = factory();
-})(function () {
-'use strict';
-
 let max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
 
-class Int10 {
+export class Int10 {
     /**
      * Arbitrary length base-10 value.
      * @param {number} value - Optional initial value (will be 0 otherwise).
@@ -110,7 +104,3 @@ class Int10 {
     }
 
 }
-
-return Int10;
-
-});

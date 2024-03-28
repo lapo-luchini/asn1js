@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2024 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,15 +13,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
-    else window.dom = factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { ASN1 } from './asn1.js';
+import { oids } from './oids.js';
 
 const
-    ASN1 = require('./asn1'),
-    oids = require('./oids'),
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
@@ -55,7 +50,7 @@ const
         },
     };
 
-class ASN1DOM extends ASN1 {
+export class ASN1DOM extends ASN1 {
 
     toDOM(spaces) {
         spaces = spaces || '';
@@ -231,7 +226,3 @@ class ASN1DOM extends ASN1 {
     }
 
 }
-
-return ASN1DOM;
-
-});

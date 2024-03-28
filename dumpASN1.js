@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-'use strict';
+
+import * as fs from 'node:fs';
+import { Base64 } from './base64.js';
+import { ASN1 } from './asn1.js';
+import { Defs } from './defs.js';
 
 const
-    fs = require('fs'),
-    Base64 = require('./base64'),
-    ASN1 = require('./asn1'),
-    Defs = require('./defs'),
     colYellow = '\x1b[33m',
     colBlue = '\x1b[34m',
     colReset = '\x1b[0m';
