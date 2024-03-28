@@ -37,7 +37,8 @@ function translate(def, tn, stats) {
     }
     if (def?.type?.name == 'CHOICE') {
         for (let c of def.type.content) {
-            c = translate(c);
+            if (tn != c.type.name && tn != c.name)
+                c = translate(c);
             if (tn == c.type.name || tn == c.name) {
                 def = Object.assign({}, def);
                 def.type = c.type.name ? c.type : c;
