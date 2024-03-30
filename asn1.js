@@ -77,7 +77,7 @@ class Stream {
         if (pos === undefined)
             pos = this.pos++;
         if (pos >= this.enc.length)
-            throw 'Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length;
+            throw new Error('Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length);
         return (typeof this.enc == 'string') ? this.enc.charCodeAt(pos) : this.enc[pos];
     }
     hexByte(b) {
@@ -250,7 +250,7 @@ class Stream {
     parseBitString(start, end, maxLength) {
         let unusedBits = this.get(start);
         if (unusedBits > 7)
-            throw 'Invalid BitString with unusedBits=' + unusedBits;
+            throw new Error('Invalid BitString with unusedBits=' + unusedBits);
         let lenBit = ((end - start - 1) << 3) - unusedBits,
             s = '';
         for (let i = start + 1; i < end; ++i) {
@@ -373,7 +373,7 @@ class ASN1Tag {
 
 class ASN1 {
     constructor(stream, header, length, tag, tagLen, sub) {
-        if (!(tag instanceof ASN1Tag)) throw 'Invalid tag value.';
+        if (!(tag instanceof ASN1Tag)) throw new Error('Invalid tag value.');
         this.stream = stream;
         this.header = header;
         this.length = length;
@@ -536,7 +536,7 @@ class ASN1 {
         if (len === 0) // long form with length 0 is a special case
             return null; // undefined length
         if (len > 6) // no reason to use Int10, as it would be a huge buffer anyways
-            throw 'Length over 48 bits not supported at position ' + (stream.pos - 1);
+            throw new Error('Length over 48 bits not supported at position ' + (stream.pos - 1));
         buf = 0;
         for (let i = 0; i < len; ++i)
             buf = (buf * 256) + stream.get();
@@ -544,7 +544,7 @@ class ASN1 {
     }
     static decode(stream, offset, type = ASN1) {
         if (!(type == ASN1 || type.prototype instanceof ASN1))
-            throw 'Must pass a class that extends ASN1';
+            throw new Error('Must pass a class that extends ASN1');
         if (!(stream instanceof Stream))
             stream = new Stream(stream, offset || 0);
         let streamStart = new Stream(stream),
@@ -560,11 +560,11 @@ class ASN1 {
                     // definite length
                     let end = start + len;
                     if (end > stream.enc.length)
-                        throw 'Container at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream';
+                        throw new Error('Container at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream');
                     while (stream.pos < end)
                         sub[sub.length] = type.decode(stream);
                     if (stream.pos != end)
-                        throw 'Content size is not correct for container at offset ' + start;
+                        throw new Error('Content size is not correct for container at offset ' + start);
                 } else {
                     // undefined length
                     try {
@@ -576,7 +576,7 @@ class ASN1 {
                         }
                         len = start - stream.pos; // undefined lengths are represented as negative values
                     } catch (e) {
-                        throw 'Exception while decoding undefined length content at offset ' + start + ': ' + e;
+                        throw new Error('Exception while decoding undefined length content at offset ' + start + ': ' + e);
                     }
                 }
             };
@@ -588,11 +588,11 @@ class ASN1 {
             try {
                 if (tag.tagNumber == 0x03)
                     if (stream.get() != 0)
-                        throw 'BIT STRINGs with unused bits cannot encapsulate.';
+                        throw new Error('BIT STRINGs with unused bits cannot encapsulate.');
                 getSub();
                 for (let i = 0; i < sub.length; ++i)
                     if (sub[i].tag.isEOC())
-                        throw 'EOC is not supposed to be actual content.';
+                        throw new Error('EOC is not supposed to be actual content.');
             } catch (e) {
                 // but silently ignore when they don't
                 sub = null;
@@ -601,7 +601,7 @@ class ASN1 {
         }
         if (sub === null) {
             if (len === null)
-                throw "We can't skip over an invalid tag with undefined length at offset " + start;
+                throw new Error("We can't skip over an invalid tag with undefined length at offset " + start);
             stream.pos = start + Math.abs(len);
         }
         return new type(streamStart, header, len, tag, tagLen, sub);
