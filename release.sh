@@ -20,13 +20,13 @@ mtn automate tags it.lapo.asn1js | \
   done | sort -r | awk -v q='"' '
     BEGIN {
       print "(typeof define != " q "undefined" q " ? define : function (factory) { " q "use strict" q ";";
-      print "    if (typeof module == " q "object" q ") module.exports = factory();";
-      print "    else window.tags = factory();";
+      print "  if (typeof module == " q "object" q ") module.exports = factory();";
+      print "  else window.tags = factory();";
       print "})(function () {";
       print q "use strict" q ";";
       print "return {"
     }
-    { print "    " q $2 q ":" q $1 q "," }
+    { print "  " q $2 q ": " q $1 q "," }
     END { print "};});" }
   ' > tags.js
 type gsha256sum >/dev/null && SHA256=gsha256sum || SHA256=sha256sum
