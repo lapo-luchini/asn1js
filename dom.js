@@ -80,7 +80,12 @@ class ASN1DOM extends ASN1 {
             }
         }
         head.appendChild(DOM.text(typeName));
-        let content = this.content(contentLength);
+        let content;
+        try {
+            content = this.content(contentLength);
+        } catch (e) {
+            content = 'Cannot decode: ' + e;
+        }
         let oid;
         if (content !== null) {
             let preview = DOM.tag('span', 'preview'),

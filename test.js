@@ -86,6 +86,8 @@ const tests = [
     ['0420041EE4E3B7ED350CC24D034E436D9A1CB15BB1E328D37062FB82E84618AB0A3C', '(32 byte)\n041EE4E3B7ED350CC24D034E436D9A1CB15BB1E328D37062FB82E84618AB0A3C', 'Do not mix encapsulated and structured octet strings'], // GitHub issue #47
     ['181531393835313130363231303632372E332D31323334', '1985-11-06 21:06:27.3 UTC-12:34', 'UTC offsets with minutes'], // GitHub issue #54
     ['181331393835313130363231303632372E332B3134', '1985-11-06 21:06:27.3 UTC+14:00', 'UTC offset +13 and +14'], // GitHub issue #54
+    ['032100171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', n => { if (n.sub != null) return 'Should not decode content: ' + n.sub[0].content(); }, 'Key that resembles an UTCTime'], // GitHub issue #79
+    ['171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', /^Exception:\nError: Unrecognized time: /, 'Invalid UTCTime'], // GitHub issue #79
 ];
 
 let
@@ -98,17 +100,25 @@ tests.forEach(function (t) {
         comment = t[2];
     let result;
     try {
-        result = ASN1.decode(Hex.decode(input)).content();
+        let node = ASN1.decode(Hex.decode(input));
+        if (typeof expected == 'function')
+            result = expected(node);
+        else
+            result = node.content();
         //TODO: check structure, not only first level content
     } catch (e) {
         result = 'Exception:\n' + e;
     }
+    if (expected instanceof RegExp)
+        result = expected.test(result) ? null : 'does not match';
     ++run;
-    if (result == expected) {
+    if (!result || result == expected) {
         if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
     } else {
         ++error;
-        console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment + '\n' + result);
+        console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
+        console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
+        console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
     }
 });
 console.log(run + ' tested, ' + expErr + ' expected, ' + error + ' errors.');

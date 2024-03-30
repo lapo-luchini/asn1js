@@ -195,7 +195,7 @@ class Stream {
         let s = this.parseStringISO(start, end).str,
             m = (shortYear ? reTimeS : reTimeL).exec(s);
         if (!m)
-            return 'Unrecognized time: ' + s;
+            throw new Error('Unrecognized time: ' + s);
         if (shortYear) {
             // to avoid querying the timer, use the fixed range [1970, 2069]
             // it will conform with ITU X.400 [-10, +40] sliding window until 2030
@@ -590,9 +590,15 @@ class ASN1 {
                     if (stream.get() != 0)
                         throw new Error('BIT STRINGs with unused bits cannot encapsulate.');
                 getSub();
-                for (let i = 0; i < sub.length; ++i)
-                    if (sub[i].tag.isEOC())
+                for (let s of sub) {
+                    if (s.tag.isEOC())
                         throw new Error('EOC is not supposed to be actual content.');
+                    try {
+                        s.content();
+                    } catch (e) {
+                        throw new Error('Unable to parse content: ' + e);
+                    }
+                }
             } catch (e) {
                 // but silently ignore when they don't
                 sub = null;
