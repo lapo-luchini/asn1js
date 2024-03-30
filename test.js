@@ -95,8 +95,7 @@ let
 tests.forEach(function (t) {
     const input = t[0],
         expected = t[1],
-        comment = t[2],
-        errorReason = t[3];
+        comment = t[2];
     let result;
     try {
         result = ASN1.decode(Hex.decode(input)).content();
@@ -107,9 +106,6 @@ tests.forEach(function (t) {
     ++run;
     if (result == expected) {
         if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
-    } else if (errorReason) {
-        ++expErr;
-        console.log('\x1B[1m\x1B[33mEXP\x1B[39m\x1B[22m ' + comment + ' (' + errorReason + ')' + '\n' + result);
     } else {
         ++error;
         console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment + '\n' + result);
