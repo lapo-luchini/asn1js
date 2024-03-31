@@ -2,18 +2,19 @@ const
     id = (elem) => document.getElementById(elem),
     contextMenu = id('contextmenu'),
     btnCopyHex = id('btnCopyHex'),
-    btnCopyString = id('btnCopyString'),
-    btnCopyPretty = id('btnCopyPretty');
+    btnCopyB64 = id('btnCopyB64'),
+    btnCopyTree = id('btnCopyTree'),
+    btnCopyValue = id('btnCopyValue');
 
 export function bindContextMenu(node) {
     const type = node.asn1.typeName();
-    const stringEnabled = type != 'SET' && type != 'SEQUENCE';
+    const valueEnabled = type != 'SET' && type != 'SEQUENCE';
     node.onclick = function (event) {
         contextMenu.style.left = event.pageX + 'px';
         contextMenu.style.top = event.pageY + 'px';
         contextMenu.style.visibility = 'visible';
         contextMenu.node = this;
-        btnCopyString.style.display = stringEnabled ? 'block' : 'none';
+        btnCopyValue.style.display = valueEnabled ? 'block' : 'none';
         event.stopPropagation();
     };
 };
@@ -26,20 +27,24 @@ contextMenu.onmouseleave = close;
 
 btnCopyHex.onclick = function (event) {
     event.stopPropagation();
-    const node = contextMenu.node;
-    const hex = node.asn1.toHexString('byte');
-    navigator.clipboard.writeText(hex);
+    navigator.clipboard.writeText(contextMenu.node.asn1.toHexString('byte'));
     close();
 };
 
-btnCopyString.onclick = function (event) {
+btnCopyB64.onclick = function (event) {
     event.stopPropagation();
-    navigator.clipboard.writeText(contextMenu.node.asn1.content());
+    navigator.clipboard.writeText(contextMenu.node.asn1.toB64String());
     close();
 };
 
-btnCopyPretty.onclick = function (event) {
+btnCopyTree.onclick = function (event) {
     event.stopPropagation();
     navigator.clipboard.writeText(contextMenu.node.asn1.toPrettyString());
+    close();
+};
+
+btnCopyValue.onclick = function (event) {
+    event.stopPropagation();
+    navigator.clipboard.writeText(contextMenu.node.asn1.content());
     close();
 };
