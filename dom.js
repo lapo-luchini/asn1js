@@ -15,6 +15,7 @@
 
 import { ASN1 } from './asn1.js';
 import { oids } from './oids.js';
+import { bindContextMenu } from './context.js';
 
 const
     lineLength = 80,
@@ -191,15 +192,7 @@ export class ASN1DOM extends ASN1 {
                 this.className = 'hex';
             }
         };
-        // handler to copy the complete hex dump into the clipboard
-        node.onclick = function (event) {
-            let contextMenu = document.getElementById('contextmenu');    
-            contextMenu.style.left = event.pageX + "px";
-            contextMenu.style.top = event.pageY + "px";
-            contextMenu.style.visibility = 'visible';
-            document.getElementById('contextmenu').node = this;
-            event.stopPropagation();
-        };      
+        bindContextMenu(node);
         if (root == node) {
             let lineStart = this.posStart() & 0xF;
             if (lineStart != 0) {
