@@ -83,6 +83,8 @@ class ASN1DOM extends ASN1 {
                 head.appendChild(DOM.space());
             }
         }
+        head.setAttribute('pos', this.posStart());
+        head.setAttribute('end', this.posEnd());    
         head.appendChild(DOM.text(typeName));
         let content;
         try {
@@ -151,8 +153,15 @@ class ASN1DOM extends ASN1 {
                 sub.appendChild(this.sub[i].toDOM(spaces));
         }
         node.appendChild(sub);
-        head.onclick = function () {
-            node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
+        head.onclick = function (event) {
+            console.log(this.asn1)
+            let contextMenu = document.getElementById('contextmenu');    
+            contextMenu.style.left = event.pageX + "px";
+            contextMenu.style.top = event.pageY + "px";
+            contextMenu.style.visibility = 'visible';
+            document.getElementById('contextmenu').node = this;
+            event.stopPropagation();
+            //node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
         };
         return node;
     }
