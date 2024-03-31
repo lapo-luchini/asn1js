@@ -29,6 +29,7 @@ mtn automate tags it.lapo.asn1js | \
     { print "  " q $2 q ": " q $1 q "," }
     END { print "};});" }
   ' > tags.js
+chmod 644 examples/*
 type gsha256sum >/dev/null && SHA256=gsha256sum || SHA256=sha256sum
 $SHA256 -t $FILES | gpg --clearsign > sha256sums.asc
 7z a -tzip -mx=9 asn1js.zip $FILES sha256sums.asc
