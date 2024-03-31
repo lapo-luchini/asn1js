@@ -1,41 +1,43 @@
-// register context menu function
-document.getElementById('btnCopyHex').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');
-    let node = contextMenu.node;
-    const pos = parseInt(node.getAttribute('pos'));
-    const end = parseInt(node.getAttribute('end'));
-    const hex = node.asn1.buf2hex(window.derBuffer.subarray(pos, end));
+const
+    id = (elem) => document.getElementById(elem),
+    contextMenu = id('contextmenu'),
+    btnCopyHex = id('btnCopyHex'),
+    btnCopyString = id('btnCopyString'),
+    btnCopyPretty = id('btnCopyPretty');
+
+export function bindContextMenu(node) {
+    const type = node.asn1.typeName();
+    const stringEnabled = type != 'SET' && type != 'SEQUENCE';
+    node.onclick = function (event) {
+        contextMenu.style.left = event.pageX + 'px';
+        contextMenu.style.top = event.pageY + 'px';
+        contextMenu.style.visibility = 'visible';
+        contextMenu.node = this;
+        btnCopyString.style.display = stringEnabled ? 'block' : 'none';
+        event.stopPropagation();
+    };
+};
+
+function close() {
+    contextMenu.style.visibility = 'hidden';
+}
+
+btnCopyHex.onclick = function (event) {
+    event.stopPropagation();
+    const node = contextMenu.node;
+    const hex = node.asn1.toHexString('byte');
     navigator.clipboard.writeText(hex);
-    contextMenu.style.visibility = 'hidden';
-    event.stopPropagation();
+    close();
 };
 
-document.getElementById('btnCopyString').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');
-    let node = contextMenu.node;
-    const pos = parseInt(node.getAttribute('pos'));
-    const end = parseInt(node.getAttribute('end'));
-    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
-    let type = result.typeName();
-    switch (type) {
-    case 'SET':
-    case 'SEQUENCE':
-        alert('Selected value is not a String!');
-        break;
-    default: 
-        navigator.clipboard.writeText(result.content());
-    }
-    contextMenu.style.visibility = 'hidden';
+btnCopyString.onclick = function (event) {
     event.stopPropagation();
+    navigator.clipboard.writeText(contextMenu.node.asn1.content());
+    close();
 };
 
-document.getElementById('btnCopyPretty').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');
-    let node = contextMenu.node;
-    const pos = parseInt(node.getAttribute('pos'));
-    const end = parseInt(node.getAttribute('end'));
-    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
-    navigator.clipboard.writeText(result.toPrettyString());
-    contextMenu.style.visibility = 'hidden';
+btnCopyPretty.onclick = function (event) {
     event.stopPropagation();
+    navigator.clipboard.writeText(contextMenu.node.asn1.toPrettyString());
+    close();
 };

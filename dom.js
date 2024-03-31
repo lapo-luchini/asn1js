@@ -53,10 +53,6 @@ const
 
 export class ASN1DOM extends ASN1 {
 
-    buf2hex(buffer) {
-        return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
-    }
-
     toDOM(spaces) {
         spaces = spaces || '';
         let isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));

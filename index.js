@@ -45,9 +45,6 @@ function show(asn1) {
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
 function decode(der, offset) {
-    // store the DER buffer of asn1 in window to copy it completely into clipboard on dumpcopy
-    window.derBuffer = der;
-
     offset = offset || 0;
     try {
         const asn1 = ASN1DOM.decode(der, offset);
