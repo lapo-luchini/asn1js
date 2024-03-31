@@ -45,6 +45,17 @@ const
         4210: [
             [ /^\s+-- .*\r?\n/mg, '' ], // comments
         ],
+        8017: [ // this RFC uses a lot of currently unsupported syntax
+            [ /ALGORITHM-IDENTIFIER ::= CLASS[^-]+--/, '--' ],
+            [ /\n +\S+ +ALGORITHM-IDENTIFIER[^\n]+(\n      [^\n]+)+\n   [}]/g, '' ],
+            [ /AlgorithmIdentifier [{] ALGORITHM-IDENTIFIER:InfoObjectSet [}] ::=(\n      [^\n]+)+\n   [}]/, 'AlgorithmIdentifier ::= ANY'],
+            [ /algorithm +id-[^,\n]+,/g, 'algorithm ANY,' ],
+            [ / (sha1    HashAlgorithm|mgf1SHA1    MaskGenAlgorithm|pSpecifiedEmpty    PSourceAlgorithm|rSAES-OAEP-Default-Identifier    RSAES-AlgorithmIdentifier|rSASSA-PSS-Default-Identifier    RSASSA-AlgorithmIdentifier) ::= [{](\n(      [^\n]+)?)+\n   [}]/g, '' ],
+            [ / ::= AlgorithmIdentifier [{]\s+[{][^}]+[}]\s+[}]/g, ' ::= AlgorithmIdentifier' ],
+            [ /OCTET STRING[(]SIZE[(]0..MAX[)][)]/g, 'OCTET STRING' ],
+            [ /emptyString    EncodingParameters ::= ''H/g, '' ],
+            [ /[(]CONSTRAINED BY[^)]+[)]/g, '' ],
+        ],
     };
 
 // const reWhitespace = /(?:\s|--(?:[}-]?[^\n}-])*(?:\n|--))*/y;
@@ -349,8 +360,11 @@ class Parser {
                 } else {
                     if (id in currentMod.values) // defined in local module
                         val = currentMod.values[id].value;
-                    else
+                    else try {
                         val = searchImportedValue(id);
+                    } catch (e) {
+                        this.exception(e.message);
+                    }
                 }
             }
             if (v.length) v += '.';
