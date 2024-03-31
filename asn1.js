@@ -78,11 +78,15 @@ class Stream {
     hexByte(b) {
         return hexDigits.charAt((b >> 4) & 0xF) + hexDigits.charAt(b & 0xF);
     }
-    hexDump(start, end, raw) {
+    /** Hexadecimal dump.
+     * @param type 'raw', 'byte' or 'dump' */
+    hexDump(start, end, type = 'dump') {
         let s = '';
         for (let i = start; i < end; ++i) {
+            if (type == 'byte' && i > start)
+                s += ' ';
             s += this.hexByte(this.get(i));
-            if (raw !== true)
+            if (type == 'dump')
                 switch (i & 0xF) {
                 case 0x7: s += '  '; break;
                 case 0xF: s += '\n'; break;
@@ -517,9 +521,12 @@ export class ASN1 {
     posLen() {
         return this.stream.pos + this.tagLen;
     }
-    toHexString() {
-        return this.stream.hexDump(this.posStart(), this.posEnd(), true);
+    /** Hexadecimal dump of the node.
+     * @param type 'raw', 'byte' or 'dump' */
+    toHexString(type = 'raw') {
+        return this.stream.hexDump(this.posStart(), this.posEnd(), type);
     }
+    /** Base64 dump of the node. */
     toB64String() {
         return this.stream.b64Dump(this.posStart(), this.posEnd());
     }
