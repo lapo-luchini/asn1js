@@ -22,6 +22,8 @@ function close() {
     contextMenu.style.visibility = 'hidden';
 }
 
+contextMenu.onmouseleave = close;
+
 btnCopyHex.onclick = function (event) {
     event.stopPropagation();
     const node = contextMenu.node;
