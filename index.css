@@ -223,6 +223,7 @@ header {
     z-index: 2;
 }
 #contextmenu > button {
+    display: block;
     width: 120px;
     background-color: var(--button-bg-color);
     color: var(--main-text-color);
