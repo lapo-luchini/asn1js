@@ -246,7 +246,7 @@ document.getElementById('btnCopyHex').onclick = function (event) {
     let node = contextMenu.node;
     const pos = parseInt(node.getAttribute('pos'));
     const end = parseInt(node.getAttribute('end'));
-    const hex = node.asn1.buf2hex(window.derBuffer.subarray(pos, end));
+    const hex = buf2hex(window.derBuffer.subarray(pos, end));
     navigator.clipboard.writeText(hex);
     contextMenu.style.visibility = 'hidden';
     event.stopPropagation();
@@ -274,12 +274,43 @@ document.getElementById('btnCopyString').onclick = function (event) {
 document.getElementById('btnCopyPretty').onclick = function (event) {
     let contextMenu = document.getElementById('contextmenu');
     let node = contextMenu.node;
-    const pos = parseInt(node.getAttribute('pos'));
-    const end = parseInt(node.getAttribute('end'));
-    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
-    navigator.clipboard.writeText(result.toPrettyString());
+    if (node.className == 'head') {
+        navigator.clipboard.writeText(nodeToString(node.parentElement));
+    }
+    else {
+        const pos = parseInt(node.getAttribute('pos'));
+        const end = parseInt(node.getAttribute('end'));
+        let result = ASN1.decode(window.derBuffer.subarray(pos, end));
+        navigator.clipboard.writeText(result.toPrettyString());
+    }
+    
     contextMenu.style.visibility = 'hidden';
     event.stopPropagation();
 };
+
+function nodeToString(node) {
+    let content = '';
+    for (const child of node.children) {
+        if (child.className == 'head') {
+            content += headToString(child) + '\n';
+        }
+        else if (child.className == 'sub') {
+            for (const sub of child.children) {
+                content += nodeToString(sub);
+            }
+        }
+    }
+    return content; 
+}
+
+function headToString(node) {
+    let content = '';
+    content += node.innerText;
+    return content; 
+}
+
+function buf2hex(buffer) {
+    return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
+}
 
 });
