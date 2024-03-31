@@ -43,17 +43,21 @@
       "semi": [ "warn", "always" ],
       "quotes": [ "error", "single", { "avoidEscape": true } ],
       "no-var": [ "warn" ],
-      "comma-dangle": [ "error", "never" ]
+      "comma-dangle": [ "error", "always-multiline" ]
     },
     "overrides": [
       {
+        "files": [ "defs.js" ],
+        "parserOptions": {
+          "ecmaVersion": 2020
+        }
+      }, {
         "files": [ "test.js", "parseRFC.js", "dumpASN1.js" ],
         "parserOptions": {
           "ecmaVersion": 2021
         },
         "rules": {
-          "strict": [ "error", "global" ],
-          "comma-dangle": [ "error", "always-multiline" ]
+          "strict": [ "error", "global" ]
         }
       }, {
         "files": [ "oids.js" ],
@@ -62,9 +66,10 @@
           "quotes": [ "warn", "double" ]
         }
       }, {
-        "files": [ "tags.js" ],
+        "files": [ "tags.js", "rfcdef.js" ],
         "rules": {
-          "comma-dangle": [ "error", "always-multiline" ],
+          "indent": [ "error", 2, { "ignoredNodes": [ "Program > ExpressionStatement > CallExpression > FunctionExpression > BlockStatement > ExpressionStatement[directive='use strict']:first-child" ] } ],
+          "comma-dangle": "off",
           "quotes": [ "warn", "double" ]
         }
       }

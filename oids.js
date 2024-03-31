@@ -3,8 +3,8 @@
 //   You can use this code in whatever way you want,
 //   as long as you don't try to claim you wrote it.
 (typeof define != "undefined" ? define : function (factory) { "use strict";
-    if (typeof module == "object") module.exports = factory();
-    else window.oids = factory();
+  if (typeof module == "object") module.exports = factory();
+  else window.oids = factory();
 })(function () {
 "use strict";
 return {
@@ -2727,5 +2727,4 @@ return {
 "1.3.6.1.4.1.40869.1.1.22.3": { "d": "TWCA EV policy", "c": "TWCA Root Certification Authority" },
 "2.16.840.1.113733.1.7.23.6": { "d": "VeriSign EV policy", "c": "VeriSign Class 3 Public Primary Certification Authority" },
 "2.16.840.1.114171.500.9": { "d": "Wells Fargo EV policy", "c": "Wells Fargo WellsSecure Public Root Certificate Authority" },
-"END": ""
 };});

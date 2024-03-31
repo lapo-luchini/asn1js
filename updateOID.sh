@@ -25,8 +25,8 @@ awk -v apos="'" -v q='"' -v url="$URL" '
         print "//   You can use this code in whatever way you want,";
         print "//   as long as you don" apos "t try to claim you wrote it.";
         print "(typeof define != " q "undefined" q " ? define : function (factory) { " q "use strict" q ";";
-        print "    if (typeof module == " q "object" q ") module.exports = factory();";
-        print "    else window.oids = factory();";
+        print "  if (typeof module == " q "object" q ") module.exports = factory();";
+        print "  else window.oids = factory();";
         print "})(function () {";
         print q "use strict" q ";";
         print "return {";
@@ -48,7 +48,6 @@ awk -v apos="'" -v q='"' -v url="$URL" '
         }
     }
     END {
-        print "\"END\": \"\""
         print "};});"
     }
 ' >oids.js

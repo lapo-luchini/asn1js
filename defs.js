@@ -29,7 +29,7 @@ function translate(def, tn, stats) {
         try {
             // hope current OIDs contain the type name (will need to parse from RFC itself)
             def = Defs.searchType(firstUpper(stats.defs[def.definedBy][1]));
-        } catch (e) {}
+        } catch (e) { /*ignore*/ }
     while (def?.type == 'defined' || def?.type?.type == 'defined') {
         const name = def?.type?.type ? def.type.name : def.name;
         def = Object.assign({}, def);
@@ -37,7 +37,8 @@ function translate(def, tn, stats) {
     }
     if (def?.type?.name == 'CHOICE') {
         for (let c of def.type.content) {
-            c = translate(c);
+            if (tn != c.type.name && tn != c.name)
+                c = translate(c);
             if (tn == c.type.name || tn == c.name) {
                 def = Object.assign({}, def);
                 def.type = c.type.name ? c.type : c;
@@ -109,7 +110,7 @@ class Defs {
                         } else if (type?.definedBy && stats.defs?.[type.definedBy]?.[1]) { // hope current OIDs contain the type name (will need to parse from RFC itself)
                             try {
                                 type = Defs.searchType(firstUpper(stats.defs[type.definedBy][1]));
-                            } catch (e) {}
+                            } catch (e) { /*ignore*/ }
                         }
                     }
                 }
@@ -126,6 +127,7 @@ Defs.RFC = rfc;
 Defs.commonTypes = [
     [ 'X.509 certificate', '1.3.6.1.5.5.7.0.18', 'Certificate' ], 
     [ 'CMS / PKCS#7 envelope', '1.2.840.113549.1.9.16.0.14', 'ContentInfo' ],
+    [ 'PKCS#1 RSA private key', '1.2.840.113549.1.1.0.1', 'RSAPrivateKey' ],
     [ 'PKCS#8 encrypted private key', '1.2.840.113549.1.8.1.1', 'EncryptedPrivateKeyInfo' ],
     [ 'PKCS#8 private key', '1.2.840.113549.1.8.1.1', 'PrivateKeyInfo' ],
     [ 'PKCS#10 certification request', '1.2.840.113549.1.10.1.1', 'CertificationRequest' ],
