@@ -58,7 +58,7 @@ export class ASN1DOM extends ASN1 {
         let isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));
         let node = DOM.tag('div', 'node');
         node.asn1 = this;
-        let head = DOM.tag('div', 'head');
+        let head = DOM.tag('span', 'head');
         head.appendChild(DOM.tag('span', 'spaces', spaces));
         const typeName = this.typeName().replace(/_/g, ' ');
         if (this.def) {
