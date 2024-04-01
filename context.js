@@ -1,6 +1,7 @@
 const
     id = (elem) => document.getElementById(elem),
     contextMenu = id('contextmenu'),
+    btnHideTree = id('btnHideTree'),
     btnCopyHex = id('btnCopyHex'),
     btnCopyB64 = id('btnCopyB64'),
     btnCopyTree = id('btnCopyTree'),
@@ -14,6 +15,8 @@ export function bindContextMenu(node) {
         contextMenu.style.top = event.pageY + 'px';
         contextMenu.style.visibility = 'visible';
         contextMenu.node = this;
+        btnHideTree.innerText = (node.className == 'node') ? 'Hide subtree' : 'Show subtree';
+        btnHideTree.style.display = node.className.startsWith('node') ? 'block' : 'none';
         btnCopyValue.style.display = valueEnabled ? 'block' : 'none';
         event.stopPropagation();
     };
@@ -24,6 +27,13 @@ function close() {
 }
 
 contextMenu.onmouseleave = close;
+
+btnHideTree.onclick = function (event) {
+    event.stopPropagation();
+    const node = contextMenu.node;
+    node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
+    close();
+};
 
 btnCopyHex.onclick = function (event) {
     event.stopPropagation();

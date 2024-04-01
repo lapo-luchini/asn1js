@@ -143,9 +143,7 @@ export class ASN1DOM extends ASN1 {
                 sub.appendChild(this.sub[i].toDOM(spaces));
         }
         node.appendChild(sub);
-        head.onclick = function () {
-            node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
-        };
+        bindContextMenu(node);
         return node;
     }
     fakeHover(current) {
@@ -202,9 +200,6 @@ export class ASN1DOM extends ASN1 {
                 node.appendChild(skip);
             }
         }
-        // set the current start and end position as an attribute at the node to know the selected area
-        node.setAttribute('pos', this.posStart());
-        node.setAttribute('end', this.posEnd());    
         this.toHexDOM_sub(node, 'tag', this.stream, this.posStart(), this.posLen());
         this.toHexDOM_sub(node, (this.length >= 0) ? 'dlen' : 'ulen', this.stream, this.posLen(), this.posContent());
         if (this.sub === null) {
