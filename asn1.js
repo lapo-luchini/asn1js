@@ -489,7 +489,16 @@ export class ASN1 {
     }
     toPrettyString(indent) {
         if (indent === undefined) indent = '';
-        let s = indent + this.typeName() + ' @' + this.stream.pos;
+        let s = indent;
+        if (this.def) {
+            if (this.def.id)
+                s += this.def.id + ' ';
+            if (this.def.name && this.def.name != this.typeName().replace(/_/g, ' '))
+                s+= this.def.name + ' ';
+            if (this.def.mismatch)
+                s += '[?] ';
+        }
+        s += this.typeName() + ' @' + this.stream.pos;
         if (this.length >= 0)
             s += '+';
         s += this.length;
