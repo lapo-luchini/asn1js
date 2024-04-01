@@ -20,7 +20,7 @@ export function bindContextMenu(node) {
         btnCopyValue.style.display = valueEnabled ? 'block' : 'none';
         event.stopPropagation();
     };
-};
+}
 
 function close() {
     contextMenu.style.visibility = 'hidden';
