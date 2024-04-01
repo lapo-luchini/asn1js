@@ -47,13 +47,13 @@ const
         ],
         8017: [ // this RFC uses a lot of currently unsupported syntax
             [ /ALGORITHM-IDENTIFIER ::= CLASS[^-]+--/, '--' ],
-            [ /\n +\S+ +ALGORITHM-IDENTIFIER[^\n]+(\n      [^\n]+)+\n   [}]/g, '' ],
-            [ /AlgorithmIdentifier [{] ALGORITHM-IDENTIFIER:InfoObjectSet [}] ::=(\n      [^\n]+)+\n   [}]/, 'AlgorithmIdentifier ::= ANY'],
+            [ /\n +\S+ +ALGORITHM-IDENTIFIER[^\n]+(\n {6}[^\n]+)+\n {3}[}]/g, '' ],
+            [ /AlgorithmIdentifier [{] ALGORITHM-IDENTIFIER:InfoObjectSet [}] ::=(\n {6}[^\n]+)+\n {3}[}]/, 'AlgorithmIdentifier ::= ANY'],
             [ /algorithm +id-[^,\n]+,/g, 'algorithm ANY,' ],
-            [ / (sha1    HashAlgorithm|mgf1SHA1    MaskGenAlgorithm|pSpecifiedEmpty    PSourceAlgorithm|rSAES-OAEP-Default-Identifier    RSAES-AlgorithmIdentifier|rSASSA-PSS-Default-Identifier    RSASSA-AlgorithmIdentifier) ::= [{](\n(      [^\n]+)?)+\n   [}]/g, '' ],
+            [ / (sha1 {4}HashAlgorithm|mgf1SHA1 {4}MaskGenAlgorithm|pSpecifiedEmpty {4}PSourceAlgorithm|rSAES-OAEP-Default-Identifier {4}RSAES-AlgorithmIdentifier|rSASSA-PSS-Default-Identifier {4}RSASSA-AlgorithmIdentifier) ::= [{](\n( {6}[^\n]+)?)+\n {3}[}]/g, '' ],
             [ / ::= AlgorithmIdentifier [{]\s+[{][^}]+[}]\s+[}]/g, ' ::= AlgorithmIdentifier' ],
             [ /OCTET STRING[(]SIZE[(]0..MAX[)][)]/g, 'OCTET STRING' ],
-            [ /emptyString    EncodingParameters ::= ''H/g, '' ],
+            [ /emptyString {4}EncodingParameters ::= ''H/g, '' ],
             [ /[(]CONSTRAINED BY[^)]+[)]/g, '' ],
         ],
     };
