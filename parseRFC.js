@@ -288,12 +288,15 @@ class Parser {
                     this.expectToken(')');
                 }
                 break;
+            case 'UTCTime':
+            case 'GeneralizedTime':
+                break;
             default:
-                x.content = 'TODO:unknown';
+                x.warning = 'type unknown';
             }
         } catch (e) {
             console.log('[debug] parseBuiltinType content', e);
-            x.content = 'TODO:exception';
+            x.warning = 'type exception';
         }
         return x;
     }

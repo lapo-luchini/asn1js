@@ -1606,14 +1606,12 @@ export const rfcdef = {
             {
               "id": "utcTime",
               "name": "UTCTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "generalTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             }
           ]
         }
@@ -3382,8 +3380,7 @@ export const rfcdef = {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -3400,8 +3397,7 @@ export const rfcdef = {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -4494,8 +4490,7 @@ export const rfcdef = {
         "name": "InvalidityDate",
         "type": {
           "name": "GeneralizedTime",
-          "type": "builtin",
-          "content": "TODO:unknown"
+          "type": "builtin"
         }
       }
     }
@@ -5566,7 +5561,6 @@ export const rfcdef = {
               "id": "date",
               "name": "GeneralizedTime",
               "type": "builtin",
-              "content": "TODO:unknown",
               "optional": true
             },
             {
@@ -5629,7 +5623,6 @@ export const rfcdef = {
               "id": "date",
               "name": "GeneralizedTime",
               "type": "builtin",
-              "content": "TODO:unknown",
               "optional": true
             },
             {
@@ -6142,14 +6135,12 @@ export const rfcdef = {
             {
               "id": "utcTime",
               "name": "UTCTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "generalTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             }
           ]
         }
@@ -6664,8 +6655,7 @@ export const rfcdef = {
             {
               "id": "genTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "accuracy",
@@ -8345,8 +8335,7 @@ export const rfcdef = {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -9649,14 +9638,12 @@ export const rfcdef = {
             {
               "id": "willBeRevokedAt",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "badSinceDate",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "crlDetails",
