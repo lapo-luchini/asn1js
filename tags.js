@@ -1,9 +1,7 @@
-(typeof define != "undefined" ? define : function (factory) { "use strict";
-  if (typeof module == "object") module.exports = factory();
-  else window.tags = factory();
-})(function () {
-"use strict";
-return {
+export const tags = {
+  "2.0.1": "2024-03-28",
+  "2.0.0": "2024-03-26",
+  "1.3.0": "2024-03-26",
   "1.2.4": "2022-11-14",
   "1.2.3": "2021-10-21",
   "1.2.2": "2021-10-21",
@@ -13,4 +11,4 @@ return {
   "1.0.2": "2018-08-23",
   "1.0.1": "2018-08-14",
   "1.0.0": "2018-08-14",
-};});
+};

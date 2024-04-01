@@ -1,15 +1,10 @@
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') factory(function (name) { return require(name); });
-    else factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { ASN1DOM } from './dom.js';
+import { Base64 } from './base64.js';
+import { Hex } from './hex.js';
+import { Defs } from './defs.js';
+import { tags } from './tags.js';
 
 const
-    ASN1DOM = require('./dom'),
-    Base64 = require('./base64'),
-    Hex = require('./hex'),
-    Defs = require('./defs'),
-    tags = require('./tags'),
     maxLength = 10240,
     reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
     tree = id('tree'),
@@ -138,6 +133,7 @@ id('butClear').onclick = function () {
     file.value = '';
     tree.innerHTML = '';
     dump.innerHTML = '';
+    selectDefs.innerHTML = '';
     hash = window.location.hash = '';
 };
 id('butExample').onclick = function () {
@@ -235,5 +231,3 @@ selectTag.onchange = function (ev) {
     let tag = ev.target.selectedOptions[0].value;
     window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html';
 };
-
-});

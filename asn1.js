@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2024 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,15 +13,10 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
-    else window.asn1 = factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { Int10 } from './int10.js';
+import { oids } from './oids.js';
 
 const
-    Int10 = require('./int10'),
-    oids = require('./oids'),
     ellipsis = '\u2026',
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
@@ -83,11 +78,15 @@ class Stream {
     hexByte(b) {
         return hexDigits.charAt((b >> 4) & 0xF) + hexDigits.charAt(b & 0xF);
     }
-    hexDump(start, end, raw) {
+    /** Hexadecimal dump.
+     * @param type 'raw', 'byte' or 'dump' */
+    hexDump(start, end, type = 'dump') {
         let s = '';
         for (let i = start; i < end; ++i) {
+            if (type == 'byte' && i > start)
+                s += ' ';
             s += this.hexByte(this.get(i));
-            if (raw !== true)
+            if (type == 'dump')
                 switch (i & 0xF) {
                 case 0x7: s += '  '; break;
                 case 0xF: s += '\n'; break;
@@ -371,7 +370,7 @@ class ASN1Tag {
     }
 }
 
-class ASN1 {
+export class ASN1 {
     constructor(stream, header, length, tag, tagLen, sub) {
         if (!(tag instanceof ASN1Tag)) throw new Error('Invalid tag value.');
         this.stream = stream;
@@ -490,7 +489,16 @@ class ASN1 {
     }
     toPrettyString(indent) {
         if (indent === undefined) indent = '';
-        let s = indent + this.typeName() + ' @' + this.stream.pos;
+        let s = indent;
+        if (this.def) {
+            if (this.def.id)
+                s += this.def.id + ' ';
+            if (this.def.name && this.def.name != this.typeName().replace(/_/g, ' '))
+                s+= this.def.name + ' ';
+            if (this.def.mismatch)
+                s += '[?] ';
+        }
+        s += this.typeName() + ' @' + this.stream.pos;
         if (this.length >= 0)
             s += '+';
         s += this.length;
@@ -522,9 +530,12 @@ class ASN1 {
     posLen() {
         return this.stream.pos + this.tagLen;
     }
-    toHexString() {
-        return this.stream.hexDump(this.posStart(), this.posEnd(), true);
+    /** Hexadecimal dump of the node.
+     * @param type 'raw', 'byte' or 'dump' */
+    toHexString(type = 'raw') {
+        return this.stream.hexDump(this.posStart(), this.posEnd(), type);
     }
+    /** Base64 dump of the node. */
     toB64String() {
         return this.stream.b64Dump(this.posStart(), this.posEnd());
     }
@@ -614,7 +625,3 @@ class ASN1 {
     }
 
 }
-
-return ASN1;
-
-});

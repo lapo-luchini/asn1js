@@ -12,47 +12,43 @@ This package can be installed with either npm or yarn via the following commands
 
 ```sh
 npm install @lapo/asn1js
-# or with yarn
+# or other tools
+pnpm install @lapo/asn1js
 yarn add @lapo/asn1js
 ```
 
 Assuming a standard javascript bundler is setup you can import it like so:
 
 ```js
-const ASN1 = require('@lapo/asn1js');
-// or with ES modules
 import ASN1 from '@lapo/asn1js';
 ```
 
 A submodule of this package can also be imported:
 
 ```js
-const Hex = require('@lapo/asn1js/hex');
-// or with ES modules
 import Hex from '@lapo/asn1js/hex';
 ```
 
-Usage with RequireJS
+Unfortunately until [`require(esm)` gets released](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) it is necessary to use async `import()` when used from CommonJS (legacy NodeJS) code.
+
+Usage on the web
 --------------------
 
-Can be [tested on JSFiddle](https://jsfiddle.net/lapo/tmdq35ug/).
+Can be [tested on JSFiddle](https://jsfiddle.net/lapo/y6t2wo7q/).
 
 ```html
-<script type="text/javascript" src="https://unpkg.com/requirejs/require.js"></script>
 <script>
-require([
-  'https://unpkg.com/@lapo/asn1js/asn1.js',
-  'https://unpkg.com/@lapo/asn1js/hex.js'
-], function(ASN1, Hex) {
-  document.body.innerText = ASN1.decode(Hex.decode('06032B6570')).content();
-});
+import { ASN1} from 'https://unpkg.com/@lapo/asn1js@2.0.0/asn1.js';
+import { Hex } from 'https://unpkg.com/@lapo/asn1js@2.0.0/hex.js';
+
+document.body.innerText = ASN1.decode(Hex.decode('06032B6570')).content();
 </script>
 ```
 
 ISC license
 -----------
 
-ASN.1 JavaScript decoder Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
+ASN.1 JavaScript decoder Copyright (c) 2008-2024 Lapo Luchini <lapo@lapo.it>
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
@@ -66,7 +62,7 @@ credits
 - extended tag support added by [Péter Budai](https://www.peterbudai.eu/)
 - patches by [Gergely Nagy](https://github.com/ngg)
 - Relative OID support added by [Mistial Developer](https://github.com/mistial-dev)
-- dark mode support added by [Oliver Burgmaier](https://github.com/olibu/)
+- dark mode and other UI improvements by [Oliver Burgmaier](https://github.com/olibu/)
 - patches by [Nicolai Søborg](https://github.com/NicolaiSoeborg)
 
 links

@@ -7,7 +7,7 @@ FILES="
   updateOID.sh check.sh
   examples
 "
-mtn automate tags it.lapo.asn1js | \
+mtn automate tags 'it.lapo.asn1js{,.*}' | \
   awk '/^revision/ { print substr($2, 2, length($2) - 2)}' | \
   while read rev; do
     mtn automate certs $rev | awk -v q='"' '
@@ -19,15 +19,10 @@ mtn automate tags it.lapo.asn1js | \
     '
   done | sort -r | awk -v q='"' '
     BEGIN {
-      print "(typeof define != " q "undefined" q " ? define : function (factory) { " q "use strict" q ";";
-      print "  if (typeof module == " q "object" q ") module.exports = factory();";
-      print "  else window.tags = factory();";
-      print "})(function () {";
-      print q "use strict" q ";";
-      print "return {"
+      print "export const tags = {"
     }
     { print "  " q $2 q ": " q $1 q "," }
-    END { print "};});" }
+    END { print "};" }
   ' > tags.js
 chmod 644 examples/*
 type gsha256sum >/dev/null && SHA256=gsha256sum || SHA256=sha256sum
