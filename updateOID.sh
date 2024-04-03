@@ -24,12 +24,7 @@ awk -v apos="'" -v q='"' -v url="$URL" '
         print "// which is made by Peter Gutmann and whose license states:";
         print "//   You can use this code in whatever way you want,";
         print "//   as long as you don" apos "t try to claim you wrote it.";
-        print "(typeof define != " q "undefined" q " ? define : function (factory) { " q "use strict" q ";";
-        print "  if (typeof module == " q "object" q ") module.exports = factory();";
-        print "  else window.oids = factory();";
-        print "})(function () {";
-        print q "use strict" q ";";
-        print "return {";
+        print "export const oids = {";
     }
     /^OID/         { oid = $2; }
     /^Comment/     { comment = $2; }
@@ -48,7 +43,7 @@ awk -v apos="'" -v q='"' -v url="$URL" '
         }
     }
     END {
-        print "};});"
+        print "};"
     }
 ' >oids.js
 echo Conversion completed.

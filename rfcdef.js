@@ -3,12 +3,7 @@
 // as far as I can tell this file is allowed under the following clause:
 //   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary.
 // https://trustee.ietf.org/about/faq/#reproducing-rfcs
-(typeof define != "undefined" ? define : function (factory) { "use strict";
-  if (typeof module == "object") module.exports = factory();
-  else window.rfcdef = factory();
-})(function () {
-"use strict";
-return {
+export const rfcdef = {
   "1.3.6.1.5.5.7.0.18": {
     "name": "PKIX1Explicit88",
     "oid": "1.3.6.1.5.5.7.0.18",
@@ -1611,14 +1606,12 @@ return {
             {
               "id": "utcTime",
               "name": "UTCTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "generalTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             }
           ]
         }
@@ -3387,8 +3380,7 @@ return {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -3405,8 +3397,7 @@ return {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -4499,8 +4490,7 @@ return {
         "name": "InvalidityDate",
         "type": {
           "name": "GeneralizedTime",
-          "type": "builtin",
-          "content": "TODO:unknown"
+          "type": "builtin"
         }
       }
     }
@@ -5571,7 +5561,6 @@ return {
               "id": "date",
               "name": "GeneralizedTime",
               "type": "builtin",
-              "content": "TODO:unknown",
               "optional": true
             },
             {
@@ -5634,7 +5623,6 @@ return {
               "id": "date",
               "name": "GeneralizedTime",
               "type": "builtin",
-              "content": "TODO:unknown",
               "optional": true
             },
             {
@@ -6147,14 +6135,12 @@ return {
             {
               "id": "utcTime",
               "name": "UTCTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "generalTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             }
           ]
         }
@@ -6669,8 +6655,7 @@ return {
             {
               "id": "genTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "accuracy",
@@ -8350,8 +8335,7 @@ return {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -9654,14 +9638,12 @@ return {
             {
               "id": "willBeRevokedAt",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "badSinceDate",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "crlDetails",
@@ -10392,4 +10374,4 @@ return {
     }
   }
 }
-;});
+;

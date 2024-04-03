@@ -18,6 +18,7 @@
     --preview-border-color: #505050;
     --dump-bg-color: #C0C0C0;
     --dump-border-color: #E0E0E0;
+    --hover-bg-color: #E0E0E0;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -126,18 +127,9 @@ header {
     height: 1em;
     white-space: nowrap;
 }
-.head:hover::before {
-    position: absolute;
-    content: '-';
-    color: red;
-    border: solid 1px red;
-    border-radius: 20px;
-    background-color: black;
-    /*TODO: use vars instead of hex*/
-}
 .node:hover > .head, .node.hover > .head {
     color: var(--link-color);
-    font-weight: bold;
+    background-color: var(--hover-bg-color);
 }
 .node:hover > .head:hover, .node.hover > .head.hover {
     color: var(--link-hover-color);
@@ -212,3 +204,24 @@ header {
 #dump .hexCurrent .dlen { color: #004040; }
 #file { display: none; }
 #area { width: 100%; }
+#contextmenu {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    padding: 2px;
+    background-color: var(--button-bg-color);
+    border: 1px solid var(--button-bg-color);
+    z-index: 2;
+}
+#contextmenu > button {
+    display: block;
+    width: 120px;
+    background-color: var(--button-bg-color);
+    color: var(--main-text-color);
+    border: 1px solid var(--button-border-color);
+    text-align: left;
+}
+#contextmenu > button:hover {
+    background-color: var(--button-bghover-color);
+}

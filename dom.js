@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2024 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,15 +13,11 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
-    else window.dom = factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { ASN1 } from './asn1.js';
+import { oids } from './oids.js';
+import { bindContextMenu } from './context.js';
 
 const
-    ASN1 = require('./asn1'),
-    oids = require('./oids'),
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
@@ -55,14 +51,14 @@ const
         },
     };
 
-class ASN1DOM extends ASN1 {
+export class ASN1DOM extends ASN1 {
 
     toDOM(spaces) {
         spaces = spaces || '';
         let isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));
         let node = DOM.tag('div', 'node');
         node.asn1 = this;
-        let head = DOM.tag('div', 'head');
+        let head = DOM.tag('span', 'head');
         head.appendChild(DOM.tag('span', 'spaces', spaces));
         const typeName = this.typeName().replace(/_/g, ' ');
         if (this.def) {
@@ -147,21 +143,18 @@ class ASN1DOM extends ASN1 {
                 sub.appendChild(this.sub[i].toDOM(spaces));
         }
         node.appendChild(sub);
-        head.onclick = function () {
-            node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
-        };
+        bindContextMenu(node);
         return node;
     }
     fakeHover(current) {
-        this.node.className += ' hover';
+        this.node.classList.add('hover');
         if (current)
-            this.head.className += ' hover';
+            this.head.classList.add('hover');
     }
     fakeOut(current) {
-        let re = / ?hover/;
-        this.node.className = this.node.className.replace(re, '');
+        this.node.classList.remove('hover');
         if (current)
-            this.head.className = this.head.className.replace(re, '');
+            this.head.classList.remove('hover');
     }
     toHexDOM_sub(node, className, stream, start, end) {
         if (start >= end)
@@ -192,6 +185,7 @@ class ASN1DOM extends ASN1 {
                 this.className = 'hex';
             }
         };
+        bindContextMenu(node);
         if (root == node) {
             let lineStart = this.posStart() & 0xF;
             if (lineStart != 0) {
@@ -236,7 +230,3 @@ class ASN1DOM extends ASN1 {
     }
 
 }
-
-return ASN1DOM;
-
-});
