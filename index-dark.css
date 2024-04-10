@@ -41,3 +41,24 @@ h1 {
 #dump .hexCurrent .hex { background-color: #474747; }
 #dump .hexCurrent .tag { color: #6db0fc; }
 #dump .hexCurrent .dlen { color: #00b6b6; }
+
+.treecollapse ul li{
+    border-left: 2px solid #888;
+}
+
+.treecollapse ul li::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -2);
+    left: -2px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid #888;
+    border-width: 0 0 2px 2px;
+}
+
+.treecollapse summary::before{
+    z-index: 1;
+    background: url('tree-icon-dark.svg');
+}

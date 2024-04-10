@@ -41,7 +41,10 @@ function checkbox(name) {
 function show(asn1) {
     tree.innerHTML = '';
     dump.innerHTML = '';
-    tree.appendChild(asn1.toDOM());
+    let ul = document.createElement('ul');
+    ul.setAttribute('class', 'treecollapse');
+    tree.appendChild(ul);
+    ul.appendChild(asn1.toDOM());
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
 function decode(der, offset) {
