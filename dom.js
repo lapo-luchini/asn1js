@@ -191,13 +191,14 @@ export class ASN1DOM extends ASN1 {
         this.head.onmouseover = function () { this.hexNode.className = 'hexCurrent'; };
         this.head.onmouseout  = function () { this.hexNode.className = 'hex'; };
         node.asn1 = this;
-        node.onmouseover = function () {
+        node.onmouseover = function (event) {
             let current = !root.selected;
             if (current) {
                 root.selected = this.asn1;
                 this.className = 'hexCurrent';
             }
             this.asn1.fakeHover(current);
+            event.stopPropagation();
         };
         node.onmouseout = function () {
             let current = (root.selected == this.asn1);
