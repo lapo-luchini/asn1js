@@ -8,7 +8,8 @@ import { Defs } from './defs.js';
 const
     colYellow = '\x1b[33m',
     colBlue = '\x1b[34m',
-    colReset = '\x1b[0m';
+    colReset = '\x1b[0m',
+    reDataURI = /^data:(?:[a-z-]+[/][a-z.+-]+;)?base64,([A-Za-z0-9+/=\s]+)$/;
 
 function print(value, indent) {
     if (indent === undefined) indent = '';
@@ -40,7 +41,11 @@ function print(value, indent) {
     return s;
 }
 
-let content = fs.readFileSync(process.argv[2]);
+const filename = process.argv[2];
+const match = reDataURI.exec(filename);
+let content = match
+    ? Buffer.from(match[1])
+    : fs.readFileSync(filename);
 try { // try PEM first
     content = Base64.unarmor(content);
 } catch (e) { // try DER/BER then
