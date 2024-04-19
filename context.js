@@ -11,14 +11,18 @@ export function bindContextMenu(node) {
     const type = node.asn1.typeName();
     const valueEnabled = type != 'SET' && type != 'SEQUENCE';
     node.onclick = function (event) {
-        contextMenu.style.left = event.pageX + 'px';
-        contextMenu.style.top = event.pageY + 'px';
-        contextMenu.style.visibility = 'visible';
-        contextMenu.node = this;
-        btnHideTree.innerText = (node.className == 'node') ? 'Hide subtree' : 'Show subtree';
-        btnHideTree.style.display = node.className.startsWith('node') ? 'block' : 'none';
-        btnCopyValue.style.display = valueEnabled ? 'block' : 'none';
-        event.stopPropagation();
+        // do not show the menu in case of clicking the icon
+        if (event.srcElement.nodeName !== "SUMMARY") {
+            contextMenu.style.left = event.pageX + 'px';
+            contextMenu.style.top = event.pageY + 'px';
+            contextMenu.style.visibility = 'visible';
+            contextMenu.node = this;
+            btnHideTree.innerText = (node.className == 'node') ? 'Hide subtree' : 'Show subtree';
+            btnHideTree.style.display = node.className.startsWith('node') ? 'block' : 'none';
+            btnCopyValue.style.display = valueEnabled ? 'block' : 'none';
+            event.preventDefault();
+            event.stopPropagation();    
+        }
     };
 }
 
