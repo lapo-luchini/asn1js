@@ -12,7 +12,7 @@ export function bindContextMenu(node) {
     const valueEnabled = type != 'SET' && type != 'SEQUENCE';
     node.onclick = function (event) {
         // do not show the menu in case of clicking the icon
-        if (event.srcElement.nodeName !== "SUMMARY") {
+        if (event.srcElement.nodeName !== 'SUMMARY') {
             contextMenu.style.left = event.pageX + 'px';
             contextMenu.style.top = event.pageY + 'px';
             contextMenu.style.visibility = 'visible';
