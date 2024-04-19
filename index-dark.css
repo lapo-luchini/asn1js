@@ -43,22 +43,23 @@ h1 {
 #dump .hexCurrent .dlen { color: #00b6b6; }
 
 .treecollapse ul li{
-    border-left: 2px solid #888;
+    border-left: 1px solid #888;
 }
 
 .treecollapse ul li::before{
     content: '';
     display: block;
     position: absolute;
-    top: calc(var(--spacing) / -2);
-    left: -2px;
+    top: calc(var(--spacing) / -1.6);
+    left: -1px;
     width: calc(var(--spacing) + 2px);
     height: calc(var(--spacing) + 1px);
     border: solid #888;
-    border-width: 0 0 2px 2px;
+    border-width: 0 0 1px 1px;
 }
 
 .treecollapse summary::before{
     z-index: 1;
+    top: 1px;
     background: url('tree-icon-dark.svg');
 }

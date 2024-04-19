@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="40"
-   height="20"
+   width="32"
+   height="16"
    version="1.1"
    id="svg2"
    sodipodi:docname="tree-icon-dark.svg"
@@ -22,7 +22,7 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="8.2783954"
-     inkscape:cx="11.173663"
+     inkscape:cx="11.113265"
      inkscape:cy="20.112593"
      inkscape:window-width="1392"
      inkscape:window-height="916"
@@ -31,26 +31,27 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <circle
-     style="fill:#333333;stroke:#cccccc;stroke-opacity:1;stroke-width:2;stroke-dasharray:none;fill-opacity:1"
+     style="fill:#333333;fill-opacity:1;stroke:#cccccc;stroke-width:1.65902;stroke-dasharray:none;stroke-opacity:1"
      id="path3"
-     cx="10.034762"
-     cy="10.127462"
-     r="7.2074161" />
+     cx="7.7978606"
+     cy="8.0081377"
+     r="5.9786596" />
   <circle
-     style="fill:#333333;stroke:#cccccc;stroke-opacity:1;stroke-width:2;stroke-dasharray:none;fill-opacity:1"
+     style="fill:#333333;fill-opacity:1;stroke:#cccccc;stroke-width:1.65902;stroke-dasharray:none;stroke-opacity:1"
      id="path3-9"
-     cx="29.890499"
-     cy="10.026073"
-     r="7.2074161" />
+     cx="24.268494"
+     cy="7.9240317"
+     r="5.9786596" />
   <g
-     fill="#fff"
-     id="g2">
+     fill="#ffffff"
+     id="g2"
+     transform="matrix(0.82951499,0,0,0.82951499,-0.52612431,-0.39274567)">
     <path
-       d="m5 9h4v-4h2v4h4v2h-4v4h-2v-4h-4z"
+       d="M 5,9 H 9 V 5 h 2 v 4 h 4 v 2 h -4 v 4 H 9 V 11 H 5 Z"
        id="path1"
        style="fill:#cccccc;fill-opacity:1" />
     <path
-       d="m25 9h10v2h-10z"
+       d="m 25,9 h 10 v 2 H 25 Z"
        id="path2"
        style="fill:#bbbbbb;fill-opacity:1" />
   </g>
