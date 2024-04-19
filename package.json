@@ -15,10 +15,11 @@
   "homepage": "https://lapo.it/asn1js/",
   "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "oids.js" ],
   "scripts": {
-    "lint": "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js context.js index.js parseRFC.js dumpASN1.js",
+    "lint": "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js context.js index.js parseRFC.js dumpASN1.js test.js testDefs.js",
     "lint-action": "npx @action-validator/cli .github/workflows/node.js.yml",
     "serve": "echo 'Connect to http://localhost:3000/' ; npx statik --port 3000 .",
-    "test": "node test"
+    "test": "node test",
+    "testdefs": "node testDefs"
   },
   "engines": {
     "node": ">=12.20.0"
@@ -80,6 +81,11 @@
         "files": [ "defs.js" ],
         "parserOptions": {
           "ecmaVersion": 2021
+        }
+      }, {
+        "files": [ "testDefs.js" ],
+        "parserOptions": {
+          "ecmaVersion": 2022
         }
       }
     ]
