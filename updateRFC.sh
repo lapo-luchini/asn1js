@@ -1,5 +1,5 @@
 #/bin/sh
-RFCs="5280 5208 3369 3161 2986 4211 4210"
+RFCs="5280 5208 3369 3161 2986 4211 4210 8017"
 downloadRFC() {
     URL="https://www.ietf.org/rfc/rfc$1.txt"
     if [ -x /usr/bin/fetch ]; then
@@ -25,15 +25,8 @@ cd ..
     echo "// as far as I can tell this file is allowed under the following clause:"
     echo "//   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary."
     echo "// https://trustee.ietf.org/about/faq/#reproducing-rfcs"
-    cat - <<EOF
-(typeof define != "undefined" ? define : function (factory) { "use strict";
-  if (typeof module == "object") module.exports = factory();
-  else window.rfcdef = factory();
-})(function () {
-"use strict";
-EOF
-    echo -n "return "
+    echo -n "export const rfcdef = "
     cat rfcdef.json
-    echo ";});"
+    echo ";"
 } > rfcdef.js
 echo Conversion completed.

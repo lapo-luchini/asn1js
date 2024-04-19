@@ -8,7 +8,13 @@
   <link rel="icon" type="image/svg+xml" sizes="192x192" href="favicon.svg">
 </head>
 <body>
-  <div id="contextmenu" onmouseleave="this.style.visibility = 'hidden';"><button id="btnCopyHex">Copy as HEX</button><br><button id="btnCopyString">Copy as String</button><br><button id="btnCopyPretty">Copy as Pretty</button></div>
+  <div id="contextmenu">
+    <button id="btnHideTree">Hide subtree</button>
+    <button id="btnCopyHex">Copy hex dump</button>
+    <button id="btnCopyB64">Copy Base64</button>
+    <button id="btnCopyTree">Copy subtree</button>
+    <button id="btnCopyValue">Copy value</button>
+  </div>
   <header>
     <div class="title">
       <h1>ASN.1 JavaScript decoder</h1>
@@ -47,6 +53,8 @@
             <option value="sig-rsa1024-sha1.p7s">PKCS#7/CMS detached signature (old)</option>
             <option value="letsencrypt-x3.cer">X.509 certificate: Let's Encrypt X3</option>
             <option value="ed25519.cer">X.509 certificate: ed25519 (RFC 8410)</option>
+            <option value="pkcs1.pem">PKCS#1 RSA key (RFC 8017)</option>
+            <option value="pkcs8-rsa.pem">PKCS#8 RSA key (RFC 5208)</option>
             <option value="pkcs10.pem">PKCS#10 certification request (RFC 2986)</option>
             <option value="cmpv2.b64">CMP PKI message (RFC 4210)</option>
           </select>
@@ -60,17 +68,17 @@
   <div id="help">
     <h2>Instructions</h2>
     <p>This page contains a JavaScript generic ASN.1 parser that can decode any valid ASN.1 DER or BER structure whether Base64-encoded (raw base64, PEM armoring and <span class="tt">begin-base64</span> are recognized) or Hex-encoded. </p>
-    <p>This tool can be used online at the address <a href="http://lapo.it/asn1js/"><span class="tt">http://lapo.it/asn1js/</span></a> or offline, unpacking <a href="http://lapo.it/asn1js/asn1js.zip">the ZIP file</a> in a directory and opening <span class="tt">index.html</span> in a browser</p>
+    <p>This tool can be used online at the address <a href="https://asn1js.eu/"><span class="tt">https://asn1js.eu/</span></a> or offline, unpacking <a href="https://asn1js.eu/asn1js.zip">the ZIP file</a> in a directory and opening <span class="tt">index.html</span> in a browser</p>
     <p>On the left of the page will be printed a tree representing the hierarchical structure, on the right side an hex dump will be shown. <br>
       Hovering on the tree highlights ancestry (the hovered node and all its ancestors get colored) and the position of the hovered node gets highlighted in the hex dump (with header and content in a different colors). <br>
       Clicking a node in the tree will hide its sub-nodes (collapsed nodes can be noticed because they will become <i>italic</i>).</p>
-    <p><b>WARNING:</b> starting from 2023-02-26 this website is using some ES6 features, which can break it for older browsers (though it is <a href="https://www.browserling.com/browse/win7/ie11/https://asn1js.eu/">still working on IE11</a>).<br>
-      You can access <a href="https://rawcdn.githack.com/lapo-luchini/asn1js/1.2.4/index.html">last version before ES6 on githack</a>.</p>
+    <p><b>WARNING:</b> starting from 2024-03-28 this website is using ES6 features (and modules), which can break it for <a href="https://caniuse.com/es6-module">very old browsers</a>.<br>
+      You can access <a href="https://rawcdn.githack.com/lapo-luchini/asn1js/1.2.4/index.html">last version before ES6 on githack</a> (which <a href="https://www.browserling.com/browse/win7/ie11/https://rawcdn.githack.com/lapo-luchini/asn1js/1.2.4/index.html">still works on IE11</a>).</p>
     <div class="license">
       <h3>Copyright</h3>
       <div><p class="hidden">
         ASN.1 JavaScript decoder<br>
-        Copyright &copy; 2008-2023 Lapo Luchini <a href="mailto:lapo@lapo.it?subject=ASN1js">&lt;lapo@lapo.it&gt;</a><br>
+        Copyright &copy; 2008-2024 Lapo Luchini <a href="mailto:lapo@lapo.it?subject=ASN1js">&lt;lapo@lapo.it&gt;</a><br>
         <br>
         Permission to use, copy, modify, and/or distribute this software for any
         purpose with or without fee is hereby granted, provided that the above
@@ -84,13 +92,13 @@
         ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
         OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </p></div>
-      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2023 <a href="http://lapo.it/">Lapo Luchini</a>; released as <a href="http://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="http://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2024 <a href="https://lapo.it/">Lapo Luchini</a>; released as <a href="https://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="https://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
     </div>
-    <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="http://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
+    <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="https://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
     <h3>Links</h3>
     <ul>
-      <li><a href="http://lapo.it/asn1js/">official website</a></li>
-      <li><a href="http://asn1js.eu/">dedicated domain</a></li>
+      <li><a href="https://asn1js.eu/">official website</a></li>
+      <li><a href="https://lapo.it/asn1js/">alternate website</a></li>
       <li>previous versions on githack: <select id="tags"><option>[select tag]</option></select></li>
       <li><a href="http://idf.lapo.it/p/asn1js/">InDefero tracker</a> (currently offline)</li>
       <li><a href="https://github.com/lapo-luchini/asn1js">github mirror</a></li>
@@ -98,15 +106,6 @@
     </ul>
   </div>
 
-  <script type="text/javascript" src="tags.js"></script>
-  <script type="text/javascript" src="hex.js"></script>
-  <script type="text/javascript" src="base64.js"></script>
-  <script type="text/javascript" src="oids.js"></script>
-  <script type="text/javascript" src="rfcdef.js"></script>
-  <script type="text/javascript" src="defs.js"></script>
-  <script type="text/javascript" src="int10.js"></script>
-  <script type="text/javascript" src="asn1.js"></script>
-  <script type="text/javascript" src="dom.js"></script>
-  <script type="text/javascript" src="index.js"></script>
+  <script type="module" src="index.js"></script>
 </body>
 </html>

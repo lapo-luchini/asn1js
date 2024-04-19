@@ -1,16 +1,10 @@
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') factory(function (name) { return require(name); });
-    else factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { ASN1DOM } from './dom.js';
+import { Base64 } from './base64.js';
+import { Hex } from './hex.js';
+import { Defs } from './defs.js';
+import { tags } from './tags.js';
 
 const
-    ASN1 = require('./asn1'),
-    ASN1DOM = require('./dom'),
-    Base64 = require('./base64'),
-    Hex = require('./hex'),
-    Defs = require('./defs'),
-    tags = require('./tags'),
     maxLength = 10240,
     reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/,
     tree = id('tree'),
@@ -47,7 +41,10 @@ function checkbox(name) {
 function show(asn1) {
     tree.innerHTML = '';
     dump.innerHTML = '';
-    tree.appendChild(asn1.toDOM());
+    let ul = document.createElement('ul');
+    ul.setAttribute('class', 'treecollapse');
+    tree.appendChild(ul);
+    ul.appendChild(asn1.toDOM());
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
 function decode(der, offset) {
@@ -142,6 +139,7 @@ id('butClear').onclick = function () {
     file.value = '';
     tree.innerHTML = '';
     dump.innerHTML = '';
+    selectDefs.innerHTML = '';
     hash = window.location.hash = '';
 };
 id('butExample').onclick = function () {
@@ -239,78 +237,3 @@ selectTag.onchange = function (ev) {
     let tag = ev.target.selectedOptions[0].value;
     window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html';
 };
-
-// register context menu function
-document.getElementById('btnCopyHex').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');
-    let node = contextMenu.node;
-    const pos = parseInt(node.getAttribute('pos'));
-    const end = parseInt(node.getAttribute('end'));
-    const hex = buf2hex(window.derBuffer.subarray(pos, end));
-    navigator.clipboard.writeText(hex);
-    contextMenu.style.visibility = 'hidden';
-    event.stopPropagation();
-};
-
-document.getElementById('btnCopyString').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');
-    let node = contextMenu.node;
-    const pos = parseInt(node.getAttribute('pos'));
-    const end = parseInt(node.getAttribute('end'));
-    let result = ASN1.decode(window.derBuffer.subarray(pos, end));
-    let type = result.typeName();
-    switch (type) {
-    case 'SET':
-    case 'SEQUENCE':
-        alert('Selected value is not a String!');
-        break;
-    default: 
-        navigator.clipboard.writeText(result.content());
-    }
-    contextMenu.style.visibility = 'hidden';
-    event.stopPropagation();
-};
-
-document.getElementById('btnCopyPretty').onclick = function (event) {
-    let contextMenu = document.getElementById('contextmenu');
-    let node = contextMenu.node;
-    if (node.className == 'head') {
-        navigator.clipboard.writeText(nodeToString(node.parentElement));
-    }
-    else {
-        const pos = parseInt(node.getAttribute('pos'));
-        const end = parseInt(node.getAttribute('end'));
-        let result = ASN1.decode(window.derBuffer.subarray(pos, end));
-        navigator.clipboard.writeText(result.toPrettyString());
-    }
-    
-    contextMenu.style.visibility = 'hidden';
-    event.stopPropagation();
-};
-
-function nodeToString(node) {
-    let content = '';
-    for (const child of node.children) {
-        if (child.className == 'head') {
-            content += headToString(child) + '\n';
-        }
-        else if (child.className == 'sub') {
-            for (const sub of child.children) {
-                content += nodeToString(sub);
-            }
-        }
-    }
-    return content; 
-}
-
-function headToString(node) {
-    let content = '';
-    content += node.innerText;
-    return content; 
-}
-
-function buf2hex(buffer) {
-    return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
-}
-
-});

@@ -1,8 +1,8 @@
 #! /usr/bin/env node
-'use strict';
+
+import * as fs from 'node:fs';
 
 const
-    fs = require('fs'),
     patches = { // to fix some known RFCs' ASN.1 syntax errors
         0: [
             [ /\n\n[A-Z].*\n\f\n[A-Z].*\n\n/g, '' ], // page change
@@ -44,6 +44,17 @@ const
         ],
         4210: [
             [ /^\s+-- .*\r?\n/mg, '' ], // comments
+        ],
+        8017: [ // this RFC uses a lot of currently unsupported syntax
+            [ /ALGORITHM-IDENTIFIER ::= CLASS[^-]+--/, '--' ],
+            [ /\n +\S+ +ALGORITHM-IDENTIFIER[^\n]+(\n {6}[^\n]+)+\n {3}[}]/g, '' ],
+            [ /AlgorithmIdentifier [{] ALGORITHM-IDENTIFIER:InfoObjectSet [}] ::=(\n {6}[^\n]+)+\n {3}[}]/, 'AlgorithmIdentifier ::= ANY'],
+            [ /algorithm +id-[^,\n]+,/g, 'algorithm ANY,' ],
+            [ / (sha1 {4}HashAlgorithm|mgf1SHA1 {4}MaskGenAlgorithm|pSpecifiedEmpty {4}PSourceAlgorithm|rSAES-OAEP-Default-Identifier {4}RSAES-AlgorithmIdentifier|rSASSA-PSS-Default-Identifier {4}RSASSA-AlgorithmIdentifier) ::= [{](\n( {6}[^\n]+)?)+\n {3}[}]/g, '' ],
+            [ / ::= AlgorithmIdentifier [{]\s+[{][^}]+[}]\s+[}]/g, ' ::= AlgorithmIdentifier' ],
+            [ /OCTET STRING[(]SIZE[(]0..MAX[)][)]/g, 'OCTET STRING' ],
+            [ /emptyString {4}EncodingParameters ::= ''H/g, '' ],
+            [ /[(]CONSTRAINED BY[^)]+[)]/g, '' ],
         ],
     };
 
@@ -277,12 +288,15 @@ class Parser {
                     this.expectToken(')');
                 }
                 break;
+            case 'UTCTime':
+            case 'GeneralizedTime':
+                break;
             default:
-                x.content = 'TODO:unknown';
+                x.warning = 'type unknown';
             }
         } catch (e) {
             console.log('[debug] parseBuiltinType content', e);
-            x.content = 'TODO:exception';
+            x.warning = 'type exception';
         }
         return x;
     }
@@ -349,8 +363,11 @@ class Parser {
                 } else {
                     if (id in currentMod.values) // defined in local module
                         val = currentMod.values[id].value;
-                    else
+                    else try {
                         val = searchImportedValue(id);
+                    } catch (e) {
+                        this.exception(e.message);
+                    }
                 }
             }
             if (v.length) v += '.';

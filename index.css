@@ -18,6 +18,7 @@
     --preview-border-color: #505050;
     --dump-bg-color: #C0C0C0;
     --dump-border-color: #E0E0E0;
+    --hover-bg-color: #E0E0E0;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -83,7 +84,7 @@ header {
 #main-page {
     background-color: var(--main-bg-color);
     border: 0px;
-    padding: 15px;
+    padding: 5px;
 }
 #main-page > div {
     position: relative;
@@ -115,27 +116,13 @@ header {
     /*display: block;*/
     visibility: visible;
 }
-.node {
-    position: relative;
-}
-.sub {
-    padding-left: 1.5em;
-    border-left: solid 1px var(--sub-border-color);
-}
 .head {
     height: 1em;
     white-space: nowrap;
 }
-.head.active::before,
-.head:hover::before {
-    position: absolute;
-    content: '______';
-    color: red;
-    /*TODO: use vars instead of hex*/
-}
 .node:hover > .head, .node.hover > .head {
     color: var(--link-color);
-    font-weight: bold;
+    background-color: var(--hover-bg-color);
 }
 .node:hover > .head:hover, .node.hover > .head.hover {
     color: var(--link-hover-color);
@@ -150,7 +137,6 @@ header {
     display: block;
 }
 .name {
-    margin-right: 1em;
     color: var(--preview-border-color);
 }
 .name.id {
@@ -161,7 +147,7 @@ header {
     position: absolute;
     z-index: 2;
     top: 1.2em;
-    left: 0;
+    left: 30px;
     background-color: #efefef; /*minimal support for IE11*/
     background-color: var(--button-bg-color);
     border: solid 1px var(--button-border-color);
@@ -171,7 +157,6 @@ header {
     display: block;
 }
 .preview {
-    margin-left: 1em;
     color: var(--preview-border-color);
     font-weight: normal;
 }
@@ -179,9 +164,6 @@ header {
     margin-left: 1em;
     color: var(--preview-bg-color);
     font-weight: normal;
-}
-.spaces {
-    font-size: 0px;
 }
 #tree {
     font-family: monospace;
@@ -210,7 +192,6 @@ header {
 #dump .hexCurrent .dlen { color: #004040; }
 #file { display: none; }
 #area { width: 100%; }
-
 #contextmenu {
     position: absolute;
     visibility: hidden;
@@ -221,8 +202,8 @@ header {
     border: 1px solid var(--button-bg-color);
     z-index: 2;
 }
-
 #contextmenu > button {
+    display: block;
     width: 120px;
     background-color: var(--button-bg-color);
     color: var(--main-text-color);
@@ -231,4 +212,77 @@ header {
 }
 #contextmenu > button:hover {
     background-color: var(--button-bghover-color);
+}
+.treecollapse {
+    --spacing: 1.5rem;
+    --radius: 8px;
+    padding-inline-start: 0px;
+}
+  
+.treecollapse li{
+    display: block;
+    position: relative;
+    padding-left: calc(2 * var(--spacing) - var(--radius) - 2px);
+}
+
+.treecollapse ul{
+    padding-left: 0;
+    margin-left: calc(var(--radius) - var(--spacing));
+}
+
+.treecollapse ul li{
+    border-left: 1px solid #ddd;
+}
+
+.treecollapse ul li:last-child{
+    border-color: transparent;
+}
+
+.treecollapse ul li::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -1.6);
+    left: -1px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid #ddd;
+    border-width: 0 0 1px 1px;
+}
+
+.treecollapse summary{
+    display : block;
+    cursor  : pointer;
+}
+
+.treecollapse summary::marker,
+.treecollapse summary::-webkit-details-marker{
+    display : none;
+}
+
+.treecollapse summary:focus{
+    outline : none;
+}
+
+.treecollapse summary:focus-visible{
+    outline : 1px dotted #000;
+}
+
+.treecollapse summary::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / 2 - var(--radius));
+    left: calc(var(--spacing) - var(--radius) - 1px);
+    width: calc(2 * var(--radius));
+    height: calc(2 * var(--radius));
+}
+
+.treecollapse summary::before{
+    z-index: 1;
+    background: url('tree-icon-light.svg');
+}
+
+.treecollapse details[open] > summary::before{
+    background-position : calc(-2 * var(--radius)) 0;
 }

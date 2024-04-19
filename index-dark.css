@@ -18,6 +18,7 @@
     --preview-border-color: #b5b3b3;
     --dump-bg-color: #0c0e11;
     --dump-border-color: #505050;
+    --hover-bg-color: #505050;
 }
 h1 {
     font-weight: 200;
@@ -40,3 +41,25 @@ h1 {
 #dump .hexCurrent .hex { background-color: #474747; }
 #dump .hexCurrent .tag { color: #6db0fc; }
 #dump .hexCurrent .dlen { color: #00b6b6; }
+
+.treecollapse ul li{
+    border-left: 1px solid #888;
+}
+
+.treecollapse ul li::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -1.6);
+    left: -1px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid #888;
+    border-width: 0 0 1px 1px;
+}
+
+.treecollapse summary::before{
+    z-index: 1;
+    top: 1px;
+    background: url('tree-icon-dark.svg');
+}

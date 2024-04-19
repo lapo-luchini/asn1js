@@ -1,14 +1,9 @@
-// content parsed from ASN.1 definitions as found in the following RFCs: 5280 5208 3369 3161 2986 4211 4210
+// content parsed from ASN.1 definitions as found in the following RFCs: 5280 5208 3369 3161 2986 4211 4210 8017
 // Copyright (C) The IETF Trust (2008)
 // as far as I can tell this file is allowed under the following clause:
 //   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary.
 // https://trustee.ietf.org/about/faq/#reproducing-rfcs
-(typeof define != "undefined" ? define : function (factory) { "use strict";
-  if (typeof module == "object") module.exports = factory();
-  else window.rfcdef = factory();
-})(function () {
-"use strict";
-return {
+export const rfcdef = {
   "1.3.6.1.5.5.7.0.18": {
     "name": "PKIX1Explicit88",
     "oid": "1.3.6.1.5.5.7.0.18",
@@ -1611,14 +1606,12 @@ return {
             {
               "id": "utcTime",
               "name": "UTCTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "generalTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             }
           ]
         }
@@ -3387,8 +3380,7 @@ return {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -3405,8 +3397,7 @@ return {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -4499,8 +4490,7 @@ return {
         "name": "InvalidityDate",
         "type": {
           "name": "GeneralizedTime",
-          "type": "builtin",
-          "content": "TODO:unknown"
+          "type": "builtin"
         }
       }
     }
@@ -5571,7 +5561,6 @@ return {
               "id": "date",
               "name": "GeneralizedTime",
               "type": "builtin",
-              "content": "TODO:unknown",
               "optional": true
             },
             {
@@ -5634,7 +5623,6 @@ return {
               "id": "date",
               "name": "GeneralizedTime",
               "type": "builtin",
-              "content": "TODO:unknown",
               "optional": true
             },
             {
@@ -6147,14 +6135,12 @@ return {
             {
               "id": "utcTime",
               "name": "UTCTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "generalTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             }
           ]
         }
@@ -6669,8 +6655,7 @@ return {
             {
               "id": "genTime",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "accuracy",
@@ -8350,8 +8335,7 @@ return {
                   "name": "",
                   "type": {
                     "name": "GeneralizedTime",
-                    "type": "builtin",
-                    "content": "TODO:unknown"
+                    "type": "builtin"
                   }
                 }
               ],
@@ -9654,14 +9638,12 @@ return {
             {
               "id": "willBeRevokedAt",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "badSinceDate",
               "name": "GeneralizedTime",
-              "type": "builtin",
-              "content": "TODO:unknown"
+              "type": "builtin"
             },
             {
               "id": "crlDetails",
@@ -9861,6 +9843,535 @@ return {
         }
       }
     }
+  },
+  "1.2.840.113549.1.1.0.1": {
+    "name": "PKCS-1",
+    "oid": "1.2.840.113549.1.1.0.1",
+    "source": "rfc8017.txt",
+    "tagDefault": "EXPLICIT",
+    "imports": {
+      "2.16.840.1.101.3.4.2": {
+        "name": "NIST-SHA2",
+        "oid": "2.16.840.1.101.3.4.2",
+        "types": [
+          "id-sha224",
+          "id-sha256",
+          "id-sha384",
+          "id-sha512",
+          "id-sha512-224",
+          "id-sha512-256"
+        ]
+      }
+    },
+    "values": {
+      "pkcs-1": {
+        "name": "pkcs-1",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1"
+      },
+      "rsaEncryption": {
+        "name": "rsaEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.1"
+      },
+      "id-RSAES-OAEP": {
+        "name": "id-RSAES-OAEP",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.7"
+      },
+      "id-pSpecified": {
+        "name": "id-pSpecified",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.9"
+      },
+      "id-RSASSA-PSS": {
+        "name": "id-RSASSA-PSS",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.10"
+      },
+      "md2WithRSAEncryption": {
+        "name": "md2WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.2"
+      },
+      "md5WithRSAEncryption": {
+        "name": "md5WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.4"
+      },
+      "sha1WithRSAEncryption": {
+        "name": "sha1WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.5"
+      },
+      "sha224WithRSAEncryption": {
+        "name": "sha224WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.14"
+      },
+      "sha256WithRSAEncryption": {
+        "name": "sha256WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.11"
+      },
+      "sha384WithRSAEncryption": {
+        "name": "sha384WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.12"
+      },
+      "sha512WithRSAEncryption": {
+        "name": "sha512WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.13"
+      },
+      "sha512-224WithRSAEncryption": {
+        "name": "sha512-224WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.15"
+      },
+      "sha512-256WithRSAEncryption": {
+        "name": "sha512-256WithRSAEncryption",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.16"
+      },
+      "id-sha1": {
+        "name": "id-sha1",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.3.14.3.2.26"
+      },
+      "id-md2": {
+        "name": "id-md2",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.2.2"
+      },
+      "id-md5": {
+        "name": "id-md5",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.2.5"
+      },
+      "id-mgf1": {
+        "name": "id-mgf1",
+        "type": {
+          "name": "OBJECT IDENTIFIER",
+          "type": "builtin"
+        },
+        "value": "1.2.840.113549.1.1.8"
+      }
+    },
+    "types": {
+      "AlgorithmIdentifier": {
+        "name": "AlgorithmIdentifier",
+        "type": {
+          "name": "ANY",
+          "type": "builtin"
+        }
+      },
+      "HashAlgorithm": {
+        "name": "HashAlgorithm",
+        "type": {
+          "name": "AlgorithmIdentifier",
+          "type": "defined"
+        }
+      },
+      "SHA1Parameters": {
+        "name": "SHA1Parameters",
+        "type": {
+          "name": "NULL",
+          "type": "defined"
+        }
+      },
+      "MaskGenAlgorithm": {
+        "name": "MaskGenAlgorithm",
+        "type": {
+          "name": "AlgorithmIdentifier",
+          "type": "defined"
+        }
+      },
+      "EncodingParameters": {
+        "name": "EncodingParameters",
+        "type": {
+          "name": "OCTET STRING",
+          "type": "builtin"
+        }
+      },
+      "PSourceAlgorithm": {
+        "name": "PSourceAlgorithm",
+        "type": {
+          "name": "AlgorithmIdentifier",
+          "type": "defined"
+        }
+      },
+      "RSAPublicKey": {
+        "name": "RSAPublicKey",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "modulus",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "publicExponent",
+              "name": "INTEGER",
+              "type": "builtin"
+            }
+          ]
+        }
+      },
+      "RSAPrivateKey": {
+        "name": "RSAPrivateKey",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "version",
+              "name": "Version",
+              "type": "defined"
+            },
+            {
+              "id": "modulus",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "publicExponent",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "privateExponent",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "prime1",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "prime2",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "exponent1",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "exponent2",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "coefficient",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "otherPrimeInfos",
+              "name": "OtherPrimeInfos",
+              "type": "defined",
+              "optional": true
+            }
+          ]
+        }
+      },
+      "Version": {
+        "name": "Version",
+        "type": {
+          "name": "INTEGER",
+          "type": "builtin",
+          "content": {
+            "two-prime": 0,
+            "multi": 1
+          }
+        }
+      },
+      "OtherPrimeInfos": {
+        "name": "OtherPrimeInfos",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "typeOf": 1,
+          "size": [
+            1,
+            "MAX"
+          ],
+          "content": [
+            {
+              "name": "OtherPrimeInfo",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "OtherPrimeInfo": {
+        "name": "OtherPrimeInfo",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "prime",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "exponent",
+              "name": "INTEGER",
+              "type": "builtin"
+            },
+            {
+              "id": "coefficient",
+              "name": "INTEGER",
+              "type": "builtin"
+            }
+          ]
+        }
+      },
+      "RSAES-OAEP-params": {
+        "name": "RSAES-OAEP-params",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "hashAlgorithm",
+              "name": "[0]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "HashAlgorithm",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "default": "sha1"
+            },
+            {
+              "id": "maskGenAlgorithm",
+              "name": "[1]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "MaskGenAlgorithm",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "default": "mgf1SHA1"
+            },
+            {
+              "id": "pSourceAlgorithm",
+              "name": "[2]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "PSourceAlgorithm",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "default": "pSpecifiedEmpty"
+            }
+          ]
+        }
+      },
+      "RSAES-AlgorithmIdentifier": {
+        "name": "RSAES-AlgorithmIdentifier",
+        "type": {
+          "name": "AlgorithmIdentifier",
+          "type": "defined"
+        }
+      },
+      "RSASSA-PSS-params": {
+        "name": "RSASSA-PSS-params",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "hashAlgorithm",
+              "name": "[0]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "HashAlgorithm",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "default": "sha1"
+            },
+            {
+              "id": "maskGenAlgorithm",
+              "name": "[1]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "MaskGenAlgorithm",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "default": "mgf1SHA1"
+            },
+            {
+              "id": "saltLength",
+              "name": "[2]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "INTEGER",
+                    "type": "builtin"
+                  }
+                }
+              ],
+              "default": 20
+            },
+            {
+              "id": "trailerField",
+              "name": "[3]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": true,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "TrailerField",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "default": "trailerFieldBC"
+            }
+          ]
+        }
+      },
+      "TrailerField": {
+        "name": "TrailerField",
+        "type": {
+          "name": "INTEGER",
+          "type": "builtin",
+          "content": {
+            "trailerFieldBC": 1
+          }
+        }
+      },
+      "RSASSA-AlgorithmIdentifier": {
+        "name": "RSASSA-AlgorithmIdentifier",
+        "type": {
+          "name": "AlgorithmIdentifier",
+          "type": "defined"
+        }
+      },
+      "DigestInfo": {
+        "name": "DigestInfo",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "digestAlgorithm",
+              "name": "DigestAlgorithm",
+              "type": "defined"
+            },
+            {
+              "id": "digest",
+              "name": "OCTET STRING",
+              "type": "builtin"
+            }
+          ]
+        }
+      },
+      "DigestAlgorithm": {
+        "name": "DigestAlgorithm",
+        "type": {
+          "name": "AlgorithmIdentifier",
+          "type": "defined"
+        }
+      }
+    }
   }
 }
-;});
+;

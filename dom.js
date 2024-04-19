@@ -1,5 +1,5 @@
 // ASN.1 JavaScript decoder
-// Copyright (c) 2008-2023 Lapo Luchini <lapo@lapo.it>
+// Copyright (c) 2008-2024 Lapo Luchini <lapo@lapo.it>
 
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -13,15 +13,11 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-(typeof define != 'undefined' ? define : function (factory) { 'use strict';
-    if (typeof module == 'object') module.exports = factory(function (name) { return require(name); });
-    else window.dom = factory(function (name) { return window[name.substring(2)]; });
-})(function (require) {
-'use strict';
+import { ASN1 } from './asn1.js';
+import { oids } from './oids.js';
+import { bindContextMenu } from './context.js';
 
 const
-    ASN1 = require('./asn1'),
-    oids = require('./oids'),
     lineLength = 80,
     contentLength = 8 * lineLength,
     DOM = {
@@ -55,7 +51,7 @@ const
         },
     };
 
-class ASN1DOM extends ASN1 {
+export class ASN1DOM extends ASN1 {
 
     buf2hex(buffer) {
         return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
@@ -64,10 +60,10 @@ class ASN1DOM extends ASN1 {
     toDOM(spaces) {
         spaces = spaces || '';
         let isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));
-        let node = DOM.tag('div', 'node');
-        node.asn1 = this;
-        let head = DOM.tag('div', 'head');
-        head.appendChild(DOM.tag('span', 'spaces', spaces));
+        let node;
+        node = document.createElement('li');
+        node.asn1 = this;        
+        let head = DOM.tag('span', 'head');
         const typeName = this.typeName().replace(/_/g, ' ');
         if (this.def) {
             if (this.def.id) {
@@ -121,8 +117,28 @@ class ASN1DOM extends ASN1 {
             content = content.replace(/</g, '&lt;');
             content = content.replace(/\n/g, '<br>');
         }
-        node.appendChild(head);
-        this.node = node;
+        // add the li and details section for this node
+        let contentNode;
+        let childNode;
+        if (this.sub !== null) {
+            let details = document.createElement('details');
+            details.setAttribute('open', '');
+            node.appendChild(details);
+            let summary = document.createElement('summary');
+            summary.setAttribute('class', 'node');
+            details.appendChild(summary);
+            summary.appendChild(head);
+            // summary.setAttribute('class', 'node');
+            contentNode = summary;
+            childNode = details;
+        }        
+        else {
+            contentNode = node;
+            contentNode.setAttribute('class', 'node');
+            contentNode.appendChild(head);
+        }
+
+        this.node = contentNode;
         this.head = head;
         let value = DOM.tag('div', 'value');
         let s = 'Offset: ' + this.stream.pos + '<br>';
@@ -145,39 +161,28 @@ class ASN1DOM extends ASN1 {
             }
         }
         value.innerHTML = s;
-        node.appendChild(value);
+        contentNode.appendChild(value);
         let sub = DOM.tag('div', 'sub');
         if (this.sub !== null) {
+            let ul = document.createElement('ul');
+            childNode.appendChild(ul);
+
             spaces += '\xA0 ';
             for (let i = 0, max = this.sub.length; i < max; ++i)
-                sub.appendChild(this.sub[i].toDOM(spaces));
+                ul.appendChild(this.sub[i].toDOM(spaces));
         }
-        node.appendChild(sub);
-        head.onclick = function (event) {
-            console.log(this.asn1)
-            let contextMenu = document.getElementById('contextmenu');    
-            contextMenu.style.left = event.pageX + "px";
-            contextMenu.style.top = event.pageY + "px";
-            contextMenu.style.visibility = 'visible';
-            document.getElementById('contextmenu').node = this;
-            event.stopPropagation();
-            //node.className = (node.className == 'node collapsed') ? 'node' : 'node collapsed';
-        };
+        bindContextMenu(node);
         return node;
     }
     fakeHover(current) {
-        this.node.classList.toggle("hover");
-        if (current) {
-            this.head.classList.toggle("hover");
-            this.head.classList.toggle("active");
-        }
+        this.node.classList.add('hover');
+        if (current)
+            this.head.classList.add('hover');
     }
     fakeOut(current) {
-        this.node.classList.toggle("hover");
-        if (current) {
-            this.head.classList.toggle("hover");
-            this.head.classList.toggle("active");
-        }
+        this.node.classList.remove('hover');
+        if (current)
+            this.head.classList.remove('hover');
     }
     toHexDOM_sub(node, className, stream, start, end) {
         if (start >= end)
@@ -192,13 +197,14 @@ class ASN1DOM extends ASN1 {
         this.head.onmouseover = function () { this.hexNode.className = 'hexCurrent'; };
         this.head.onmouseout  = function () { this.hexNode.className = 'hex'; };
         node.asn1 = this;
-        node.onmouseover = function () {
+        node.onmouseover = function (event) {
             let current = !root.selected;
             if (current) {
                 root.selected = this.asn1;
                 this.className = 'hexCurrent';
             }
             this.asn1.fakeHover(current);
+            event.stopPropagation();
         };
         node.onmouseout = function () {
             let current = (root.selected == this.asn1);
@@ -208,15 +214,7 @@ class ASN1DOM extends ASN1 {
                 this.className = 'hex';
             }
         };
-        // handler to copy the complete hex dump into the clipboard
-        node.onclick = function (event) {
-            let contextMenu = document.getElementById('contextmenu');    
-            contextMenu.style.left = event.pageX + "px";
-            contextMenu.style.top = event.pageY + "px";
-            contextMenu.style.visibility = 'visible';
-            document.getElementById('contextmenu').node = this;
-            event.stopPropagation();
-        };      
+        bindContextMenu(node);
         if (root == node) {
             let lineStart = this.posStart() & 0xF;
             if (lineStart != 0) {
@@ -264,7 +262,3 @@ class ASN1DOM extends ASN1 {
     }
 
 }
-
-return ASN1DOM;
-
-});
