@@ -224,6 +224,7 @@ class Parser {
                 if (this.tryToken('DEFINED BY'))
                     x.definedBy = this.parseIdentifier();
                 break;
+            case 'NULL':
             case 'BOOLEAN':
             case 'OCTET STRING':
             case 'OBJECT IDENTIFIER':

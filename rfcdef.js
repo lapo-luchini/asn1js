@@ -7454,8 +7454,7 @@ export const rfcdef = {
                   "name": "",
                   "type": {
                     "name": "NULL",
-                    "type": "builtin",
-                    "warning": "type unknown"
+                    "type": "builtin"
                   }
                 }
               ]
@@ -9712,8 +9711,7 @@ export const rfcdef = {
         "name": "PKIConfirmContent",
         "type": {
           "name": "NULL",
-          "type": "builtin",
-          "warning": "type unknown"
+          "type": "builtin"
         }
       },
       "InfoTypeAndValue": {
@@ -10030,8 +10028,7 @@ export const rfcdef = {
         "name": "SHA1Parameters",
         "type": {
           "name": "NULL",
-          "type": "builtin",
-          "warning": "type unknown"
+          "type": "builtin"
         }
       },
       "MaskGenAlgorithm": {
