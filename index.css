@@ -84,6 +84,7 @@ header {
 #main-page {
     background-color: var(--main-bg-color);
     border: 0px;
+    padding: 5px;
 }
 #main-page > div {
     position: relative;
