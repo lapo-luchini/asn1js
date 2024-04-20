@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="32"
-   height="16"
+   width="28"
+   height="14"
    version="1.1"
    id="svg2"
    sodipodi:docname="tree-icon-dark.svg"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   inkscape:export-filename="tree-icon-dark.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -21,9 +24,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="8.2783954"
-     inkscape:cx="11.113265"
-     inkscape:cy="20.112593"
+     inkscape:zoom="7.9394752"
+     inkscape:cx="15.618161"
+     inkscape:cy="6.1087161"
      inkscape:window-width="1392"
      inkscape:window-height="916"
      inkscape:window-x="120"
@@ -31,28 +34,34 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <circle
-     style="fill:#333333;fill-opacity:1;stroke:#cccccc;stroke-width:1.65902;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#000000;fill-opacity:1;stroke:#555555;stroke-width:1.03676;stroke-dasharray:none;stroke-opacity:1"
      id="path3"
-     cx="7.7978606"
-     cy="8.0081377"
-     r="5.9786596" />
+     cx="6.9029207"
+     cy="7.1017561"
+     r="5.1653419" />
   <circle
-     style="fill:#333333;fill-opacity:1;stroke:#cccccc;stroke-width:1.65902;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#000000;fill-opacity:1;stroke:#555555;stroke-width:1.03676;stroke-dasharray:none;stroke-opacity:1"
      id="path3-9"
-     cx="24.268494"
-     cy="7.9240317"
-     r="5.9786596" />
+     cx="21.13294"
+     cy="7.0290918"
+     r="5.1653419" />
+  <path
+     style="opacity:1;fill:none;fill-opacity:1;stroke:#555555;stroke-width:1.03676;stroke-dasharray:none;stroke-opacity:1"
+     d="m 17.907669,7.0710179 h 6.783633"
+     id="path4"
+     inkscape:label="minus" />
   <g
-     fill="#ffffff"
-     id="g2"
-     transform="matrix(0.82951499,0,0,0.82951499,-0.52612431,-0.39274567)">
+     id="g4"
+     inkscape:label="plus"
+     style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:0.518375;stroke-dasharray:none;stroke-opacity:1"
+     transform="matrix(0.71667039,0,0,0.71667039,-0.28869577,-0.08313769)">
     <path
-       d="M 5,9 H 9 V 5 h 2 v 4 h 4 v 2 h -4 v 4 H 9 V 11 H 5 Z"
-       id="path1"
-       style="fill:#cccccc;fill-opacity:1" />
+       style="opacity:0.992268;fill:none;fill-opacity:1;stroke:#555555;stroke-width:1.44663;stroke-dasharray:none;stroke-opacity:1"
+       d="M 5.231264,9.9922996 H 14.69675"
+       id="path4-4" />
     <path
-       d="m 25,9 h 10 v 2 H 25 Z"
-       id="path2"
-       style="fill:#bbbbbb;fill-opacity:1" />
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#555555;stroke-width:1.44663;stroke-dasharray:none;stroke-opacity:1"
+       d="M 10.005929,5.2415214 V 14.707007"
+       id="path4-4-1" />
   </g>
 </svg>

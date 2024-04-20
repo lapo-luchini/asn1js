@@ -215,7 +215,7 @@ header {
 }
 .treecollapse {
     --spacing: 1.5rem;
-    --radius: 8px;
+    --radius: 7px;
     padding-inline-start: 0px;
 }
   
@@ -231,7 +231,7 @@ header {
 }
 
 .treecollapse ul li{
-    border-left: 1px solid #ddd;
+    border-left: 1px solid #999;
 }
 
 .treecollapse ul li:last-child{
@@ -246,7 +246,7 @@ header {
     left: -1px;
     width: calc(var(--spacing) + 2px);
     height: calc(var(--spacing) + 1px);
-    border: solid #ddd;
+    border: solid #999;
     border-width: 0 0 1px 1px;
 }
 
@@ -280,6 +280,7 @@ header {
 
 .treecollapse summary::before{
     z-index: 1;
+    top: 1px;
     background: url('tree-icon-light.svg');
 }
 

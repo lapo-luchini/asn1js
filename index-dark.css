@@ -43,7 +43,7 @@ h1 {
 #dump .hexCurrent .dlen { color: #00b6b6; }
 
 .treecollapse ul li{
-    border-left: 1px solid #888;
+    border-left: 1px solid #333;
 }
 
 .treecollapse ul li::before{
@@ -54,7 +54,7 @@ h1 {
     left: -1px;
     width: calc(var(--spacing) + 2px);
     height: calc(var(--spacing) + 1px);
-    border: solid #888;
+    border: solid #333;
     border-width: 0 0 1px 1px;
 }
 
