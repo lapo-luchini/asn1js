@@ -84,7 +84,6 @@ header {
 #main-page {
     background-color: var(--main-bg-color);
     border: 0px;
-    padding: 5px;
 }
 #main-page > div {
     position: relative;
@@ -137,6 +136,7 @@ header {
     display: block;
 }
 .name {
+    margin-right: 1em;
     color: var(--preview-border-color);
 }
 .name.id {
@@ -157,6 +157,7 @@ header {
     display: block;
 }
 .preview {
+    margin-left: 1em;
     color: var(--preview-border-color);
     font-weight: normal;
 }
@@ -164,6 +165,9 @@ header {
     margin-left: 1em;
     color: var(--preview-bg-color);
     font-weight: normal;
+}
+.spaces {
+    font-size: 0px;
 }
 #tree {
     font-family: monospace;
