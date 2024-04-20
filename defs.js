@@ -63,7 +63,7 @@ export class Defs {
                 // return r.types[name];
                 return Defs.moduleAndType(mod, name);
             }
-        throw 'Type not found: ' + name;
+        throw new Error('Type not found: ' + name);
     }
 
     static match(value, def, stats = { total: 0, recognized: 0, defs: {} }) {
@@ -90,12 +90,20 @@ export class Defs {
                         type = def.content[0];
                     else {
                         let tn = subval.typeName().replaceAll('_', ' ');
-                        do {
+                        while (true) {
                             type = def.content[j++];
-                            // type = translate(type, tn);
+                            if (!type || typeof type != 'object') break;
                             if (type?.type?.type)
                                 type = type.type;
-                        } while (type && typeof type == 'object' && ('optional' in type || 'default' in type) && type.name != 'ANY' && type.name != tn);
+                            if (type.type == 'defined') {
+                                let t2 = translate(type, tn);
+                                if (t2.type.name == tn) break; // exact match
+                                if (t2.type.name == 'ANY') break; // good enough
+                            }
+                            if (type.name == tn) break; // exact match
+                            if (type.name == 'ANY') break; // good enough
+                            if (!('optional' in type || 'default' in type)) break;
+                        }
                         if (type?.type == 'builtin' || type?.type == 'defined') {
                             let v = subval.content();
                             if (typeof v == 'string')
