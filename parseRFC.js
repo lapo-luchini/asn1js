@@ -63,7 +63,7 @@ const reWhitespace = /(?:\s|--(?:-?[^\n-])*(?:\n|--))*/my;
 const reIdentifier = /[a-zA-Z](?:[-]?[a-zA-Z0-9])*/y;
 const reNumber = /0|[1-9][0-9]*/y;
 const reToken = /[(){},[\];]|::=|OPTIONAL|DEFAULT|NULL|TRUE|FALSE|\.\.|OF|SIZE|MIN|MAX|DEFINED BY|DEFINITIONS|TAGS|BEGIN|EXPORTS|IMPORTS|FROM|END/y;
-const reType = /ANY|BOOLEAN|INTEGER|(?:BIT|OCTET)\s+STRING|OBJECT\s+IDENTIFIER|SEQUENCE|SET|CHOICE|ENUMERATED|(?:Generalized|UTC)Time|(?:BMP|General|Graphic|IA5|ISO64|Numeric|Printable|Teletex|T61|Universal|UTF8|Videotex|Visible)String/y;
+const reType = /ANY|NULL|BOOLEAN|INTEGER|(?:BIT|OCTET)\s+STRING|OBJECT\s+IDENTIFIER|SEQUENCE|SET|CHOICE|ENUMERATED|(?:Generalized|UTC)Time|(?:BMP|General|Graphic|IA5|ISO64|Numeric|Printable|Teletex|T61|Universal|UTF8|Videotex|Visible)String/y;
 const reTagClass = /UNIVERSAL|APPLICATION|PRIVATE|/y;
 const reTagType = /IMPLICIT|EXPLICIT|/y;
 const reTagDefault = /(AUTOMATIC|IMPLICIT|EXPLICIT) TAGS|/y;
