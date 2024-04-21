@@ -44,7 +44,7 @@ function show(asn1) {
     tree.appendChild(asn1.toDOM());
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
 }
-function decode(der, offset) {
+export function decode(der, offset) {
     offset = offset || 0;
     try {
         const asn1 = ASN1DOM.decode(der, offset);
@@ -103,7 +103,7 @@ function decode(der, offset) {
         text(tree, e);
     }
 }
-function decodeText(val) {
+export function decodeText(val) {
     try {
         let der = reHex.test(val) ? Hex.decode(val) : Base64.unarmor(val);
         decode(der);
@@ -112,7 +112,7 @@ function decodeText(val) {
         dump.innerHTML = '';
     }
 }
-function decodeBinaryString(str) {
+export function decodeBinaryString(str) {
     let der;
     try {
         if (reHex.test(str)) der = Hex.decode(str);
