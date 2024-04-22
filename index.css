@@ -19,6 +19,7 @@
     --dump-bg-color: #C0C0C0;
     --dump-border-color: #E0E0E0;
     --hover-bg-color: #E0E0E0;
+    --zoom-fix: -1px;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -248,7 +249,7 @@ header {
     display: block;
     position: absolute;
     top: calc(var(--spacing) / -1.6);
-    left: -1px;
+    left: var(--zoom-fix);
     width: calc(var(--spacing) + 2px);
     height: calc(var(--spacing) + 1px);
     border: solid #999;

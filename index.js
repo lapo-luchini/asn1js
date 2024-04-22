@@ -237,3 +237,19 @@ selectTag.onchange = function (ev) {
     let tag = ev.target.selectedOptions[0].value;
     window.location.href = 'https://rawcdn.githack.com/lapo-luchini/asn1js/' + tag + '/index.html';
 };
+
+// zoom fix to have straight lines in treeview
+if (window.devicePixelRatio >= 2  ) {
+    let treecollapse = document.querySelector(':root');
+    treecollapse.style.setProperty('--zoom-fix', '-0.8px');
+} else if (window.devicePixelRatio >= 1.5  ) {
+    let treecollapse = document.querySelector(':root');
+    treecollapse.style.setProperty('--zoom-fix', '-0.5px');
+} else if (window.devicePixelRatio <= 0.81  ) {
+    let treecollapse = document.querySelector(':root');
+    treecollapse.style.setProperty('--zoom-fix', '-1.4px');
+} else if (window.devicePixelRatio <= 0.9  ) {
+    let treecollapse = document.querySelector(':root');
+    treecollapse.style.setProperty('--zoom-fix', '-1.5px');
+}
+   console.log(window.devicePixelRatio);
