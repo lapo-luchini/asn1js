@@ -252,4 +252,4 @@ if (window.devicePixelRatio >= 2  ) {
     let treecollapse = document.querySelector(':root');
     treecollapse.style.setProperty('--zoom-fix', '-1.5px');
 }
-   console.log(window.devicePixelRatio);
+console.log(window.devicePixelRatio);
