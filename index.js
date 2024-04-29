@@ -126,37 +126,37 @@ export function decodeBinaryString(str) {
 }
 // set up buttons
 const butClickHandlers = {
-  butDecode: () => {
-    decodeText(area.value);
-  },
-  butClear: () => {
-    area.value = '';
-    file.value = '';
-    tree.innerHTML = '';
-    dump.innerHTML = '';
-    selectDefs.innerHTML = '';
-    hash = window.location.hash = '';
-  },
-  butExample: () => {
-    console.log('Loading example:', examples.value);
-    let request = new XMLHttpRequest();
-    request.open('GET', 'examples/' + examples.value, true);
-    request.onreadystatechange = function () {
-        if (this.readyState !== 4) return;
-        if (this.status >= 200 && this.status < 400) {
-            area.value = this.responseText;
-            decodeText(this.responseText);
-        } else {
-            console.log('Error loading example.');
-        }
-    };
-    request.send();
-  },
+    butDecode: () => {
+        decodeText(area.value);
+    },
+    butClear: () => {
+        area.value = '';
+        file.value = '';
+        tree.innerHTML = '';
+        dump.innerHTML = '';
+        selectDefs.innerHTML = '';
+        hash = window.location.hash = '';
+    },
+    butExample: () => {
+        console.log('Loading example:', examples.value);
+        let request = new XMLHttpRequest();
+        request.open('GET', 'examples/' + examples.value, true);
+        request.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+            if (this.status >= 200 && this.status < 400) {
+                area.value = this.responseText;
+                decodeText(this.responseText);
+            } else {
+                console.log('Error loading example.');
+            }
+        };
+        request.send();
+    },
 };
 for (const [name, onClick] of Object.entries(butClickHandlers)) {
-  let elem = id(name);
-  if (elem)
-    elem.onclick = onClick;
+    let elem = id(name);
+    if (elem)
+        elem.onclick = onClick;
 }
 // set dark theme depending on OS settings
 function setTheme() {
