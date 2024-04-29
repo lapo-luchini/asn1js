@@ -26,10 +26,27 @@ import { ASN1 } from '@lapo/asn1js';
 A submodule of this package can also be imported:
 
 ```js
-import { Hex } from '@lapo/asn1js/hex';
+import { Hex } from '@lapo/asn1js/hex.js';
 ```
 
-Unfortunately until [`require(esm)` gets released](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) it is necessary to use async `import()` when used from CommonJS (legacy NodeJS) code.
+Once [`require(esm)` gets released](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) (probably in Node 22) it will be possible to `require` it normally:
+
+```js
+const ASN1 = require('@lapo/asn1js');
+const Hex = require('@lapo/asn1js/hex.js');
+console.log(ASN1.decode(Hex.decode('06032B6570')).content());
+```
+
+Until then, it is necessary to use async `import()` when used from CommonJS (legacy NodeJS) code:
+
+```js
+async function main() {
+  const { ASN1 } = await import('@lapo/asn1js');
+  const { Hex } = await import('@lapo/asn1js/hex.js');
+  console.log(ASN1.decode(Hex.decode('06032B6570')).content());
+}
+main();
+```
 
 Usage on the web
 --------------------
