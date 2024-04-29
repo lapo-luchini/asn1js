@@ -17,6 +17,7 @@
   "scripts": {
     "lint": "npx eslint asn1.js base64.js hex.js int10.js oids.js tags.js context.js index.js parseRFC.js dumpASN1.js test.js testDefs.js",
     "lint-action": "npx @action-validator/cli .github/workflows/node.js.yml",
+    "build": "vite build",
     "serve": "echo 'Connect to http://localhost:3000/' ; npx statik --port 3000 .",
     "test": "node test",
     "testdefs": "node testDefs"
@@ -25,7 +26,15 @@
     "node": ">=12.20.0"
   },
   "devDependencies": {
-    "eslint": "^8.34.0"
+    "@rollup/wasm-node": "^4.17.1",
+    "eslint": "^8.34.0",
+    "htmlparser2": "^9.1.0",
+    "vite": "^5.2.10",
+    "vite-plugin-dom": "^1.0.3",
+    "vite-plugin-singlefile": "^2.0.1"
+  },
+  "overrides": {
+    "rollup": "npm:@rollup/wasm-node"
   },
   "eslintConfig": {
     "env": {

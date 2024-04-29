@@ -4,6 +4,7 @@ node_modules$
 package-lock[.]json
 pnpm-lock[.]yaml
 # Artifacts from release.sh
+index-local.html
 sha256sums[.]asc
 asn1js[.]zip
 # Artifacts from mirror_to_github.sh

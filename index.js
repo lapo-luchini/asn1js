@@ -160,6 +160,10 @@ for (const [name, onClick] of Object.entries(butClickHandlers)) {
 }
 // set dark theme depending on OS settings
 function setTheme() {
+    if (!selectTheme) {
+        console.log('Themes are currently not working with single file version.');
+        return;
+    }
     let storedTheme = localStorage.getItem('theme');
     let theme = 'os';
     if (storedTheme)
@@ -181,10 +185,12 @@ function setTheme() {
     }
 }
 setTheme();
-selectTheme.addEventListener('change', function () {
-    localStorage.setItem('theme', selectTheme.value);
-    setTheme();
-});
+if (selectTheme) {
+    selectTheme.addEventListener('change', function () {
+        localStorage.setItem('theme', selectTheme.value);
+        setTheme();
+    });
+}
 // this is only used if window.FileReader
 function read(f) {
     area.value = ''; // clear text area, will get b64 content
