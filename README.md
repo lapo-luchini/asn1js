@@ -5,8 +5,8 @@ asn1js is a JavaScript generic ASN.1 parser/decoder that can decode any valid AS
 
 An example page that can decode Base64-encoded (raw base64, PEM armoring and `begin-base64` are recognized) or Hex-encoded (or local files with some browsers) is included and can be used both [online on the official website](https://lapo.it/asn1js/) or [offline (ZIP file)](https://lapo.it/asn1js/asn1js.zip).
 
-Usage with `npm` / `yarn`
--------------------------
+Usage with `nodejs`
+-------------------
 
 This package can be installed with either npm or yarn via the following commands:
 
@@ -20,13 +20,13 @@ yarn add @lapo/asn1js
 Assuming a standard javascript bundler is setup you can import it like so:
 
 ```js
-import ASN1 from '@lapo/asn1js';
+import { ASN1 } from '@lapo/asn1js';
 ```
 
 A submodule of this package can also be imported:
 
 ```js
-import Hex from '@lapo/asn1js/hex';
+import { Hex } from '@lapo/asn1js/hex';
 ```
 
 Unfortunately until [`require(esm)` gets released](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) it is necessary to use async `import()` when used from CommonJS (legacy NodeJS) code.
@@ -38,7 +38,7 @@ Can be [tested on JSFiddle](https://jsfiddle.net/lapo/y6t2wo7q/).
 
 ```html
 <script>
-import { ASN1} from 'https://unpkg.com/@lapo/asn1js@2.0.0/asn1.js';
+import { ASN1 } from 'https://unpkg.com/@lapo/asn1js@2.0.0/asn1.js';
 import { Hex } from 'https://unpkg.com/@lapo/asn1js@2.0.0/hex.js';
 
 document.body.innerText = ASN1.decode(Hex.decode('06032B6570')).content();
