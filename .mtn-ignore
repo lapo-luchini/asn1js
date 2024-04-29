@@ -1,6 +1,7 @@
 [.]DS_Store$
 [.]vscode$
 node_modules$
+dist$
 package-lock[.]json
 pnpm-lock[.]yaml
 # Artifacts from release.sh
