@@ -4,16 +4,6 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 import pluginDom from 'vite-plugin-dom';
 import { DomUtils } from 'htmlparser2';
 
-const preventSVGEmit = () => {
-    return {
-        generateBundle(opts, bundle) {
-            for (const key in bundle)
-                if (key.endsWith('.svg'))
-                    delete bundle[key];
-        },
-    };
-};
-
 const removeNodes = [ 'theme-select', 'rowExamples' ];
 
 export default defineConfig({
