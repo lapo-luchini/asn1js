@@ -125,18 +125,19 @@ export function decodeBinaryString(str) {
     }
 }
 // set up buttons
-id('butDecode').onclick = function () {
+const butClickHandlers = {
+  butDecode: () => {
     decodeText(area.value);
-};
-id('butClear').onclick = function () {
+  },
+  butClear: () => {
     area.value = '';
     file.value = '';
     tree.innerHTML = '';
     dump.innerHTML = '';
     selectDefs.innerHTML = '';
     hash = window.location.hash = '';
-};
-id('butExample').onclick = function () {
+  },
+  butExample: () => {
     console.log('Loading example:', examples.value);
     let request = new XMLHttpRequest();
     request.open('GET', 'examples/' + examples.value, true);
@@ -150,7 +151,13 @@ id('butExample').onclick = function () {
         }
     };
     request.send();
+  },
 };
+for (const [name, onClick] of Object.entries(butClickHandlers)) {
+  let elem = id(name);
+  if (elem)
+    elem.onclick = onClick;
+}
 // set dark theme depending on OS settings
 function setTheme() {
     let storedTheme = localStorage.getItem('theme');
