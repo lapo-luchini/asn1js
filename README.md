@@ -17,7 +17,7 @@ pnpm install @lapo/asn1js
 yarn add @lapo/asn1js
 ```
 
-Assuming a standard javascript bundler is setup you can import it like so:
+You can import the classes like this:
 
 ```js
 import { ASN1 } from '@lapo/asn1js';
@@ -26,10 +26,29 @@ import { ASN1 } from '@lapo/asn1js';
 A submodule of this package can also be imported:
 
 ```js
-import { Hex } from '@lapo/asn1js/hex';
+import { Hex } from '@lapo/asn1js/hex.js';
 ```
 
-Unfortunately until [`require(esm)` gets released](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) it is necessary to use async `import()` when used from CommonJS (legacy NodeJS) code.
+If your code is still not using ES6 Modules (and is using CommonJS) you can `require` it normally [since NodeJS 22](https://joyeecheung.github.io/blog/2024/03/18/require-esm-in-node-js/) (with parameter `--experimental-require-module`):
+
+```js
+const
+  { ASN1 } = require('@lapo/asn1js'),
+  { Hex } = require('@lapo/asn1js/hex.js');
+console.log(ASN1.decode(Hex.decode('06032B6570')).content());
+```
+
+On older NodeJS you instead need to use async `import`:
+
+```js
+async function main() {
+  const
+    { ASN1 } = await import('@lapo/asn1js'),
+    { Hex } = await import('@lapo/asn1js/hex.js');
+  console.log(ASN1.decode(Hex.decode('06032B6570')).content());
+}
+main();
+```
 
 Usage on the web
 --------------------
