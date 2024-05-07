@@ -20,9 +20,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
     - run: npm test all
-    - run: npm run testdefs
+    - run: npm install
       if: matrix.node-version == 'latest'
     - run: npm run lint
       if: matrix.node-version == 'latest'
