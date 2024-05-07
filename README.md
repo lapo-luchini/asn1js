@@ -64,6 +64,11 @@ document.body.innerText = ASN1.decode(Hex.decode('06032B6570')).content();
 </script>
 ```
 
+Local usage
+--------------------
+
+Since unfortunately ESM modules are not working on `file:` protocol due to CORS issues, there is a bundled [single-file version working locally](https://asn1js.eu/index-local.html). It doesn't work online (due to CSP restrictions about inline content) but can be saved locally and opened in a browser. (known bug: dark mode is currently broken in this mode)
+
 ISC license
 -----------
 
@@ -89,7 +94,6 @@ links
 
 - [official website](https://lapo.it/asn1js/)
 - [dedicated domain](https://asn1js.eu/)
-- [single-file version working locally](https://asn1js.eu/index-local.html) (just save this link)
 - [InDefero tracker](http://idf.lapo.it/p/asn1js/)
 - [GitHub mirror](https://github.com/lapo-luchini/asn1js)
 - [Ohloh code stats](https://www.openhub.net/p/asn1js)
