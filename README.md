@@ -67,7 +67,7 @@ document.body.innerText = ASN1.decode(Hex.decode('06032B6570')).content();
 Local usage
 --------------------
 
-Since unfortunately ESM modules are not working on `file:` protocol due to [CORS issues](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#other_differences_between_modules_and_standard_scripts), there is a bundled [single-file version working locally](https://asn1js.eu/index-local.html). It doesn't work online (due to [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) restrictions about inline content) but can be saved locally and opened in a browser. (known bug: dark mode is currently broken in this mode)
+Since unfortunately ESM modules are not working on `file:` protocol due to [CORS issues](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#other_differences_between_modules_and_standard_scripts), there is a bundled [single-file version working locally](https://asn1js.eu/index-local.html). It doesn't work online (due to [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) restrictions about inline content) but can be saved locally and opened in a browser. ([known bug](https://github.com/lapo-luchini/asn1js/issues/89): dark mode is currently broken in this mode)
 
 ISC license
 -----------

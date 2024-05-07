@@ -6,18 +6,26 @@ import { DomUtils } from 'htmlparser2';
 
 const removeNodes = [ 'theme-select', 'rowExamples' ];
 
+const preventSVGEmit = () => {
+    return {
+        generateBundle(opts, bundle) {
+            for (const key in bundle)
+                if (key.endsWith('.svg'))
+                    delete bundle[key];
+        },
+    };
+};
+
 export default defineConfig({
     plugins: [
+        preventSVGEmit(),
         pluginDom({
             applyOnMode: true, // all modes
             handler: node => {
                 if (removeNodes.includes(node.attribs.id))
                     DomUtils.removeElement(node);
-                else if (node.name == 'link' && node.attribs.rel == 'icon') {
-                    //node.attribs.href = 'data:image/svg+xml,' + encodeURI(fs.readFileSync('favicon.svg', 'ascii').replace(/^([^<]+|<[^s]|<s[^v]|<sv[^g])+/, '').trim());
+                else if (node.name == 'link' && node.attribs.rel == 'icon')
                     node.attribs.href = 'data:image/svg+xml;base64,' + btoa(fs.readFileSync('favicon.svg', 'ascii').replace(/^([^<]+|<[^s]|<s[^v]|<sv[^g])+/, '').trim());
-                    console.log(node.attribs.href);
-                }
             },
         }),
         viteSingleFile(),
