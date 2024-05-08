@@ -69,6 +69,15 @@ Local usage
 
 Since unfortunately ESM modules are not working on `file:` protocol due to [CORS issues](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#other_differences_between_modules_and_standard_scripts), there is a bundled [single-file version working locally](https://asn1js.eu/index-local.html). It doesn't work online (due to [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) restrictions about inline content) but can be saved locally and opened in a browser. ([known bug](https://github.com/lapo-luchini/asn1js/issues/89): dark mode is currently broken in this mode)
 
+Usage from CLI
+--------------------
+
+You can dump an ASN.1 structure from the command line using the following command (no need to even install it):
+
+```sh
+npx @lapo/asn1js ed25519.cer
+```
+
 ISC license
 -----------
 

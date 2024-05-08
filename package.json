@@ -13,7 +13,7 @@
   "license": "ISC",
   "bugs": { "url": "https://github.com/lapo-luchini/asn1js/issues" },
   "homepage": "https://lapo.it/asn1js/",
-  "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "defs.js", "oids.js", "rfcdef.js" ],
+  "files": [ "asn1.js", "base64.js", "hex.js", "int10.js", "defs.js", "oids.js", "rfcdef.js", "dumpASN1.js" ],
   "scripts": {
     "lint": "npx eslint asn1.js base64.js hex.js int10.js defs.js oids.js rfcdef.js tags.js context.js index.js parseRFC.js dumpASN1.js test.js testDefs.js vite.config.js",
     "lint-action": "npx @action-validator/cli .github/workflows/node.js.yml",
@@ -21,6 +21,9 @@
     "serve": "echo 'Connect to http://localhost:3000/' ; npx statik --port 3000 .",
     "test": "node test",
     "testdefs": "node testDefs"
+  },
+  "bin": {
+    "dumpASN1": "./dumpASN1.js"
   },
   "engines": {
     "node": ">=12.20.0"
