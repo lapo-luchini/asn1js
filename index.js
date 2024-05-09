@@ -159,36 +159,39 @@ for (const [name, onClick] of Object.entries(butClickHandlers)) {
         elem.onclick = onClick;
 }
 // set dark theme depending on OS settings
-function setTheme() {
+function setTheme(theme) {
     if (!selectTheme) {
         console.log('Themes are currently not working with single file version.');
         return;
     }
-    let storedTheme = localStorage.getItem('theme');
-    let theme = 'os';
-    if (storedTheme)
-        theme = storedTheme;
-    selectTheme.value = theme;
     if (theme == 'os') {
         let prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        theme = prefersDarkScheme.matches ? 'dark': 'light';
+        if (prefersDarkScheme.matches) {
+            theme = 'dark';
+        } else {
+            theme = 'light';
+        }
     }
-    if (theme == 'dark') {
-        const css1 = id('theme-base');
-        const css2 = css1.cloneNode();
-        css2.id = 'theme-override';
-        css2.href = 'index-' + theme + '.css';
-        css1.parentElement.appendChild(css2);
-    } else {
-        const css2 = id('theme-override');
-        if (css2) css2.remove();
-    }
+    document.documentElement.style['color-scheme'] = theme
+    document.querySelector('html').setAttribute('data-theme', theme)
 }
-setTheme();
+// activate selected theme
+let theme = 'os';
+const localStorageTheme = localStorage.getItem('theme');
+if (localStorageTheme) {
+    theme = localStorageTheme;
+}
+if (theme == 'light') {
+    selectTheme.selectedIndex = 2;
+} else if (theme == 'dark') {
+    selectTheme.selectedIndex = 1;
+}
+setTheme(theme);
+// add handler to theme selction element
 if (selectTheme) {
-    selectTheme.addEventListener('change', function () {
+    selectTheme.addEventListener ('change', function () {
         localStorage.setItem('theme', selectTheme.value);
-        setTheme();
+        setTheme(selectTheme.value);
     });
 }
 // this is only used if window.FileReader
