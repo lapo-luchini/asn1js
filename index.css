@@ -1,4 +1,4 @@
-:root {
+[data-theme="light"] {
     --main-bg-color: #C0C0C0;
     --main-text-color: #000000;
     --headline-text-color: #8be9fd;
@@ -18,7 +18,49 @@
     --preview-border-color: #505050;
     --dump-bg-color: #C0C0C0;
     --dump-border-color: #E0E0E0;
+    --dump-tag: blue;
+    --dump-dlen: darkcyan;
+    --dump-ulen: darkgreen;
+    --dump-intro: blue;
+    --dump-outro: darkgreen;
+    --dump-skip: #666666;
+    --dump-skip-bg: #C0C0C0;
+    --dump-hex-current: #808080;
+    --dump-hex-current-hex: #A0A0A0;
+    --dump-hex-current-dlen: #004040;
     --hover-bg-color: #E0E0E0;
+}
+[data-theme="dark"] {
+    --main-bg-color: #0d1116;
+    --main-text-color: #f8f8f2;
+    --headline-text-color: #8be9fd;
+    --button-border-color: #505050;
+    --button-bg-color: #303030;
+    --button-bghover-color: #404040;
+    --input-border-color: #505050;
+    --input-bg-color: #0c0e11;
+    --link-color: #58a6ff;
+    --link-hover-color: #9b9bea;
+    --header-bg-color: #161b22;
+    --page-bg-color: #000000;
+    --license-bg-color: #4b4a4a;
+    --license-border-color: black;
+    --sub-border-color: #383838;
+    --preview-bg-color: #989797;
+    --preview-border-color: #b5b3b3;
+    --dump-bg-color: #0c0e11;
+    --dump-border-color: #505050;
+    --dump-tag: #58a6ff;
+    --dump-dlen: darkcyan;
+    --dump-ulen: #00b6b6;
+    --dump-intro: #58a6ff;
+    --dump-outro: #00b6b6;
+    --dump-skip: #707070;
+    --dump-skip-bg: #222222;
+    --dump-hex-current: #727272;
+    --dump-hex-current-hex: #474747;
+    --dump-hex-current-dlen: #00b6b6;
+    --hover-bg-color: #505050;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -193,15 +235,15 @@ header {
     white-space: pre;
     padding: 5px;
 }
-#dump .tag             { color: blue; }
-#dump .dlen            { color: darkcyan; }
-#dump .ulen            { color: darkgreen; }
-#dump .intro           { color: blue; }
-#dump .outro           { color: darkgreen; }
-#dump .skip            { color: #666666; background-color: #C0C0C0; }
-#dump .hexCurrent      { background-color: #808080; }
-#dump .hexCurrent .hex { background-color: #A0A0A0; }
-#dump .hexCurrent .dlen { color: #004040; }
+#dump .tag             { color: var(--dump-tag); }
+#dump .dlen            { color: var(--dump-dlen); }
+#dump .ulen            { color: var(--dump-ulen); }
+#dump .intro           { color: var(--dump-intro); }
+#dump .outro           { color: var(--dump-outro); }
+#dump .skip            { color: var(--dump-skip); background-color: var(--dump-skip-bg); }
+#dump .hexCurrent      { background-color: var(--dump-hex-current); }
+#dump .hexCurrent .hex { background-color: var(--dump-hex-current-hex); }
+#dump .hexCurrent .dlen { color: var(--dump-hex-current-dlen); }
 #file { display: none; }
 #area { width: 100%; }
 #contextmenu {
