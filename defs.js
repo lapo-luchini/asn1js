@@ -90,7 +90,7 @@ export class Defs {
                         type = def.content[0];
                     else {
                         let tn = subval.typeName().replaceAll('_', ' ');
-                        while (true) {
+                        for (;;) {
                             type = def.content[j++];
                             if (!type || typeof type != 'object') break;
                             if (type?.type?.type)
