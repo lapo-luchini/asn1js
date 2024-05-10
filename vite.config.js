@@ -4,7 +4,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 import pluginDom from 'vite-plugin-dom';
 import { DomUtils } from 'htmlparser2';
 
-const removeNodes = [ 'theme-select', 'rowExamples' ];
+const removeNodes = [ 'rowExamples' ];
 
 const preventSVGEmit = () => {
     return {
