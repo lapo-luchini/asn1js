@@ -519,10 +519,10 @@ while ((m = reModuleDefinition.exec(s))) {
     asn1[currentMod.oid] = currentMod;
 }
 /*asn1 = Object.keys(asn1).sort().reduce(
-    (obj, key) => { 
+    (obj, key) => {
         obj[key] = asn1[key];
         return obj;
-    }, 
+    },
     {}
 );*/
 fs.writeFileSync(process.argv[3], JSON.stringify(asn1, null, 2) + '\n', 'utf8');

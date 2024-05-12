@@ -62,6 +62,7 @@
     "rules": {
       "strict": [ "error", "function" ],
       "indent": [ "error", 4 ],
+      "no-trailing-spaces": [ "error" ],
       "linebreak-style": [ "error", "unix" ],
       "eol-last": [ "error", "always" ],
       "semi": [ "warn", "always" ],

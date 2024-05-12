@@ -4,7 +4,7 @@
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
 // copyright notice and this permission notice appear in all copies.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 // WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -127,7 +127,7 @@ export class Defs {
 Defs.RFC = rfcdef;
 
 Defs.commonTypes = [
-    [ 'X.509 certificate', '1.3.6.1.5.5.7.0.18', 'Certificate' ], 
+    [ 'X.509 certificate', '1.3.6.1.5.5.7.0.18', 'Certificate' ],
     [ 'X.509 public key info', '1.3.6.1.5.5.7.0.18', 'SubjectPublicKeyInfo' ],
     [ 'CMS / PKCS#7 envelope', '1.2.840.113549.1.9.16.0.14', 'ContentInfo' ],
     [ 'PKCS#1 RSA private key', '1.2.840.113549.1.1.0.1', 'RSAPrivateKey' ],
