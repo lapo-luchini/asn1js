@@ -2,7 +2,8 @@
 set -e
 FILES="
   asn1.js oids.js defs.js base64.js hex.js int10.js dom.js rfcdef.js test.js tags.js
-  context.js index.css index-dark.css index.js index.html favicon.svg index-local.html
+  context.js index.css index-dark.css index.js index.html index-local.html
+  favicon.svg tree-icon-light.svg tree-icon-dark.svg
   README.md LICENSE
   updateOID.sh check.sh
   examples/*

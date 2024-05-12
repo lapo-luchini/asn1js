@@ -332,6 +332,10 @@ header {
     background: url('tree-icon-light.svg');
 }
 
+html[data-theme="dark"] .treecollapse summary::before{
+    background: url('tree-icon-dark.svg');
+}
+
 .treecollapse details[open] > summary::before{
     background-position : calc(-2 * var(--radius)) 0;
 }
