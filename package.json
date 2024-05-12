@@ -32,7 +32,6 @@
     "@rollup/wasm-node": "^4.17.2",
     "eslint": "^8.34.0",
     "htmlparser2": "^9.1.0",
-    "rollup": "^4.12.0",
     "vite": "^5.2.10",
     "vite-plugin-dom": "^1.0.3",
     "vite-plugin-singlefile": "^2.0.1"
