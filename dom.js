@@ -4,7 +4,7 @@
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
 // copyright notice and this permission notice appear in all copies.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 // WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -24,7 +24,7 @@ const
         ellipsis: '\u2026',
         tag: function (tagName, className, text) {
             let t = document.createElement(tagName);
-            t.className = className;
+            if (className) t.className = className;
             if (text) t.innerText = text;
             return t;
         },
@@ -53,16 +53,11 @@ const
 
 export class ASN1DOM extends ASN1 {
 
-    buf2hex(buffer) {
-        return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
-    }
-
     toDOM(spaces) {
         spaces = spaces || '';
         let isOID = (typeof oids === 'object') && (this.tag.isUniversal() && (this.tag.tagNumber == 0x06) || (this.tag.tagNumber == 0x0D));
-        let node;
-        node = document.createElement('li');
-        node.asn1 = this;        
+        let node = DOM.tag('li');
+        node.asn1 = this;
         let head = DOM.tag('span', 'head');
         const typeName = this.typeName().replace(/_/g, ' ');
         if (this.def) {
@@ -79,8 +74,6 @@ export class ASN1DOM extends ASN1 {
                 head.appendChild(DOM.space());
             }
         }
-        head.setAttribute('pos', this.posStart());
-        head.setAttribute('end', this.posEnd());    
         head.appendChild(DOM.text(typeName));
         let content;
         try {
@@ -131,13 +124,11 @@ export class ASN1DOM extends ASN1 {
             // summary.setAttribute('class', 'node');
             contentNode = summary;
             childNode = details;
-        }        
-        else {
+        } else {
             contentNode = node;
             contentNode.setAttribute('class', 'node');
             contentNode.appendChild(head);
         }
-
         this.node = contentNode;
         this.head = head;
         let value = DOM.tag('div', 'value');
@@ -162,14 +153,12 @@ export class ASN1DOM extends ASN1 {
         }
         value.innerHTML = s;
         contentNode.appendChild(value);
-        let sub = DOM.tag('div', 'sub');
         if (this.sub !== null) {
-            let ul = document.createElement('ul');
-            childNode.appendChild(ul);
-
+            let sub = DOM.tag('ul');
+            childNode.appendChild(sub);
             spaces += '\xA0 ';
             for (let i = 0, max = this.sub.length; i < max; ++i)
-                ul.appendChild(this.sub[i].toDOM(spaces));
+                sub.appendChild(this.sub[i].toDOM(spaces));
         }
         bindContextMenu(node);
         return node;
@@ -228,9 +217,6 @@ export class ASN1DOM extends ASN1 {
                 node.appendChild(skip);
             }
         }
-        // set the current start and end position as an attribute at the node to know the selected area
-        node.setAttribute('pos', this.posStart());
-        node.setAttribute('end', this.posEnd());    
         this.toHexDOM_sub(node, 'tag', this.stream, this.posStart(), this.posLen());
         this.toHexDOM_sub(node, (this.length >= 0) ? 'dlen' : 'ulen', this.stream, this.posLen(), this.posContent());
         if (this.sub === null) {
