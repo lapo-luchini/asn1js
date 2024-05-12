@@ -1,3 +1,4 @@
+import './theme.js';
 import { ASN1DOM } from './dom.js';
 import { Base64 } from './base64.js';
 import { Hex } from './hex.js';
