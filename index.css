@@ -19,7 +19,6 @@
     --dump-bg-color: #C0C0C0;
     --dump-border-color: #E0E0E0;
     --hover-bg-color: #E0E0E0;
-    --zoom-fix: -1px;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -238,6 +237,7 @@ header {
 
 .treecollapse ul li{
     border-left: 1px solid #999;
+    left: 0.5px;
 }
 
 .treecollapse ul li:last-child{
@@ -292,4 +292,35 @@ header {
 
 .treecollapse details[open] > summary::before{
     background-position : calc(-2 * var(--radius)) 0;
+}
+
+/*
+Zoom fix to have straight lines in treeview
+Zoom level and dpi resolution:
+- 175%: 336dpi
+- 150%: 288dpi
+- 110%: 212dpi
+- 100%: 192dpi
+- 90%:  173dpi
+- 80%:  154dpi
+*/
+@media (resolution <= 154dpi) {
+    :root{
+        --zoom-fix: -0.6px;
+    }
+}
+@media (155dpi <= resolution < 192dpi) {
+    :root{
+        --zoom-fix: -0.7px;
+    }
+}
+@media (192dpi <= resolution < 336dpi) {
+    :root{
+        --zoom-fix: -1px;
+    }
+}
+@media (336dpi <= resolution) {
+    :root{
+        --zoom-fix: -0.9px;
+    }
 }

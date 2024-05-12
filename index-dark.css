@@ -19,7 +19,6 @@
     --dump-bg-color: #0c0e11;
     --dump-border-color: #505050;
     --hover-bg-color: #505050;
-    --zoom-fix: -1px;
 }
 h1 {
     font-weight: 200;
@@ -45,6 +44,7 @@ h1 {
 
 .treecollapse ul li{
     border-left: 1px solid #333;
+    left: 0.5px;
 }
 
 .treecollapse ul li::before{
