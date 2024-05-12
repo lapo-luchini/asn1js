@@ -29,6 +29,7 @@ html[data-theme="light"] {
     --dump-hex-current-hex: #A0A0A0;
     --dump-hex-current-dlen: #004040;
     --hover-bg-color: #E0E0E0;
+    --zoom-fix: -1px;
 }
 html[data-theme="dark"] {
     --main-bg-color: #0d1116;
@@ -126,7 +127,7 @@ header {
 #main-page {
     background-color: var(--main-bg-color);
     border: 0px;
-    padding: 15px;
+    padding: 5px;
 }
 #main-page > div {
     position: relative;
@@ -157,13 +158,6 @@ header {
 .license:hover .hidden {
     /*display: block;*/
     visibility: visible;
-}
-.node {
-    position: relative;
-}
-.sub {
-    padding-left: 1.5em;
-    border-left: solid 1px var(--sub-border-color);
 }
 .head {
     height: 1em;
@@ -197,7 +191,7 @@ header {
     position: absolute;
     z-index: 2;
     top: 1.2em;
-    left: 0;
+    left: 30px;
     background-color: #efefef; /*minimal support for IE11*/
     background-color: var(--button-bg-color);
     border: solid 1px var(--button-border-color);
@@ -266,4 +260,78 @@ header {
 }
 #contextmenu > button:hover {
     background-color: var(--button-bghover-color);
+}
+.treecollapse {
+    --spacing: 1.5rem;
+    --radius: 7px;
+    padding-inline-start: 0px;
+}
+  
+.treecollapse li{
+    display: block;
+    position: relative;
+    padding-left: calc(2 * var(--spacing) - var(--radius) - 2px);
+}
+
+.treecollapse ul{
+    padding-left: 0;
+    margin-left: calc(var(--radius) - var(--spacing));
+}
+
+.treecollapse ul li{
+    border-left: 1px solid #999;
+}
+
+.treecollapse ul li:last-child{
+    border-color: transparent;
+}
+
+.treecollapse ul li::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -1.6);
+    left: var(--zoom-fix);
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid #999;
+    border-width: 0 0 1px 1px;
+}
+
+.treecollapse summary{
+    display : block;
+    cursor  : pointer;
+}
+
+.treecollapse summary::marker,
+.treecollapse summary::-webkit-details-marker{
+    display : none;
+}
+
+.treecollapse summary:focus{
+    outline : none;
+}
+
+.treecollapse summary:focus-visible{
+    outline : 1px dotted #000;
+}
+
+.treecollapse summary::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / 2 - var(--radius));
+    left: calc(var(--spacing) - var(--radius) - 1px);
+    width: calc(2 * var(--radius));
+    height: calc(2 * var(--radius));
+}
+
+.treecollapse summary::before{
+    z-index: 1;
+    top: 1px;
+    background: url('tree-icon-light.svg');
+}
+
+.treecollapse details[open] > summary::before{
+    background-position : calc(-2 * var(--radius)) 0;
 }
