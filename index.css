@@ -1,4 +1,4 @@
-[data-theme="light"] {
+html[data-theme="light"] {
     --main-bg-color: #C0C0C0;
     --main-text-color: #000000;
     --headline-text-color: #8be9fd;
@@ -30,7 +30,7 @@
     --dump-hex-current-dlen: #004040;
     --hover-bg-color: #E0E0E0;
 }
-[data-theme="dark"] {
+html[data-theme="dark"] {
     --main-bg-color: #0d1116;
     --main-text-color: #f8f8f2;
     --headline-text-color: #8be9fd;

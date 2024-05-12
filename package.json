@@ -61,6 +61,7 @@
       "strict": [ "error", "function" ],
       "indent": [ "error", 4 ],
       "linebreak-style": [ "error", "unix" ],
+      "eol-last": [ "error", "always" ],
       "semi": [ "warn", "always" ],
       "quotes": [ "error", "single", { "avoidEscape": true } ],
       "no-var": [ "warn" ],
