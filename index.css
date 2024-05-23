@@ -1,4 +1,4 @@
-html[data-theme="light"] {
+html {
     --main-bg-color: #C0C0C0;
     --main-text-color: #000000;
     --headline-text-color: #8be9fd;
@@ -29,7 +29,8 @@ html[data-theme="light"] {
     --dump-hex-current-hex: #A0A0A0;
     --dump-hex-current-dlen: #004040;
     --hover-bg-color: #E0E0E0;
-    --zoom-fix: -1px;
+    --tree-zoom-fix: -1px;
+    --tree-line: #999;
 }
 html[data-theme="dark"] {
     --main-bg-color: #0d1116;
@@ -62,6 +63,7 @@ html[data-theme="dark"] {
     --dump-hex-current-hex: #474747;
     --dump-hex-current-dlen: #00b6b6;
     --hover-bg-color: #505050;
+    --tree-line: #333;
 }
 html, body {
     background-color: var(--page-bg-color);
@@ -277,7 +279,7 @@ header {
     margin-left: calc(var(--radius) - var(--spacing));
 }
 .treecollapse ul li{
-    border-left: 1px solid #999;
+    border-left: 1px solid var(--tree-line);
 }
 .treecollapse ul li:last-child{
     border-color: transparent;
@@ -287,10 +289,10 @@ header {
     display: block;
     position: absolute;
     top: calc(var(--spacing) / -1.6);
-    left: var(--zoom-fix);
+    left: var(--tree-zoom-fix);
     width: calc(var(--spacing) + 2px);
     height: calc(var(--spacing) + 1px);
-    border: solid #999;
+    border: solid var(--tree-line);
     border-width: 0 0 1px 1px;
 }
 .treecollapse summary{
@@ -340,21 +342,21 @@ Zoom level and dpi resolution:
 */
 @media (resolution <= 154dpi) {
     :root{
-        --zoom-fix: -0.6px;
+        --tree-zoom-fix: -0.6px;
     }
 }
 @media (155dpi <= resolution < 192dpi) {
     :root{
-        --zoom-fix: -0.7px;
+        --tree-zoom-fix: -0.7px;
     }
 }
 @media (192dpi <= resolution < 336dpi) {
     :root{
-        --zoom-fix: -1px;
+        --tree-zoom-fix: -1px;
     }
 }
 @media (336dpi <= resolution) {
     :root{
-        --zoom-fix: -0.9px;
+        --tree-zoom-fix: -0.9px;
     }
 }
