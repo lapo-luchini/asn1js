@@ -261,31 +261,27 @@ header {
 #contextmenu > button:hover {
     background-color: var(--button-bghover-color);
 }
+
 .treecollapse {
     --spacing: 1.5rem;
     --radius: 7px;
     padding-inline-start: 0px;
 }
-  
 .treecollapse li{
     display: block;
     position: relative;
     padding-left: calc(2 * var(--spacing) - var(--radius) - 2px);
 }
-
 .treecollapse ul{
     padding-left: 0;
     margin-left: calc(var(--radius) - var(--spacing));
 }
-
 .treecollapse ul li{
     border-left: 1px solid #999;
 }
-
 .treecollapse ul li:last-child{
     border-color: transparent;
 }
-
 .treecollapse ul li::before{
     content: '';
     display: block;
@@ -297,25 +293,20 @@ header {
     border: solid #999;
     border-width: 0 0 1px 1px;
 }
-
 .treecollapse summary{
     display : block;
     cursor  : pointer;
 }
-
 .treecollapse summary::marker,
 .treecollapse summary::-webkit-details-marker{
     display : none;
 }
-
 .treecollapse summary:focus{
     outline : none;
 }
-
 .treecollapse summary:focus-visible{
     outline : 1px dotted #000;
 }
-
 .treecollapse summary::before{
     content: '';
     display: block;
@@ -325,17 +316,14 @@ header {
     width: calc(2 * var(--radius));
     height: calc(2 * var(--radius));
 }
-
 .treecollapse summary::before{
     z-index: 1;
     top: 1px;
     background: url('tree-icon-light.svg');
 }
-
 html[data-theme="dark"] .treecollapse summary::before{
     background: url('tree-icon-dark.svg');
 }
-
 .treecollapse details[open] > summary::before{
     background-position : calc(-2 * var(--radius)) 0;
 }
