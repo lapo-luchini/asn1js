@@ -114,19 +114,17 @@ export class ASN1DOM extends ASN1 {
         let contentNode;
         let childNode;
         if (this.sub !== null) {
-            let details = document.createElement('details');
+            let details = DOM.tag('details');
             details.setAttribute('open', '');
             node.appendChild(details);
-            let summary = document.createElement('summary');
-            summary.setAttribute('class', 'node');
+            let summary = DOM.tag('summary', 'node');
             details.appendChild(summary);
             summary.appendChild(head);
-            // summary.setAttribute('class', 'node');
             contentNode = summary;
             childNode = details;
         } else {
             contentNode = node;
-            contentNode.setAttribute('class', 'node');
+            contentNode.classList.add('node');
             contentNode.appendChild(head);
         }
         this.node = contentNode;

@@ -42,7 +42,7 @@ function show(asn1) {
     tree.innerHTML = '';
     dump.innerHTML = '';
     let ul = document.createElement('ul');
-    ul.setAttribute('class', 'treecollapse');
+    ul.className = 'treecollapse';
     tree.appendChild(ul);
     ul.appendChild(asn1.toDOM());
     if (wantHex.checked) dump.appendChild(asn1.toHexDOM(undefined, trimHex.checked));
