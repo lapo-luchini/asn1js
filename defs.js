@@ -136,4 +136,5 @@ Defs.commonTypes = [
     [ 'PKCS#8 private key', '1.2.840.113549.1.8.1.1', 'PrivateKeyInfo' ],
     [ 'PKCS#10 certification request', '1.2.840.113549.1.10.1.1', 'CertificationRequest' ],
     [ 'CMP PKI Message', '1.3.6.1.5.5.7.0.16', 'PKIMessage' ],
+    [ 'LDAP Message', '1.3.6.1.1.18', 'LDAPMessage' ],
 ].map(arr => ({ description: arr[0], ...Defs.moduleAndType(rfcdef[arr[1]], arr[2]) }));

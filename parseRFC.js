@@ -71,6 +71,25 @@ const
             [ /emptyString {4}EncodingParameters ::= ''H/g, '' ],
             [ /[(]CONSTRAINED BY[^)]+[)]/g, '' ],
         ],
+        4511: [
+            [ /^\s+-- .*\r?\n/mg, '' ], // comments
+            [ 'EXTENSIBILITY IMPLIED', '' ],
+            [ /\.\.\.(,|  )/g, '' ],
+            [ /value AttributeValue/g, 'AttributeValue' ],
+            [ /control Control/g, 'Control' ],
+            [ /Attribute ::= PartialAttribute\(WITH COMPONENTS \{[^}]+\}\)/g, 'PartialAttribute ::= SEQUENCE { type AttributeDescription, vals SET SIZE (1..MAX) OF AttributeValue }' ],
+            [ /,\s+\}/g, '}' ],
+            [ /SaslCredentials,/g, 'SaslCredentials' ],
+            [ /(BindResponse|ExtendedResponse) ::= \[APPLICATION [0-9]+\] SEQUENCE \{[^}]+\}/g, '$1 ::= ANY' ],
+            [ /selector LDAPString/g, 'LDAPString' ],
+            [ /filter Filter/g, 'Filter' ],
+            [ /MatchingRuleAssertion,/g, 'MatchingRuleAssertion' ],
+            [ /OF substring CHOICE/g, 'OF CHOICE' ],
+            [ /partialAttribute PartialAttribute/g, 'PartialAttribute' ],
+            [ /uri URI/g, 'URI' ],
+            [ /OF change SEQUENCE/g, 'OF SEQUENCE' ],
+            [ /attribute Attribute/g, 'Attribute' ],
+        ],
     };
 
 // const reWhitespace = /(?:\s|--(?:[}-]?[^\n}-])*(?:\n|--))*/y;

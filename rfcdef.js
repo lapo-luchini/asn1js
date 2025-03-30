@@ -1,4 +1,4 @@
-// content parsed from ASN.1 definitions as found in the following RFCs: 5280 5208 3369 3161 2986 4211 4210 8017
+// content parsed from ASN.1 definitions as found in the following RFCs: 5280 5208 3369 3161 2986 4211 4210 8017 4511
 // Copyright (C) The IETF Trust (2008)
 // as far as I can tell this file is allowed under the following clause:
 //   It is acceptable under the current IETF rules (RFC 5378) to modify extracted code if necessary.
@@ -10369,6 +10369,1506 @@ export const rfcdef = {
         "type": {
           "name": "AlgorithmIdentifier",
           "type": "defined"
+        }
+      }
+    }
+  },
+  "1.3.6.1.1.18": {
+    "name": "Lightweight-Directory-Access-Protocol-V3",
+    "oid": "1.3.6.1.1.18",
+    "source": "rfc4511.txt",
+    "tagDefault": "IMPLICIT",
+    "values": {
+      "maxInt": {
+        "name": "maxInt",
+        "type": {
+          "name": "INTEGER",
+          "type": "builtin"
+        },
+        "value": 2147483647
+      }
+    },
+    "types": {
+      "LDAPMessage": {
+        "name": "LDAPMessage",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "messageID",
+              "name": "MessageID",
+              "type": "defined"
+            },
+            {
+              "id": "protocolOp",
+              "name": "CHOICE",
+              "type": "builtin",
+              "content": [
+                {
+                  "id": "bindRequest",
+                  "name": "BindRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "bindResponse",
+                  "name": "BindResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "unbindRequest",
+                  "name": "UnbindRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "searchRequest",
+                  "name": "SearchRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "searchResEntry",
+                  "name": "SearchResultEntry",
+                  "type": "defined"
+                },
+                {
+                  "id": "searchResDone",
+                  "name": "SearchResultDone",
+                  "type": "defined"
+                },
+                {
+                  "id": "searchResRef",
+                  "name": "SearchResultReference",
+                  "type": "defined"
+                },
+                {
+                  "id": "modifyRequest",
+                  "name": "ModifyRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "modifyResponse",
+                  "name": "ModifyResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "addRequest",
+                  "name": "AddRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "addResponse",
+                  "name": "AddResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "delRequest",
+                  "name": "DelRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "delResponse",
+                  "name": "DelResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "modDNRequest",
+                  "name": "ModifyDNRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "modDNResponse",
+                  "name": "ModifyDNResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "compareRequest",
+                  "name": "CompareRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "compareResponse",
+                  "name": "CompareResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "abandonRequest",
+                  "name": "AbandonRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "extendedReq",
+                  "name": "ExtendedRequest",
+                  "type": "defined"
+                },
+                {
+                  "id": "extendedResp",
+                  "name": "ExtendedResponse",
+                  "type": "defined"
+                },
+                {
+                  "id": "intermediateResponse",
+                  "name": "IntermediateResponse",
+                  "type": "defined"
+                }
+              ]
+            },
+            {
+              "id": "controls",
+              "name": "[0]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "Controls",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "optional": true
+            }
+          ]
+        }
+      },
+      "MessageID": {
+        "name": "MessageID",
+        "type": {
+          "name": "INTEGER",
+          "type": "builtin",
+          "range": [
+            0,
+            "maxInt"
+          ]
+        }
+      },
+      "LDAPString": {
+        "name": "LDAPString",
+        "type": {
+          "name": "OCTET STRING",
+          "type": "builtin"
+        }
+      },
+      "LDAPOID": {
+        "name": "LDAPOID",
+        "type": {
+          "name": "OCTET STRING",
+          "type": "builtin"
+        }
+      },
+      "LDAPDN": {
+        "name": "LDAPDN",
+        "type": {
+          "name": "LDAPString",
+          "type": "defined"
+        }
+      },
+      "RelativeLDAPDN": {
+        "name": "RelativeLDAPDN",
+        "type": {
+          "name": "LDAPString",
+          "type": "defined"
+        }
+      },
+      "AttributeDescription": {
+        "name": "AttributeDescription",
+        "type": {
+          "name": "LDAPString",
+          "type": "defined"
+        }
+      },
+      "AttributeValue": {
+        "name": "AttributeValue",
+        "type": {
+          "name": "OCTET STRING",
+          "type": "builtin"
+        }
+      },
+      "AttributeValueAssertion": {
+        "name": "AttributeValueAssertion",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "attributeDesc",
+              "name": "AttributeDescription",
+              "type": "defined"
+            },
+            {
+              "id": "assertionValue",
+              "name": "AssertionValue",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "AssertionValue": {
+        "name": "AssertionValue",
+        "type": {
+          "name": "OCTET STRING",
+          "type": "builtin"
+        }
+      },
+      "PartialAttribute": {
+        "name": "PartialAttribute",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "type",
+              "name": "AttributeDescription",
+              "type": "defined"
+            },
+            {
+              "id": "vals",
+              "name": "SET",
+              "type": "builtin",
+              "typeOf": 1,
+              "size": [
+                1,
+                "MAX"
+              ],
+              "content": [
+                {
+                  "name": "AttributeValue",
+                  "type": "defined"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "MatchingRuleId": {
+        "name": "MatchingRuleId",
+        "type": {
+          "name": "LDAPString",
+          "type": "defined"
+        }
+      },
+      "LDAPResult": {
+        "name": "LDAPResult",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "resultCode",
+              "name": "ENUMERATED",
+              "type": "builtin",
+              "content": {
+                "success": 0,
+                "operationsError": 1,
+                "protocolError": 2,
+                "timeLimitExceeded": 3,
+                "sizeLimitExceeded": 4,
+                "compareFalse": 5,
+                "compareTrue": 6,
+                "authMethodNotSupported": 7,
+                "strongerAuthRequired": 8,
+                "referral": 10,
+                "adminLimitExceeded": 11,
+                "unavailableCriticalExtension": 12,
+                "confidentialityRequired": 13,
+                "saslBindInProgress": 14,
+                "noSuchAttribute": 16,
+                "undefinedAttributeType": 17,
+                "inappropriateMatching": 18,
+                "constraintViolation": 19,
+                "attributeOrValueExists": 20,
+                "invalidAttributeSyntax": 21,
+                "noSuchObject": 32,
+                "aliasProblem": 33,
+                "invalidDNSyntax": 34,
+                "aliasDereferencingProblem": 36,
+                "inappropriateAuthentication": 48,
+                "invalidCredentials": 49,
+                "insufficientAccessRights": 50,
+                "busy": 51,
+                "unavailable": 52,
+                "unwillingToPerform": 53,
+                "loopDetect": 54,
+                "namingViolation": 64,
+                "objectClassViolation": 65,
+                "notAllowedOnNonLeaf": 66,
+                "notAllowedOnRDN": 67,
+                "entryAlreadyExists": 68,
+                "objectClassModsProhibited": 69,
+                "affectsMultipleDSAs": 71,
+                "other": 80
+              }
+            },
+            {
+              "id": "matchedDN",
+              "name": "LDAPDN",
+              "type": "defined"
+            },
+            {
+              "id": "diagnosticMessage",
+              "name": "LDAPString",
+              "type": "defined"
+            },
+            {
+              "id": "referral",
+              "name": "[3]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "Referral",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "optional": true
+            }
+          ]
+        }
+      },
+      "Referral": {
+        "name": "Referral",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "typeOf": 1,
+          "size": [
+            1,
+            "MAX"
+          ],
+          "content": [
+            {
+              "name": "URI",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "URI": {
+        "name": "URI",
+        "type": {
+          "name": "LDAPString",
+          "type": "defined"
+        }
+      },
+      "Controls": {
+        "name": "Controls",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "typeOf": 1,
+          "content": [
+            {
+              "name": "Control",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "Control": {
+        "name": "Control",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "controlType",
+              "name": "LDAPOID",
+              "type": "defined"
+            },
+            {
+              "id": "criticality",
+              "name": "BOOLEAN",
+              "type": "builtin",
+              "default": false
+            },
+            {
+              "id": "controlValue",
+              "name": "OCTET STRING",
+              "type": "builtin",
+              "optional": true
+            }
+          ]
+        }
+      },
+      "BindRequest": {
+        "name": "BindRequest",
+        "type": {
+          "name": "[0]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "version",
+                    "name": "INTEGER",
+                    "type": "builtin",
+                    "range": [
+                      1,
+                      127
+                    ]
+                  },
+                  {
+                    "id": "name",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "authentication",
+                    "name": "AuthenticationChoice",
+                    "type": "defined"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "AuthenticationChoice": {
+        "name": "AuthenticationChoice",
+        "type": {
+          "name": "CHOICE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "simple",
+              "name": "[0]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "OCTET STRING",
+                    "type": "builtin"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "sasl",
+              "name": "[3]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "SaslCredentials",
+                    "type": "defined"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "SaslCredentials": {
+        "name": "SaslCredentials",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "mechanism",
+              "name": "LDAPString",
+              "type": "defined"
+            },
+            {
+              "id": "credentials",
+              "name": "OCTET STRING",
+              "type": "builtin",
+              "optional": true
+            }
+          ]
+        }
+      },
+      "BindResponse": {
+        "name": "BindResponse",
+        "type": {
+          "name": "ANY",
+          "type": "builtin"
+        }
+      },
+      "UnbindRequest": {
+        "name": "UnbindRequest",
+        "type": {
+          "name": "[2]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "NULL",
+                "type": "builtin"
+              }
+            }
+          ]
+        }
+      },
+      "SearchRequest": {
+        "name": "SearchRequest",
+        "type": {
+          "name": "[3]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "baseObject",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "scope",
+                    "name": "ENUMERATED",
+                    "type": "builtin",
+                    "content": {
+                      "baseObject": 0,
+                      "singleLevel": 1,
+                      "wholeSubtree": 2
+                    }
+                  },
+                  {
+                    "id": "derefAliases",
+                    "name": "ENUMERATED",
+                    "type": "builtin",
+                    "content": {
+                      "neverDerefAliases": 0,
+                      "derefInSearching": 1,
+                      "derefFindingBaseObj": 2,
+                      "derefAlways": 3
+                    }
+                  },
+                  {
+                    "id": "sizeLimit",
+                    "name": "INTEGER",
+                    "type": "builtin",
+                    "range": [
+                      0,
+                      "maxInt"
+                    ]
+                  },
+                  {
+                    "id": "timeLimit",
+                    "name": "INTEGER",
+                    "type": "builtin",
+                    "range": [
+                      0,
+                      "maxInt"
+                    ]
+                  },
+                  {
+                    "id": "typesOnly",
+                    "name": "BOOLEAN",
+                    "type": "builtin"
+                  },
+                  {
+                    "id": "filter",
+                    "name": "Filter",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "attributes",
+                    "name": "AttributeSelection",
+                    "type": "defined"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "AttributeSelection": {
+        "name": "AttributeSelection",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "typeOf": 1,
+          "content": [
+            {
+              "name": "LDAPString",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "Filter": {
+        "name": "Filter",
+        "type": {
+          "name": "CHOICE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "and",
+              "name": "[0]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "SET",
+                    "type": "builtin",
+                    "typeOf": 1,
+                    "size": [
+                      1,
+                      "MAX"
+                    ],
+                    "content": [
+                      {
+                        "name": "Filter",
+                        "type": "defined"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "id": "or",
+              "name": "[1]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "SET",
+                    "type": "builtin",
+                    "typeOf": 1,
+                    "size": [
+                      1,
+                      "MAX"
+                    ],
+                    "content": [
+                      {
+                        "name": "Filter",
+                        "type": "defined"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "id": "not",
+              "name": "[2]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "Filter",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "equalityMatch",
+              "name": "[3]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AttributeValueAssertion",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "substrings",
+              "name": "[4]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "SubstringFilter",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "greaterOrEqual",
+              "name": "[5]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AttributeValueAssertion",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "lessOrEqual",
+              "name": "[6]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AttributeValueAssertion",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "present",
+              "name": "[7]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AttributeDescription",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "approxMatch",
+              "name": "[8]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AttributeValueAssertion",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "extensibleMatch",
+              "name": "[9]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "MatchingRuleAssertion",
+                    "type": "defined"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "SubstringFilter": {
+        "name": "SubstringFilter",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "type",
+              "name": "AttributeDescription",
+              "type": "defined"
+            },
+            {
+              "id": "substrings",
+              "name": "SEQUENCE",
+              "type": "builtin",
+              "typeOf": 1,
+              "size": [
+                1,
+                "MAX"
+              ],
+              "content": [
+                {
+                  "name": "CHOICE",
+                  "type": "builtin",
+                  "content": [
+                    {
+                      "id": "initial",
+                      "name": "[0]",
+                      "type": "tag",
+                      "class": "CONTEXT",
+                      "explicit": false,
+                      "content": [
+                        {
+                          "name": "",
+                          "type": {
+                            "name": "AssertionValue",
+                            "type": "defined"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "any",
+                      "name": "[1]",
+                      "type": "tag",
+                      "class": "CONTEXT",
+                      "explicit": false,
+                      "content": [
+                        {
+                          "name": "",
+                          "type": {
+                            "name": "AssertionValue",
+                            "type": "defined"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "final",
+                      "name": "[2]",
+                      "type": "tag",
+                      "class": "CONTEXT",
+                      "explicit": false,
+                      "content": [
+                        {
+                          "name": "",
+                          "type": {
+                            "name": "AssertionValue",
+                            "type": "defined"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "MatchingRuleAssertion": {
+        "name": "MatchingRuleAssertion",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "content": [
+            {
+              "id": "matchingRule",
+              "name": "[1]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "MatchingRuleId",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "optional": true
+            },
+            {
+              "id": "type",
+              "name": "[2]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AttributeDescription",
+                    "type": "defined"
+                  }
+                }
+              ],
+              "optional": true
+            },
+            {
+              "id": "matchValue",
+              "name": "[3]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "AssertionValue",
+                    "type": "defined"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "dnAttributes",
+              "name": "[4]",
+              "type": "tag",
+              "class": "CONTEXT",
+              "explicit": false,
+              "content": [
+                {
+                  "name": "",
+                  "type": {
+                    "name": "BOOLEAN",
+                    "type": "builtin"
+                  }
+                }
+              ],
+              "default": false
+            }
+          ]
+        }
+      },
+      "SearchResultEntry": {
+        "name": "SearchResultEntry",
+        "type": {
+          "name": "[4]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "objectName",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "attributes",
+                    "name": "PartialAttributeList",
+                    "type": "defined"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "PartialAttributeList": {
+        "name": "PartialAttributeList",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "typeOf": 1,
+          "content": [
+            {
+              "name": "PartialAttribute",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "SearchResultReference": {
+        "name": "SearchResultReference",
+        "type": {
+          "name": "[19]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "typeOf": 1,
+                "size": [
+                  1,
+                  "MAX"
+                ],
+                "content": [
+                  {
+                    "name": "URI",
+                    "type": "defined"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "SearchResultDone": {
+        "name": "SearchResultDone",
+        "type": {
+          "name": "[5]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPResult",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "ModifyRequest": {
+        "name": "ModifyRequest",
+        "type": {
+          "name": "[6]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "object",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "changes",
+                    "name": "SEQUENCE",
+                    "type": "builtin",
+                    "typeOf": 1,
+                    "content": [
+                      {
+                        "name": "SEQUENCE",
+                        "type": "builtin",
+                        "content": [
+                          {
+                            "id": "operation",
+                            "name": "ENUMERATED",
+                            "type": "builtin",
+                            "content": {
+                              "add": 0,
+                              "delete": 1,
+                              "replace": 2
+                            }
+                          },
+                          {
+                            "id": "modification",
+                            "name": "PartialAttribute",
+                            "type": "defined"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "ModifyResponse": {
+        "name": "ModifyResponse",
+        "type": {
+          "name": "[7]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPResult",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "AddRequest": {
+        "name": "AddRequest",
+        "type": {
+          "name": "[8]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "entry",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "attributes",
+                    "name": "AttributeList",
+                    "type": "defined"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "AttributeList": {
+        "name": "AttributeList",
+        "type": {
+          "name": "SEQUENCE",
+          "type": "builtin",
+          "typeOf": 1,
+          "content": [
+            {
+              "name": "Attribute",
+              "type": "defined"
+            }
+          ]
+        }
+      },
+      "AddResponse": {
+        "name": "AddResponse",
+        "type": {
+          "name": "[9]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPResult",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "DelRequest": {
+        "name": "DelRequest",
+        "type": {
+          "name": "[10]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPDN",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "DelResponse": {
+        "name": "DelResponse",
+        "type": {
+          "name": "[11]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPResult",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "ModifyDNRequest": {
+        "name": "ModifyDNRequest",
+        "type": {
+          "name": "[12]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "entry",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "newrdn",
+                    "name": "RelativeLDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "deleteoldrdn",
+                    "name": "BOOLEAN",
+                    "type": "builtin"
+                  },
+                  {
+                    "id": "newSuperior",
+                    "name": "[0]",
+                    "type": "tag",
+                    "class": "CONTEXT",
+                    "explicit": false,
+                    "content": [
+                      {
+                        "name": "",
+                        "type": {
+                          "name": "LDAPDN",
+                          "type": "defined"
+                        }
+                      }
+                    ],
+                    "optional": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "ModifyDNResponse": {
+        "name": "ModifyDNResponse",
+        "type": {
+          "name": "[13]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPResult",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "CompareRequest": {
+        "name": "CompareRequest",
+        "type": {
+          "name": "[14]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "entry",
+                    "name": "LDAPDN",
+                    "type": "defined"
+                  },
+                  {
+                    "id": "ava",
+                    "name": "AttributeValueAssertion",
+                    "type": "defined"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "CompareResponse": {
+        "name": "CompareResponse",
+        "type": {
+          "name": "[15]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "LDAPResult",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "AbandonRequest": {
+        "name": "AbandonRequest",
+        "type": {
+          "name": "[16]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "MessageID",
+                "type": "defined"
+              }
+            }
+          ]
+        }
+      },
+      "ExtendedRequest": {
+        "name": "ExtendedRequest",
+        "type": {
+          "name": "[23]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "requestName",
+                    "name": "[0]",
+                    "type": "tag",
+                    "class": "CONTEXT",
+                    "explicit": false,
+                    "content": [
+                      {
+                        "name": "",
+                        "type": {
+                          "name": "LDAPOID",
+                          "type": "defined"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "requestValue",
+                    "name": "[1]",
+                    "type": "tag",
+                    "class": "CONTEXT",
+                    "explicit": false,
+                    "content": [
+                      {
+                        "name": "",
+                        "type": {
+                          "name": "OCTET STRING",
+                          "type": "builtin"
+                        }
+                      }
+                    ],
+                    "optional": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "ExtendedResponse": {
+        "name": "ExtendedResponse",
+        "type": {
+          "name": "ANY",
+          "type": "builtin"
+        }
+      },
+      "IntermediateResponse": {
+        "name": "IntermediateResponse",
+        "type": {
+          "name": "[25]",
+          "type": "tag",
+          "class": "APPLICATION",
+          "explicit": false,
+          "content": [
+            {
+              "name": "",
+              "type": {
+                "name": "SEQUENCE",
+                "type": "builtin",
+                "content": [
+                  {
+                    "id": "responseName",
+                    "name": "[0]",
+                    "type": "tag",
+                    "class": "CONTEXT",
+                    "explicit": false,
+                    "content": [
+                      {
+                        "name": "",
+                        "type": {
+                          "name": "LDAPOID",
+                          "type": "defined"
+                        }
+                      }
+                    ],
+                    "optional": true
+                  },
+                  {
+                    "id": "responseValue",
+                    "name": "[1]",
+                    "type": "tag",
+                    "class": "CONTEXT",
+                    "explicit": false,
+                    "content": [
+                      {
+                        "name": "",
+                        "type": {
+                          "name": "OCTET STRING",
+                          "type": "builtin"
+                        }
+                      }
+                    ],
+                    "optional": true
+                  }
+                ]
+              }
+            }
+          ]
         }
       }
     }

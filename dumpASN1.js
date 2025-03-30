@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// usage:
+// ./dumpASN1.js filename
+// ./dumpASN1.js data:base64,MDMCAQFjLgQACgEACgEAAgEAAgEAAQEAoA+jDQQFTnRWZXIEBAEAAAAwCgQITmV0bG9nb24===
+
 import * as fs from 'node:fs';
 import { Base64 } from './base64.js';
 import { ASN1 } from './asn1.js';
