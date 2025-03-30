@@ -1,0 +1,35 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "parseRFC",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/parseRFC.js",
+      "args": [
+        "rfc/rfc4511.txt",
+        "rfcdef.json"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "dumpASN1 LDAP",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/dumpASN1.js",
+      "args": [
+        "data:base64,MDMCAQFjLgQACgEACgEAAgEAAgEAAQEAoA+jDQQFTnRWZXIEBAEAAAAwCgQITmV0bG9nb24===",
+        "1.3.6.1.1.18",
+        "LDAPMessage"
+      ]
+    }
+  ]
+}
