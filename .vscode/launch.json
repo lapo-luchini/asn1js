@@ -7,6 +7,18 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "dumpASN1",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/dumpASN1.js",
+      "args": [
+        "examples/ed25519.cer"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "parseRFC",
       "skipFiles": [
         "<node_internals>/**"
@@ -15,6 +27,34 @@
       "args": [
         "rfc/rfc4511.txt",
         "rfcdef.json"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "dumpASN1 cert",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/dumpASN1.js",
+      "args": [
+        "data:base64,MIG9AgEBMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAlVTMRUwEwYDVQQKEwxUUjM0IFNhbXBsZXMxGzAZBgNVBAMTElRSMzQgU2FtcGxlIENBIEtESBcNMTAxMTAyMTczMzMwWhcNMTAxMjAyMTczMzMwWjBIMBYCBTQAAAAIFw0xMDExMDIxNzI4MTNaMBYCBTQAAAAKFw0xMDExMDIxNzMxNDZaMBYCBTQAAAALFw0xMDExMDIxNzMzMjVa",
+        "1.3.6.1.5.5.7.0.18",
+        "TBSCertList"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "dumpASN1 CMS",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/dumpASN1.js",
+      "args": [
+        "examples/cms-password.p7m",
+        "1.2.840.113549.1.9.16.0.14",
+        "ContentInfo"
       ]
     },
     {
