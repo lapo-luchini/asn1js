@@ -343,8 +343,23 @@ class Parser {
         let plicit = this.getRegEx('explicit/implicit', reTagType);
         if (plicit == '') plicit = currentMod.tagDefault;
         let x = this.parseType();
+        let name;
+        switch (tagClass) {
+            // keep in sync with ASN1.typeName
+            case 'APPLICATION':
+                name = 'Application ' + t;
+                break;
+            case 'PRIVATE':
+                name = 'Private ' + t;
+                break;
+            case 'CONTEXT':
+                // intentional fall-thru
+            default:
+                name = '[' + t + ']';
+                break;
+            }
         return {
-            name: '[' + t + ']',
+            name,
             type: 'tag',
             'class': tagClass,
             explicit: (plicit == 'EXPLICIT'),

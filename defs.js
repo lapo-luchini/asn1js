@@ -29,12 +29,13 @@ function translate(def, tn, stats) {
         def = Object.assign({}, def);
         def.type = Defs.searchType(name).type;
     }
-    if (def?.type?.name == 'CHOICE') {
-        for (let c of def.type.content) {
+    if (def?.name == 'CHOICE' || def?.type?.name == 'CHOICE') {
+        for (let c of def.content ?? def.type.content) {
             if (tn != c.type.name && tn != c.name)
                 c = translate(c);
             if (tn == c.type.name || tn == c.name) {
                 def = Object.assign({}, def);
+                if (c.id) def.id = c.id;
                 def.type = c.type.name ? c.type : c;
                 break;
             }
