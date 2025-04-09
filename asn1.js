@@ -21,7 +21,7 @@ const
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     hexDigits = '0123456789ABCDEF',
-    b64Safe = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
+    b64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
     tableT61 = [
         ['', ''],
         ['AEIOUaeiou', 'ÀÈÌÒÙàèìòù'], // Grave
@@ -123,17 +123,17 @@ class Stream {
             i, c;
         for (i = start; i + 2 < end; i += 3) {
             c = this.get(i) << 16 | this.get(i + 1) << 8 | this.get(i + 2);
-            s += b64Safe.charAt(c >> 18 & 0x3F);
-            s += b64Safe.charAt(c >> 12 & 0x3F);
-            s += b64Safe.charAt(c >>  6 & 0x3F);
-            s += b64Safe.charAt(c       & 0x3F);
+            s += b64Chars.charAt(c >> 18 & 0x3F);
+            s += b64Chars.charAt(c >> 12 & 0x3F);
+            s += b64Chars.charAt(c >>  6 & 0x3F);
+            s += b64Chars.charAt(c       & 0x3F);
         }
         if (extra > 0) {
             c = this.get(i) << 16;
             if (extra > 1) c |= this.get(i + 1) << 8;
-            s += b64Safe.charAt(c >> 18 & 0x3F);
-            s += b64Safe.charAt(c >> 12 & 0x3F);
-            if (extra == 2) s += b64Safe.charAt(c >> 6 & 0x3F);
+            s += b64Chars.charAt(c >> 18 & 0x3F);
+            s += b64Chars.charAt(c >> 12 & 0x3F);
+            if (extra == 2) s += b64Chars.charAt(c >> 6 & 0x3F);
         }
         if (s.length % 4 > 0) {
             s = (s + '===').slice(0, s.length + s.length % 4);
