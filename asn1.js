@@ -135,6 +135,9 @@ class Stream {
             s += b64Safe.charAt(c >> 12 & 0x3F);
             if (extra == 2) s += b64Safe.charAt(c >> 6 & 0x3F);
         }
+        if (s.length % 4 > 0) {
+            s = (s + '===').slice(0, s.length + s.length % 4);
+        }
         return s;
     }
     isASCII(start, end) {
