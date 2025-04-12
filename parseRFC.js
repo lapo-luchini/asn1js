@@ -344,8 +344,7 @@ class Parser {
         if (plicit == '') plicit = currentMod.tagDefault;
         let x = this.parseType();
         let name;
-        switch (tagClass) {
-        // keep in sync with ASN1.typeName
+        switch (tagClass) { // keep in sync with ASN1.typeName
         case 'APPLICATION':
             name = 'Application ' + t;
             break;
@@ -353,7 +352,7 @@ class Parser {
             name = 'Private ' + t;
             break;
         case 'CONTEXT':
-            // fallthrough
+            // fall through
         default:
             name = '[' + t + ']';
             break;
