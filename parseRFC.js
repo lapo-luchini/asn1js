@@ -74,7 +74,7 @@ const
         4511: [
             [ /^\s+-- .*\r?\n/mg, '' ], // comments
             [ 'EXTENSIBILITY IMPLIED', '' ],
-            [ /\.\.\.(,|  )/g, '' ],
+            [ /\.\.\.(,| {2})/g, '' ],
             [ /value AttributeValue/g, 'AttributeValue' ],
             [ /control Control/g, 'Control' ],
             [ /Attribute ::= PartialAttribute\(WITH COMPONENTS \{[^}]+\}\)/g, 'PartialAttribute ::= SEQUENCE { type AttributeDescription, vals SET SIZE (1..MAX) OF AttributeValue }' ],
@@ -345,19 +345,19 @@ class Parser {
         let x = this.parseType();
         let name;
         switch (tagClass) {
-            // keep in sync with ASN1.typeName
-            case 'APPLICATION':
-                name = 'Application ' + t;
-                break;
-            case 'PRIVATE':
-                name = 'Private ' + t;
-                break;
-            case 'CONTEXT':
-                // intentional fall-thru
-            default:
-                name = '[' + t + ']';
-                break;
-            }
+        // keep in sync with ASN1.typeName
+        case 'APPLICATION':
+            name = 'Application ' + t;
+            break;
+        case 'PRIVATE':
+            name = 'Private ' + t;
+            break;
+        case 'CONTEXT':
+            // fallthrough
+        default:
+            name = '[' + t + ']';
+            break;
+        }
         return {
             name,
             type: 'tag',
