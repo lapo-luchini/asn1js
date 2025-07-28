@@ -144,9 +144,13 @@ for (let t of testsB64) {
     ++run;
     if (!check(url, t.replace(/\n/g, '').replace(/=*$/g, ''), 'Base64url: ' + bin.length + ' bytes'))
         ++error;
-    let std = Base64.pretty(url);
+    let pretty = Base64.pretty(url);
     ++run;
-    if (!check(std, t, 'Base64: ' + bin.length + ' bytes'))
+    if (!check(pretty, t, 'Base64pretty: ' + bin.length + ' bytes'))
+        ++error;
+    let std = new Stream(bin, 0).b64Dump(0, bin.length, 'std');
+    ++run;
+    if (!check(std, t.replace(/\n/g, ''), 'Base64: ' + bin.length + ' bytes'))
         ++error;
 }
 console.log(run + ' tested, ' + expErr + ' expected, ' + error + ' errors.');
