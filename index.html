@@ -37,7 +37,7 @@
       <div id="tree"></div>
     </div>
     <form>
-      <textarea id="area" rows="8"></textarea>
+      <textarea id="area" rows="8" placeholder="Paste hex or base64 or PEM encoded ASN.1 BER or DER structures here, or load a file."></textarea>
       <br>
       <br>
       <label title="can be slow with big files"><input type="checkbox" id="wantHex" checked="checked"> with hex dump</label>
@@ -60,6 +60,7 @@
             <option value="pkcs10.pem">PKCS#10 certification request (RFC 2986)</option>
             <option value="crl-rfc5280.b64">CRL example (RFC 5280)</option>
             <option value="cmpv2.b64">CMP PKI message (RFC 4210)</option>
+            <option value="ldapmessage.b64">LDAP message (RFC 4511)</option>
           </select>
           <input id="butExample" type="button" value="load"><br>
         </td></tr>
@@ -95,7 +96,7 @@
         ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
         OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </p></div>
-      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2024 <a href="https://lapo.it/">Lapo Luchini</a>; released as <a href="https://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="https://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
+      <p>ASN.1 JavaScript decoder Copyright &copy; 2008-2025 <a href="https://lapo.it/">Lapo Luchini</a>; released as <a href="https://opensource.org/licenses/isc-license.txt">opensource</a> under the <a href="https://en.wikipedia.org/wiki/ISC_licence">ISC license</a>.</p>
     </div>
     <p><span class="tt">OBJECT&nbsp;IDENTIFIER</span> values are recognized using data taken from Peter Gutmann's <a href="https://www.cs.auckland.ac.nz/~pgut001/#standards">dumpasn1</a> program.</p>
     <h3>Links</h3>

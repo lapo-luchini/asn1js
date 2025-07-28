@@ -1,0 +1,8 @@
+LDAPMessage example as found on ldap.com.
+
+Original link:
+https://ldap.com/ldapv3-wire-protocol-reference-ldap-message/
+
+begin-base64 644 ldapmessage.der
+MDUCAQVKEWRjPWV4YW1wbGUsZGM9Y29toB0wGwQWMS4yLjg0MC4xMTM1NTYuMS40LjgwNQEB/w==
+====

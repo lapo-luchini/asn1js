@@ -1983,7 +1983,7 @@ export const rfcdef = {
       "CountryName": {
         "name": "CountryName",
         "type": {
-          "name": "[1]",
+          "name": "Application 1",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": true,
@@ -2015,7 +2015,7 @@ export const rfcdef = {
       "AdministrationDomainName": {
         "name": "AdministrationDomainName",
         "type": {
-          "name": "[2]",
+          "name": "Application 2",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": true,
@@ -10798,7 +10798,7 @@ export const rfcdef = {
       "BindRequest": {
         "name": "BindRequest",
         "type": {
-          "name": "[0]",
+          "name": "Application 0",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -10905,7 +10905,7 @@ export const rfcdef = {
       "UnbindRequest": {
         "name": "UnbindRequest",
         "type": {
-          "name": "[2]",
+          "name": "Application 2",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -10923,7 +10923,7 @@ export const rfcdef = {
       "SearchRequest": {
         "name": "SearchRequest",
         "type": {
-          "name": "[3]",
+          "name": "Application 3",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11363,7 +11363,7 @@ export const rfcdef = {
       "SearchResultEntry": {
         "name": "SearchResultEntry",
         "type": {
-          "name": "[4]",
+          "name": "Application 4",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11407,7 +11407,7 @@ export const rfcdef = {
       "SearchResultReference": {
         "name": "SearchResultReference",
         "type": {
-          "name": "[19]",
+          "name": "Application 19",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11436,7 +11436,7 @@ export const rfcdef = {
       "SearchResultDone": {
         "name": "SearchResultDone",
         "type": {
-          "name": "[5]",
+          "name": "Application 5",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11454,7 +11454,7 @@ export const rfcdef = {
       "ModifyRequest": {
         "name": "ModifyRequest",
         "type": {
-          "name": "[6]",
+          "name": "Application 6",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11508,7 +11508,7 @@ export const rfcdef = {
       "ModifyResponse": {
         "name": "ModifyResponse",
         "type": {
-          "name": "[7]",
+          "name": "Application 7",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11526,7 +11526,7 @@ export const rfcdef = {
       "AddRequest": {
         "name": "AddRequest",
         "type": {
-          "name": "[8]",
+          "name": "Application 8",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11570,7 +11570,7 @@ export const rfcdef = {
       "AddResponse": {
         "name": "AddResponse",
         "type": {
-          "name": "[9]",
+          "name": "Application 9",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11588,7 +11588,7 @@ export const rfcdef = {
       "DelRequest": {
         "name": "DelRequest",
         "type": {
-          "name": "[10]",
+          "name": "Application 10",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11606,7 +11606,7 @@ export const rfcdef = {
       "DelResponse": {
         "name": "DelResponse",
         "type": {
-          "name": "[11]",
+          "name": "Application 11",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11624,7 +11624,7 @@ export const rfcdef = {
       "ModifyDNRequest": {
         "name": "ModifyDNRequest",
         "type": {
-          "name": "[12]",
+          "name": "Application 12",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11676,7 +11676,7 @@ export const rfcdef = {
       "ModifyDNResponse": {
         "name": "ModifyDNResponse",
         "type": {
-          "name": "[13]",
+          "name": "Application 13",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11694,7 +11694,7 @@ export const rfcdef = {
       "CompareRequest": {
         "name": "CompareRequest",
         "type": {
-          "name": "[14]",
+          "name": "Application 14",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11724,7 +11724,7 @@ export const rfcdef = {
       "CompareResponse": {
         "name": "CompareResponse",
         "type": {
-          "name": "[15]",
+          "name": "Application 15",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11742,7 +11742,7 @@ export const rfcdef = {
       "AbandonRequest": {
         "name": "AbandonRequest",
         "type": {
-          "name": "[16]",
+          "name": "Application 16",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11760,7 +11760,7 @@ export const rfcdef = {
       "ExtendedRequest": {
         "name": "ExtendedRequest",
         "type": {
-          "name": "[23]",
+          "name": "Application 23",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
@@ -11820,7 +11820,7 @@ export const rfcdef = {
       "IntermediateResponse": {
         "name": "IntermediateResponse",
         "type": {
-          "name": "[25]",
+          "name": "Application 25",
           "type": "tag",
           "class": "APPLICATION",
           "explicit": false,
