@@ -114,7 +114,7 @@ class Stream {
         }
         return s;
     }
-    /** Base-64 dump of a specified region of the stream.
+    /** Base64url dump of a specified region of the stream (according to RFC 4648 section 5).
      * @param {number} start starting position (included)
      * @param {number} end ending position (excluded) */
     b64Dump(start, end) {
@@ -557,7 +557,7 @@ export class ASN1 {
     toHexString(type = 'raw') {
         return this.stream.hexDump(this.posStart(), this.posEnd(), type);
     }
-    /** Base64 dump of the node. */
+    /** Base64url dump of the node (according to RFC 4648 section 5). */
     toB64String() {
         return this.stream.b64Dump(this.posStart(), this.posEnd());
     }
