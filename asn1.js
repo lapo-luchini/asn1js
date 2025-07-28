@@ -21,7 +21,8 @@ const
     reTimeS =     /^(\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     reTimeL = /^(\d\d\d\d)(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])(?:([0-5]\d)(?:([0-5]\d)(?:[.,](\d{1,3}))?)?)?(Z|(-(?:0\d|1[0-2])|[+](?:0\d|1[0-4]))([0-5]\d)?)?$/,
     hexDigits = '0123456789ABCDEF',
-    b64Safe = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
+    b64Std = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+    b64URL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
     tableT61 = [
         ['', ''],
         ['AEIOUaeiou', 'ÀÈÌÒÙàèìòù'], // Grave
@@ -98,7 +99,7 @@ export class Stream {
     /** Hexadecimal dump of a specified region of the stream.
      * @param {number} start starting position (included)
      * @param {number} end ending position (excluded)
-     * @param {string} type 'raw', 'byte' or 'dump' */
+     * @param {string} type 'raw', 'byte' or 'dump' (default) */
     hexDump(start, end, type = 'dump') {
         let s = '';
         for (let i = start; i < end; ++i) {
@@ -116,24 +117,27 @@ export class Stream {
     }
     /** Base64url dump of a specified region of the stream (according to RFC 4648 section 5).
      * @param {number} start starting position (included)
-     * @param {number} end ending position (excluded) */
-    b64Dump(start, end) {
+     * @param {number} end ending position (excluded)
+     * @param {string} type 'url' (default, section 5 without padding) or 'std' (section 4 with padding) */
+    b64Dump(start, end, type = 'url') {
+        const b64 = type === 'url' ? b64URL : b64Std;
         let extra = (end - start) % 3,
             s = '',
             i, c;
         for (i = start; i + 2 < end; i += 3) {
             c = this.get(i) << 16 | this.get(i + 1) << 8 | this.get(i + 2);
-            s += b64Safe.charAt(c >> 18 & 0x3F);
-            s += b64Safe.charAt(c >> 12 & 0x3F);
-            s += b64Safe.charAt(c >>  6 & 0x3F);
-            s += b64Safe.charAt(c       & 0x3F);
+            s += b64.charAt(c >> 18 & 0x3F);
+            s += b64.charAt(c >> 12 & 0x3F);
+            s += b64.charAt(c >>  6 & 0x3F);
+            s += b64.charAt(c       & 0x3F);
         }
         if (extra > 0) {
             c = this.get(i) << 16;
             if (extra > 1) c |= this.get(i + 1) << 8;
-            s += b64Safe.charAt(c >> 18 & 0x3F);
-            s += b64Safe.charAt(c >> 12 & 0x3F);
-            if (extra == 2) s += b64Safe.charAt(c >> 6 & 0x3F);
+            s += b64.charAt(c >> 18 & 0x3F);
+            s += b64.charAt(c >> 12 & 0x3F);
+            if (extra == 2) s += b64.charAt(c >> 6 & 0x3F);
+            if (b64 === b64Std) s += '==='.slice(0, 3 - extra);
         }
         return s;
     }

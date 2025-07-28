@@ -31,7 +31,7 @@ export class Base64 {
                 decoder[b64.charCodeAt(i)] = i;
             for (i = 0; i < ignore.length; ++i)
                 decoder[ignore.charCodeAt(i)] = -1;
-            // RFC 3548 URL & file safe encoding
+            // also support decoding Base64url (RFC 4648 section 5)
             decoder['-'.charCodeAt(0)] = decoder['+'.charCodeAt(0)];
             decoder['_'.charCodeAt(0)] = decoder['/'.charCodeAt(0)];
         }
