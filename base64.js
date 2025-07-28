@@ -75,12 +75,13 @@ export class Base64 {
 
     static pretty(str) {
         // fix padding
-        if (str.length % 4 > 0)
-            str = (str + '===').slice(0, str.length + str.length % 4);
-        // convert RFC 3548 to standard Base64
+        let pad = 4 - str.length % 4;
+        if (pad < 4)
+            str += '==='.slice(0, pad);
+        // convert Base64url (RFC 4648 section 5) to standard Base64 (RFC 4648 section 4)
         str = str.replace(/-/g, '+').replace(/_/g, '/');
         // 80 column width
-        return str.replace(/(.{80})/g, '$1\n');
+        return str.replace(/.{80}/g, '$&\n');
     }
 
     static unarmor(a) {
