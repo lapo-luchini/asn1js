@@ -561,9 +561,11 @@ export class ASN1 {
     toHexString(type = 'raw') {
         return this.stream.hexDump(this.posStart(), this.posEnd(), type);
     }
-    /** Base64url dump of the node (according to RFC 4648 section 5). */
-    toB64String() {
-        return this.stream.b64Dump(this.posStart(), this.posEnd());
+    /** Base64url dump of the node (according to RFC 4648 section 5).
+     * @param {string} type 'url' (default, section 5 without padding) or 'std' (section 4 with padding)
+    */
+    toB64String(type = 'url') {
+        return this.stream.b64Dump(this.posStart(), this.posEnd(), type);
     }
     static decodeLength(stream) {
         let buf = stream.get(),
