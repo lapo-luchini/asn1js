@@ -58,7 +58,7 @@ function checkPrintable(s) {
 
 /** Class to manage a stream of bytes, with a zero-copy approach.
  * It uses an existing array or binary string and advances a position index. */
-class Stream {
+export class Stream {
 
     /**
      * @param {Stream|array|string} enc data (will not be copied)

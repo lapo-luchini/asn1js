@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import { ASN1 } from './asn1.js';
+import { ASN1, Stream } from './asn1.js';
 import { Hex } from './hex.js';
+import { Base64 } from './base64.js';
 
 const
     all = (process.argv[2] == 'all');
@@ -90,11 +91,33 @@ const tests = [
     ['171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', /^Exception:\nError: Unrecognized time: /, 'Invalid UTCTime'], // GitHub issue #79
 ];
 
+const testsB64 = [
+    'AA==',
+    'ABA=',
+    'ABCD',
+    'ABCDEA==',
+    'ABCDEFE=',
+    'ABCDEFGH',
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQR\nSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456w==',
+];
+
+function check(result, expected, comment) {
+    if (!result || result == expected) {
+        if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
+        return true;
+    } else {
+        console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
+        console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
+        console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
+        return false;
+    }
+}
+
 let
     run = 0,
     expErr = 0,
     error = 0;
-tests.forEach(function (t) {
+for (let t of tests) {
     const input = t[0],
         expected = t[1],
         comment = t[2];
@@ -112,14 +135,19 @@ tests.forEach(function (t) {
     if (expected instanceof RegExp)
         result = expected.test(result) ? null : 'does not match';
     ++run;
-    if (!result || result == expected) {
-        if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
-    } else {
+    if (!check(result, expected, comment))
         ++error;
-        console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
-        console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
-        console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
-    }
-});
+}
+for (let t of testsB64) {
+    let bin = Base64.decode(t);
+    let url = new Stream(bin, 0).b64Dump(0, bin.length);
+    ++run;
+    if (!check(url, t.replace(/\n/g, '').replace(/=*$/g, ''), 'Base64url: ' + bin.length + ' bytes'))
+        ++error;
+    let std = Base64.pretty(url);
+    ++run;
+    if (!check(std, t, 'Base64: ' + bin.length + ' bytes'))
+        ++error;
+}
 console.log(run + ' tested, ' + expErr + ' expected, ' + error + ' errors.');
 process.exit(error ? 1 : 0);
