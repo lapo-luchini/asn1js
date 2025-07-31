@@ -4,10 +4,88 @@ import { ASN1, Stream } from './asn1.js';
 import { Hex } from './hex.js';
 import { Base64 } from './base64.js';
 
-const
-    all = (process.argv[2] == 'all');
+const all = (process.argv[2] == 'all');
 
-const tests = [
+/** @type {Array<Tests>} */
+const tests = [];
+
+const stats = {
+    run: 0,
+    error: 0,
+};
+
+/**
+ * A class for managing and executing tests.
+ */
+class Tests {
+    /**
+     * An array to store test data.
+     * @type {Array<unknown>}
+     */
+    data;
+
+    /**
+     * Checks a row of test data.
+     * @param {Function} t - How to test a row of data.
+     */
+    checkRow;
+
+    /**
+     * Constructs a new Tests instance.
+     * @param {Function} checkRow - A function to check each row of data.
+     * @param {Array<unknown>} data - The test data to be processed.
+     */
+    constructor(checkRow, data) {
+        this.checkRow = checkRow;
+        this.data = data;
+    }
+
+    /**
+     * Executes the tests and checks their results for all rows.
+     */
+    checkAll() {
+        for (const t of this.data)
+            this.checkRow(t);
+    }
+
+    /**
+     * Prints the result of a test, indicating if it passed or failed.
+     * @param {unknown} result The actual result of the test.
+     * @param {unknown} expected The expected result of the test.
+     * @param {string} comment A comment describing the test.
+     */
+    checkResult(result, expected, comment) {
+        ++stats.run;
+        if (!result || result == expected) {
+            if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
+        } else {
+            ++stats.error;
+            console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
+            console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
+            console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
+        }
+    }
+}
+
+tests.push(new Tests(function (t) {
+    const input = t[0],
+        expected = t[1],
+        comment = t[2];
+    let result;
+    try {
+        let node = ASN1.decode(Hex.decode(input));
+        if (typeof expected == 'function')
+            result = expected(node);
+        else
+            result = node.content();
+        //TODO: check structure, not only first level content
+    } catch (e) {
+        result = 'Exception:\n' + e;
+    }
+    if (expected instanceof RegExp)
+        result = expected.test(result) ? null : 'does not match';
+    this.checkResult(result, expected, comment);
+}, [
     // RSA Laboratories technical notes from https://luca.ntop.org/Teaching/Appunti/asn1.html
     ['0304066E5DC0', '(18 bit)\n011011100101110111', 'ntop, bit string: DER encoding'],
     ['0304066E5DE0', '(18 bit)\n011011100101110111', 'ntop, bit string: padded with "100000"'],
@@ -89,9 +167,20 @@ const tests = [
     ['181331393835313130363231303632372E332B3134', '1985-11-06 21:06:27.3 UTC+14:00', 'UTC offset +13 and +14'], // GitHub issue #54
     ['032100171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', n => { if (n.sub != null) return 'Should not decode content: ' + n.sub[0].content(); }, 'Key that resembles an UTCTime'], // GitHub issue #79
     ['171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', /^Exception:\nError: Unrecognized time: /, 'Invalid UTCTime'], // GitHub issue #79
-];
+]));
 
-const testsB64 = [
+tests.push(new Tests(function (t) {
+    let bin = Base64.decode(t);
+    let url = new Stream(bin, 0).b64Dump(0, bin.length);
+    // check base64url encoding
+    this.checkResult(url, t.replace(/\n/g, '').replace(/=*$/g, ''), 'Base64url: ' + bin.length + ' bytes');
+    // check conversion from base64url to base64
+    let pretty = Base64.pretty(url);
+    this.checkResult(pretty, t, 'Base64pretty: ' + bin.length + ' bytes');
+    let std = new Stream(bin, 0).b64Dump(0, bin.length, 'std');
+    // check direct base64 encoding
+    this.checkResult(std, t.replace(/\n/g, ''), 'Base64: ' + bin.length + ' bytes');
+}, [
     'AA==',
     'ABA=',
     'ABCD',
@@ -99,59 +188,10 @@ const testsB64 = [
     'ABCDEFE=',
     'ABCDEFGH',
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQR\nSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456w==',
-];
+]));
 
-function check(result, expected, comment) {
-    if (!result || result == expected) {
-        if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
-        return true;
-    } else {
-        console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
-        console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
-        console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
-        return false;
-    }
-}
+for (const t of tests)
+    t.checkAll();
 
-let
-    run = 0,
-    expErr = 0,
-    error = 0;
-for (let t of tests) {
-    const input = t[0],
-        expected = t[1],
-        comment = t[2];
-    let result;
-    try {
-        let node = ASN1.decode(Hex.decode(input));
-        if (typeof expected == 'function')
-            result = expected(node);
-        else
-            result = node.content();
-        //TODO: check structure, not only first level content
-    } catch (e) {
-        result = 'Exception:\n' + e;
-    }
-    if (expected instanceof RegExp)
-        result = expected.test(result) ? null : 'does not match';
-    ++run;
-    if (!check(result, expected, comment))
-        ++error;
-}
-for (let t of testsB64) {
-    let bin = Base64.decode(t);
-    let url = new Stream(bin, 0).b64Dump(0, bin.length);
-    ++run;
-    if (!check(url, t.replace(/\n/g, '').replace(/=*$/g, ''), 'Base64url: ' + bin.length + ' bytes'))
-        ++error;
-    let pretty = Base64.pretty(url);
-    ++run;
-    if (!check(pretty, t, 'Base64pretty: ' + bin.length + ' bytes'))
-        ++error;
-    let std = new Stream(bin, 0).b64Dump(0, bin.length, 'std');
-    ++run;
-    if (!check(std, t.replace(/\n/g, ''), 'Base64: ' + bin.length + ' bytes'))
-        ++error;
-}
-console.log(run + ' tested, ' + expErr + ' expected, ' + error + ' errors.');
-process.exit(error ? 1 : 0);
+console.log(stats.run + ' tested, ' + stats.error + ' errors.');
+process.exit(stats.error ? 1 : 0);
