@@ -13,7 +13,8 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-let max = 10000000000000; // biggest 10^n integer that can still fit 2^53 when multiplied by 256
+/** Biggest 10^n integer that can still fit 2^53 when multiplied by 256. */
+const max = 10000000000000;
 
 export class Int10 {
     /**
@@ -26,11 +27,13 @@ export class Int10 {
 
     /**
      * Multiply value by m and add c.
-     * @param {number} m - multiplier, must be < =256
-     * @param {number} c - value to add
+     * @param {number} m - multiplier, must be 0<m<=256
+     * @param {number} c - value to add, must be c>=0
      */
     mulAdd(m, c) {
+        // assert(m > 0)
         // assert(m <= 256)
+        // assert(c >= 0)
         let b = this.buf,
             l = b.length,
             i, t;
@@ -71,11 +74,12 @@ export class Int10 {
 
     /**
      * Convert to decimal string representation.
-     * @param {*} base - optional value, only value accepted is 10
+     * @param {number} [base=10] - optional value, only value accepted is 10
+     * @returns {string} The decimal string representation.
      */
-    toString(base) {
-        if ((base || 10) != 10)
-            throw 'only base 10 is supported';
+    toString(base = 10) {
+        if (base != 10)
+            throw new Error('only base 10 is supported');
         let b = this.buf,
             s = b[b.length - 1].toString();
         for (let i = b.length - 2; i >= 0; --i)
@@ -86,6 +90,7 @@ export class Int10 {
     /**
      * Convert to Number value representation.
      * Will probably overflow 2^53 and thus become approximate.
+     * @returns {number} The numeric value.
      */
     valueOf() {
         let b = this.buf,
@@ -97,6 +102,7 @@ export class Int10 {
 
     /**
      * Return value as a simple Number (if it is <= 10000000000000), or return this.
+     * @returns {number | Int10} The simplified value.
      */
     simplify() {
         let b = this.buf;
