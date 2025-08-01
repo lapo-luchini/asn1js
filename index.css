@@ -1,6 +1,7 @@
 html {
     --main-bg-color: #C0C0C0;
     --main-text-color: #000000;
+    --id-text-color: #7d5900;
     --headline-text-color: #8be9fd;
     --button-border-color: #767676;
     --button-bg-color: #efefef;
@@ -35,6 +36,7 @@ html {
 html[data-theme="dark"] {
     --main-bg-color: #0d1116;
     --main-text-color: #f8f8f2;
+    --id-text-color: #9d7c2d;
     --headline-text-color: #8be9fd;
     --button-border-color: #505050;
     --button-bg-color: #303030;
@@ -186,7 +188,7 @@ header {
     color: var(--preview-border-color);
 }
 .name.id {
-    color: var(--main-text-color);
+    color: var(--id-text-color);
 }
 .value {
     display: none;
