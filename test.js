@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import * as fs from 'node:fs';
 import { ASN1, Stream } from './asn1.js';
+import { Defs } from './defs.js';
 import { Hex } from './hex.js';
 import { Base64 } from './base64.js';
 import { Int10 } from './int10.js';
@@ -168,6 +170,29 @@ tests.push(new Tests(function (t) {
     ['181331393835313130363231303632372E332B3134', '1985-11-06 21:06:27.3 UTC+14:00', 'UTC offset +13 and +14'], // GitHub issue #54
     ['032100171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', n => { if (n.sub != null) return 'Should not decode content: ' + n.sub[0].content(); }, 'Key that resembles an UTCTime'], // GitHub issue #79
     ['171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', /^Exception:\nError: Unrecognized time: /, 'Invalid UTCTime'], // GitHub issue #79
+]));
+
+tests.push(new Tests(function () {
+    const examples = fs.readdirSync('examples/').filter(f => f.endsWith('.dump'));
+    for (const example of examples) {
+        const filename = example.slice(0, -5); // Remove '.dump' suffix
+        const expected = fs.readFileSync('examples/' + example, 'utf8');
+        let data = fs.readFileSync('examples/' + filename);
+        if (filename.endsWith('.pem'))
+            data = Base64.unarmor(data);
+        let node = ASN1.decode(data);
+        const types = Defs.commonTypes
+            .map(type => {
+                const stats = Defs.match(node, type);
+                return { type, match: stats.recognized / stats.total };
+            })
+            .sort((a, b) => b.match - a.match);
+        Defs.match(node, types[0].type);
+        let result = node.toPrettyString();
+        this.checkResult(result, expected, 'Example: ' + filename);
+    }
+}, [
+    [0],
 ]));
 
 tests.push(new Tests(function (t) {

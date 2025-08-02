@@ -86,7 +86,7 @@ export function decode(der, offset) {
         if (area.value === '') area.value = Base64.pretty(b64);
         try {
             window.location.hash = hash = '#' + b64;
-        } catch (e) {
+        } catch (ignore) {
             // fails with "Access Denied" on IE with URLs longer than ~2048 chars
             window.location.hash = hash = '#';
         }
@@ -122,7 +122,7 @@ export function decodeBinaryString(str) {
         else if (Base64.re.test(str)) der = Base64.unarmor(str);
         else der = str;
         decode(der);
-    } catch (e) {
+    } catch (ignore) {
         text(tree, 'Cannot decode file.');
         dump.innerHTML = '';
     }

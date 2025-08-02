@@ -7,6 +7,16 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "test",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/test.js",
+      "args": []
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "dumpASN1",
       "skipFiles": [
         "<node_internals>/**"
