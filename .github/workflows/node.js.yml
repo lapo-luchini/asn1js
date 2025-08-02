@@ -21,12 +21,16 @@ jobs:
       with:
         version: 10
         run_install: false
+      if: matrix.node-version == 'latest'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: pnpm
     - run: pnpm install
-    - run: pnpm test all
+      if: matrix.node-version == 'latest'
+    - run: npm install diff
+      if: matrix.node-version != 'latest'
+    - run: node test all
     - run: pnpm run lint
       if: matrix.node-version == 'latest'
