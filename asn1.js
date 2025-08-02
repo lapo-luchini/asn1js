@@ -295,7 +295,7 @@ export class Stream {
             s = this.parseStringUTF(start, end, maxLength);
             checkPrintable(s.str);
             return { size: end - start, str: s.str };
-        } catch (e) {
+        } catch (ignore) {
             // ignore
         }
         maxLength /= 2; // we work in bytes
@@ -638,7 +638,7 @@ export class ASN1 {
                         throw new Error('Unable to parse content: ' + e);
                     }
                 }
-            } catch (e) {
+            } catch (ignore) {
                 // but silently ignore when they don't
                 sub = null;
                 //DEBUG console.log('Could not decode structure at ' + start + ':', e);

@@ -213,7 +213,7 @@ class Parser {
     tryToken(expect) {
         let p = this.pos;
         let t;
-        try { t = this.parseToken(); } catch (e) { /*ignore*/ }
+        try { t = this.parseToken(); } catch (ignore) { /*ignore*/ }
         // console.log('[debug] tryToken(' + expect + ') = ' + t);
         if (t == expect)
             return true;
@@ -371,7 +371,7 @@ class Parser {
         let p = this.pos;
         try {
             return this.parseBuiltinType();
-        } catch (e) {
+        } catch (ignore) {
             // console.log('[debug] parseAssignment failed on parseType', e);
             this.pos = p;
             let x = {
@@ -442,13 +442,13 @@ class Parser {
             case 'NULL':
                 return null;
             }
-        } catch (e) {
+        } catch (ignore) {
             this.pos = p;
         }
         p = this.pos;
         try {
             return this.parseIdentifier();
-        } catch (e) {
+        } catch (ignore) {
             this.pos = p;
         }
         this.exception('Unknown value type.');

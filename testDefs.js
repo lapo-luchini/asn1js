@@ -11,7 +11,7 @@ for await (const file of await fs.opendir('examples')) {
     try {
         try { // try PEM first
             content = Base64.unarmor(content);
-        } catch (e) { // try DER/BER then
+        } catch (ignore) { // try DER/BER then
         }
         let result = ASN1.decode(content);
         content = null;
