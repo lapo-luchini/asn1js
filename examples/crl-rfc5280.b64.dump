@@ -1,0 +1,45 @@
+CertificateList SEQUENCE @0+352 (constructed): (3 elem)
+  tbsCertList TBSCertList SEQUENCE @4+202 (constructed): (7 elem)
+    version Version INTEGER @7+1: 1
+    signature AlgorithmIdentifier SEQUENCE @10+13 (constructed): (2 elem)
+      algorithm OBJECT_IDENTIFIER @12+9: 1.2.840.113549.1.1.5|sha1WithRSAEncryption|PKCS #1
+      parameters ANY NULL @23+0
+    issuer Name SEQUENCE @25+67 (constructed): (3 elem)
+      RelativeDistinguishedName SET @27+19 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @29+17 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @31+10: 0.9.2342.19200300.100.1.25|domainComponent|Men are from Mars, this OID is from Pluto
+          value AttributeValue [?] IA5String @43+3: com
+      RelativeDistinguishedName SET @48+23 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @50+21 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @52+10: 0.9.2342.19200300.100.1.25|domainComponent|Men are from Mars, this OID is from Pluto
+          value AttributeValue [?] IA5String @64+7: example
+      RelativeDistinguishedName SET @73+19 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @75+17 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @77+3: 2.5.4.3|commonName|X.520 DN component
+          value AttributeValue [?] PrintableString @82+10: Example CA
+    utcTime Time UTCTime @94+13: 2005-02-05 12:00:00 UTC
+    utcTime Time UTCTime @109+13: 2005-02-06 12:00:00 UTC
+    revokedCertificates SEQUENCE @124+34 (constructed): (1 elem)
+      SEQUENCE @126+32 (constructed): (3 elem)
+        userCertificate CertificateSerialNumber INTEGER @128+1: 18
+        utcTime Time UTCTime @131+13: 2004-11-19 15:57:03 UTC
+        crlEntryExtensions Extensions SEQUENCE @146+12 (constructed): (1 elem)
+          Extension SEQUENCE @148+10 (constructed): (2 elem)
+            extnID OBJECT_IDENTIFIER @150+3: 2.5.29.21|cRLReason|X.509 extension
+            extnValue OCTET_STRING @155+3 (encapsulates): (3 byte)|0A0101
+              ENUMERATED @157+1: 1
+    crlExtensions [0] @160+47 (constructed): (1 elem)
+      Extensions SEQUENCE @162+45 (constructed): (2 elem)
+        Extension SEQUENCE @164+31 (constructed): (2 elem)
+          extnID OBJECT_IDENTIFIER @166+3: 2.5.29.35|authorityKeyIdentifier|X.509 extension
+          extnValue OCTET_STRING @171+24 (encapsulates): (24 byte)|301680140868AF8533C8394A7AF882938E706A4A20842C32
+            SEQUENCE @173+22 (constructed): (1 elem)
+              [0] @175+20: (20 byte)|0868AF8533C8394A7AF882938E706A4A20842C32
+        Extension SEQUENCE @197+10 (constructed): (2 elem)
+          extnID OBJECT_IDENTIFIER @199+3: 2.5.29.20|cRLNumber|X.509 extension
+          extnValue OCTET_STRING @204+3 (encapsulates): (3 byte)|02010C
+            INTEGER @206+1: 12
+  signatureAlgorithm AlgorithmIdentifier SEQUENCE @209+13 (constructed): (2 elem)
+    algorithm OBJECT_IDENTIFIER @211+9: 1.2.840.113549.1.1.5|sha1WithRSAEncryption|PKCS #1
+    parameters ANY NULL @222+0
+  signature BIT_STRING @224+129: (1024 bit)|0010001011011100000110000111110111110111000010001100111011001100011101011101000011010000011010101001101110101101000100001111010001110110001000111011010010000001011011101011010101101101101111100000111011111011000101010001010001101100110010000001011101101101000111111110111010010000000101111010001001101111011000001110010010111101101010101000110001010101110111101000111010000100011011111001001011111000100111110001000000010010001001111010111101001010110101000010111110000101111000100011011001000100011111011010101010100011010011000010010100111000000101011111111100000000111111010011111001111110111011100011110100100110000100101110101111011000111001110010101101100010111000100010101111000011010001101000000011101111011110001000001011010001000101011100011011010000100111000111001001101010110010111100111001111010111011010110011110011001100010110110111001110000100000010111110101000011010000100111010011000001101001101010111111000001010101010001011110100010001100110100110011010110000001101001100000101011101001001111110000101110

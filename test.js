@@ -6,6 +6,7 @@ import { Defs } from './defs.js';
 import { Hex } from './hex.js';
 import { Base64 } from './base64.js';
 import { Int10 } from './int10.js';
+import { createPatch } from 'diff';
 
 const all = (process.argv[2] == 'all');
 
@@ -16,6 +17,14 @@ const stats = {
     run: 0,
     error: 0,
 };
+
+function diff(str1, str2) {
+    let s = createPatch('test', str1, str2, null, null, { context: 2 });
+    s = s.slice(s.indexOf('@@'), -1);
+    s = s.replace(/^-.*/mg, '\x1B[31m$&\x1B[39m');
+    s = s.replace(/^\+.*/mg, '\x1B[32m$&\x1B[39m');
+    return s;
+}
 
 /**
  * A class for managing and executing tests.
@@ -73,8 +82,12 @@ class Tests {
         } else {
             ++stats.error;
             console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
-            console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
-            console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
+            if (result.length > 100) {
+                console.log('  \x1B[1m\x1B[34mDIF\x1B[39m\x1B[22m ' + diff(result, expected.toString()).replace(/\n/g, '\n      '));
+            } else {
+                console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
+                console.log('  \x1B[1m\x1B[33mGOT\x1B[39m\x1B[22m ' + result.replace(/\n/g, '\n      '));
+            }
         }
     }
 }
@@ -187,8 +200,7 @@ tests.push(new Tests('Dump of examples', function () {
         const filename = example.slice(0, -5); // Remove '.dump' suffix
         const expected = fs.readFileSync('examples/' + example, 'utf8');
         let data = fs.readFileSync('examples/' + filename);
-        if (filename.endsWith('.pem'))
-            data = Base64.unarmor(data);
+        data = Base64.unarmor(data);
         let node = ASN1.decode(data);
         const types = Defs.commonTypes
             .map(type => {

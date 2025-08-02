@@ -49,6 +49,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.32.0",
     "@rollup/wasm-node": "^4.46.2",
+    "diff": "^8.0.2",
     "eslint": "^9.32.0",
     "globals": "^16.3.0",
     "htmlparser2": "^9.1.0",
