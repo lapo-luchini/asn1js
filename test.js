@@ -22,6 +22,12 @@ const stats = {
  */
 class Tests {
     /**
+     * The title of the test suite.
+     * @type {string}
+     */
+    title;
+
+    /**
      * An array to store test data.
      * @type {Array<unknown>}
      */
@@ -35,10 +41,12 @@ class Tests {
 
     /**
      * Constructs a new Tests instance.
+     * @param {string} title - The title of the test suite.
      * @param {Function} checkRow - A function to check each row of data.
      * @param {Array<unknown>} data - The test data to be processed.
      */
-    constructor(checkRow, data) {
+    constructor(title, checkRow, data) {
+        this.title = title;
         this.checkRow = checkRow;
         this.data = data;
     }
@@ -47,6 +55,7 @@ class Tests {
      * Executes the tests and checks their results for all rows.
      */
     checkAll() {
+        if (all) console.log('\x1B[1m\x1B[34m' + this.title + '\x1B[39m\x1B[22m');
         for (const t of this.data)
             this.checkRow(t);
     }
@@ -70,7 +79,7 @@ class Tests {
     }
 }
 
-tests.push(new Tests(function (t) {
+tests.push(new Tests('ASN.1', function (t) {
     const input = t[0],
         expected = t[1],
         comment = t[2];
@@ -172,7 +181,7 @@ tests.push(new Tests(function (t) {
     ['171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', /^Exception:\nError: Unrecognized time: /, 'Invalid UTCTime'], // GitHub issue #79
 ]));
 
-tests.push(new Tests(function () {
+tests.push(new Tests('Dump of examples', function () {
     const examples = fs.readdirSync('examples/').filter(f => f.endsWith('.dump'));
     for (const example of examples) {
         const filename = example.slice(0, -5); // Remove '.dump' suffix
@@ -189,13 +198,13 @@ tests.push(new Tests(function () {
             .sort((a, b) => b.match - a.match);
         Defs.match(node, types[0].type);
         let result = node.toPrettyString();
-        this.checkResult(result, expected, 'Example: ' + filename);
+        this.checkResult(result, expected, 'Dump of examples/' + filename);
     }
 }, [
     [0],
 ]));
 
-tests.push(new Tests(function (t) {
+tests.push(new Tests('Base64', function (t) {
     let bin = Base64.decode(t);
     let url = new Stream(bin, 0).b64Dump(0, bin.length);
     // check base64url encoding
@@ -216,7 +225,7 @@ tests.push(new Tests(function (t) {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQR\nSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456w==',
 ]));
 
-tests.push(new Tests(function (t) {
+tests.push(new Tests('Int10', function (t) {
     this.row = (0|this.row) + 1;
     this.num = this.num || new Int10();
     this.num.mulAdd(t[0], t[1]);
