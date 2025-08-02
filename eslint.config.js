@@ -28,12 +28,12 @@ export default [
             }],
         },
     },
-    // {
-    //     files: ['defs.js'],
-    //     languageOptions: {
-    //         ecmaVersion: 2020,
-    //     },
-    // },
+    {
+        files: ['defs.js'],
+        languageOptions: {
+            ecmaVersion: 2020, // by use of optional chaining operator (?.) and null coalesching operator (??)
+        },
+    },
     {
         files: ['oids.js'],
         rules: {
@@ -53,15 +53,8 @@ export default [
                     ],
                 },
             ],
-
             'comma-dangle': 'off',
             quotes: ['warn', 'double'],
-        },
-    },
-    {
-        files: ['defs.js'],
-        languageOptions: {
-            ecmaVersion: 2021,
         },
     },
     {
