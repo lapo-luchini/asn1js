@@ -69,7 +69,7 @@ export class Defs {
 
     static match(value, def, stats = { total: 0, recognized: 0, defs: {} }) {
         value.def = {};
-        let tn = value.typeName().replaceAll('_', ' ');
+        let tn = value.typeName().replace(/_/g, ' ');
         def = translate(def, tn, stats);
         ++stats.total;
         if (def?.type) {
@@ -90,7 +90,7 @@ export class Defs {
                     if (def.typeOf)
                         type = def.content[0];
                     else {
-                        let tn = subval.typeName().replaceAll('_', ' ');
+                        let tn = subval.typeName().replace(/_/g, ' ');
                         for (;;) {
                             type = def.content[j++];
                             if (!type || typeof type != 'object') break;

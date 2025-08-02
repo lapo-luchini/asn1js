@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as fs from 'node:fs';
+import * as fs from 'fs'; // 'node:fs' doesn't work on NodeJS 14.5.0
 import { ASN1, Stream } from './asn1.js';
 import { Defs } from './defs.js';
 import { Hex } from './hex.js';
