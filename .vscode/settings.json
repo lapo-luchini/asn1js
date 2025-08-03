@@ -1,7 +1,7 @@
 {
   "editor.insertSpaces": true,
   "editor.tabSize": 8,
-  "editor.indentSize": 2,
+  "editor.indentSize": 4,
   "editor.stickyScroll.enabled": true,
   "explorer.excludeGitIgnore": true,
   "files.eol": "\n",
