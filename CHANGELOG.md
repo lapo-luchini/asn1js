@@ -5,7 +5,7 @@
 ### Changed
 
 - when fields are CHOICEs now both the field name and the choice name are shown (fixes GitHub #102)
-- upgrade minimum NodeJS version supported from 12.20.0 to 14.5.0 due to usage of ?. and ?? operators in defs.js (ECMAScript 2020); older code is still linted against ECMAScript 2015 for now
+- upgrade minimum NodeJS version supported from 12.20.0 to 14.6.0 due to usage of ?. and ?? operators in defs.js (ECMAScript 2020); older code is still linted against ECMAScript 2015 for now
 
 ### Added
 
