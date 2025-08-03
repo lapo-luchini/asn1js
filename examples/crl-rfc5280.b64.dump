@@ -4,7 +4,7 @@ CertificateList SEQUENCE @0+352 (constructed): (3 elem)
     signature AlgorithmIdentifier SEQUENCE @10+13 (constructed): (2 elem)
       algorithm OBJECT_IDENTIFIER @12+9: 1.2.840.113549.1.1.5|sha1WithRSAEncryption|PKCS #1
       parameters ANY NULL @23+0
-    issuer Name SEQUENCE @25+67 (constructed): (3 elem)
+    issuer rdnSequence Name SEQUENCE @25+67 (constructed): (3 elem)
       RelativeDistinguishedName SET @27+19 (constructed): (1 elem)
         AttributeTypeAndValue SEQUENCE @29+17 (constructed): (2 elem)
           type AttributeType OBJECT_IDENTIFIER @31+10: 0.9.2342.19200300.100.1.25|domainComponent|Men are from Mars, this OID is from Pluto
@@ -17,12 +17,12 @@ CertificateList SEQUENCE @0+352 (constructed): (3 elem)
         AttributeTypeAndValue SEQUENCE @75+17 (constructed): (2 elem)
           type AttributeType OBJECT_IDENTIFIER @77+3: 2.5.4.3|commonName|X.520 DN component
           value AttributeValue [?] PrintableString @82+10: Example CA
-    utcTime Time UTCTime @94+13: 2005-02-05 12:00:00 UTC
-    utcTime Time UTCTime @109+13: 2005-02-06 12:00:00 UTC
+    thisUpdate utcTime Time UTCTime @94+13: 2005-02-05 12:00:00 UTC
+    nextUpdate utcTime Time UTCTime @109+13: 2005-02-06 12:00:00 UTC
     revokedCertificates SEQUENCE @124+34 (constructed): (1 elem)
       SEQUENCE @126+32 (constructed): (3 elem)
         userCertificate CertificateSerialNumber INTEGER @128+1: 18
-        utcTime Time UTCTime @131+13: 2004-11-19 15:57:03 UTC
+        revocationDate utcTime Time UTCTime @131+13: 2004-11-19 15:57:03 UTC
         crlEntryExtensions Extensions SEQUENCE @146+12 (constructed): (1 elem)
           Extension SEQUENCE @148+10 (constructed): (2 elem)
             extnID OBJECT_IDENTIFIER @150+3: 2.5.29.21|cRLReason|X.509 extension

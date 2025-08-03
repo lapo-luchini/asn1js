@@ -19,15 +19,15 @@ ContentInfo SEQUENCE @0+10868 (constructed): (2 elem)
             serialNumber CertificateSerialNumber INTEGER @10117+16: (127 bit)|128087855099855233032551836648087377254
             signature AlgorithmIdentifier SEQUENCE @10135+10 (constructed): (1 elem)
               algorithm OBJECT_IDENTIFIER @10137+8: 1.2.840.10045.4.3.2|ecdsaWithSHA256|ANSI X9.62 ECDSA algorithm with SHA256
-            issuer Name SEQUENCE @10147+15 (constructed): (1 elem)
+            issuer rdnSequence Name SEQUENCE @10147+15 (constructed): (1 elem)
               RelativeDistinguishedName SET @10149+13 (constructed): (1 elem)
                 AttributeTypeAndValue SEQUENCE @10151+11 (constructed): (2 elem)
                   type AttributeType OBJECT_IDENTIFIER @10153+3: 2.5.4.3|commonName|X.520 DN component
                   value AttributeValue [?] UTF8String @10158+4: Test
             validity Validity SEQUENCE @10164+30 (constructed): (2 elem)
-              utcTime Time UTCTime @10166+13: 2018-07-16 14:56:35 UTC
-              utcTime Time UTCTime @10181+13: 2019-07-16 14:56:35 UTC
-            subject Name SEQUENCE @10196+15 (constructed): (1 elem)
+              notBefore utcTime Time UTCTime @10166+13: 2018-07-16 14:56:35 UTC
+              notAfter utcTime Time UTCTime @10181+13: 2019-07-16 14:56:35 UTC
+            subject rdnSequence Name SEQUENCE @10196+15 (constructed): (1 elem)
               RelativeDistinguishedName SET @10198+13 (constructed): (1 elem)
                 AttributeTypeAndValue SEQUENCE @10200+11 (constructed): (2 elem)
                   type AttributeType OBJECT_IDENTIFIER @10202+3: 2.5.4.3|commonName|X.520 DN component
@@ -62,8 +62,8 @@ ContentInfo SEQUENCE @0+10868 (constructed): (2 elem)
       signerInfos SignerInfos SET @10474+394 (constructed): (1 elem)
         SignerInfo SEQUENCE @10478+390 (constructed): (6 elem)
           version CMSVersion INTEGER @10482+1: 1
-          issuerAndSerialNumber SignerIdentifier SEQUENCE @10485+35 (constructed): (2 elem)
-            rdnSequence Name SEQUENCE @10487+15 (constructed): (1 elem)
+          sid issuerAndSerialNumber SignerIdentifier SEQUENCE @10485+35 (constructed): (2 elem)
+            issuer rdnSequence Name SEQUENCE @10487+15 (constructed): (1 elem)
               RelativeDistinguishedName SET @10489+13 (constructed): (1 elem)
                 AttributeTypeAndValue SEQUENCE @10491+11 (constructed): (2 elem)
                   type AttributeType OBJECT_IDENTIFIER @10493+3: 2.5.4.3|commonName|X.520 DN component

@@ -1,6 +1,6 @@
 LDAPMessage SEQUENCE @0+53 (constructed): (3 elem)
   messageID MessageID INTEGER @2+1: 5
-  delRequest CHOICE Application_10 @5+17: (17 byte)|dc=example,dc=com
+  protocolOp delRequest CHOICE Application_10 @5+17: (17 byte)|dc=example,dc=com
   Controls [?] [0] @24+29 (constructed): (1 elem)
     AttributeTypeAndValue SEQUENCE @26+27 (constructed): (2 elem)
       type AttributeType [?] OCTET_STRING @28+22: (22 byte)|1.2.840.113556.1.4.805

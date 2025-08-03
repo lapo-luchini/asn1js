@@ -5,7 +5,7 @@ Certificate SEQUENCE @0+383 (constructed): (3 elem)
     serialNumber CertificateSerialNumber INTEGER @13+20: (159 bit)|711090297755414526861352146244170174161660335942
     signature AlgorithmIdentifier SEQUENCE @35+5 (constructed): (1 elem)
       algorithm OBJECT_IDENTIFIER @37+3: 1.3.101.112|curveEd25519|EdDSA 25519 signature algorithm
-    issuer Name SEQUENCE @42+53 (constructed): (3 elem)
+    issuer rdnSequence Name SEQUENCE @42+53 (constructed): (3 elem)
       RelativeDistinguishedName SET @44+11 (constructed): (1 elem)
         AttributeTypeAndValue SEQUENCE @46+9 (constructed): (2 elem)
           type AttributeType OBJECT_IDENTIFIER @48+3: 2.5.4.6|countryName|X.520 DN component
@@ -19,9 +19,9 @@ Certificate SEQUENCE @0+383 (constructed): (3 elem)
           type AttributeType OBJECT_IDENTIFIER @78+3: 2.5.4.3|commonName|X.520 DN component
           value AttributeValue [?] UTF8String @83+12: Test ed25519
     validity Validity SEQUENCE @97+30 (constructed): (2 elem)
-      utcTime Time UTCTime @99+13: 2020-09-02 13:25:26 UTC
-      utcTime Time UTCTime @114+13: 2030-09-02 13:25:26 UTC
-    subject Name SEQUENCE @129+53 (constructed): (3 elem)
+      notBefore utcTime Time UTCTime @99+13: 2020-09-02 13:25:26 UTC
+      notAfter utcTime Time UTCTime @114+13: 2030-09-02 13:25:26 UTC
+    subject rdnSequence Name SEQUENCE @129+53 (constructed): (3 elem)
       RelativeDistinguishedName SET @131+11 (constructed): (1 elem)
         AttributeTypeAndValue SEQUENCE @133+9 (constructed): (2 elem)
           type AttributeType OBJECT_IDENTIFIER @135+3: 2.5.4.6|countryName|X.520 DN component

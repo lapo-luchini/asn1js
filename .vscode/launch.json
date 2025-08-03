@@ -42,7 +42,21 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "dumpASN1 cert",
+      "name": "dumpASN1 X.509",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/dumpASN1.js",
+      "args": [
+        "examples/ed25519.cer",
+        "1.3.6.1.5.5.7.0.18",
+        "Certificate"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "dumpASN1 CRL",
       "skipFiles": [
         "<node_internals>/**"
       ],

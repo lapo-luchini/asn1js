@@ -35,7 +35,8 @@ function translate(def, tn, stats) {
                 c = translate(c);
             if (tn == c.type.name || tn == c.name) {
                 def = Object.assign({}, def);
-                if (c.id) def.id = c.id;
+                if (c.id) // show the CHOICE id, but add it to existing one if present
+                    def.id = def.id ? def.id + ' ' + c.id : c.id;
                 def.type = c.type.name ? c.type : c;
                 break;
             }
@@ -95,7 +96,8 @@ export class Defs {
                             type = def.content[j++];
                             if (!type || typeof type != 'object') break;
                             if (type?.type?.type)
-                                type = type.type;
+                                // type = type.type;
+                                type = Object.assign({}, type.type, {id: type.id});
                             if (type.type == 'defined') {
                                 let t2 = translate(type, tn);
                                 if (t2.type.name == tn) break; // exact match
