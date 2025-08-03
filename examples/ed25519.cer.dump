@@ -1,0 +1,60 @@
+Certificate SEQUENCE @0+383 (constructed): (3 elem)
+  tbsCertificate TBSCertificate SEQUENCE @4+305 (constructed): (8 elem)
+    version [0] @8+3 (constructed): (1 elem)
+      Version INTEGER @10+1: 2
+    serialNumber CertificateSerialNumber INTEGER @13+20: (159 bit)|711090297755414526861352146244170174161660335942
+    signature AlgorithmIdentifier SEQUENCE @35+5 (constructed): (1 elem)
+      algorithm OBJECT_IDENTIFIER @37+3: 1.3.101.112|curveEd25519|EdDSA 25519 signature algorithm
+    issuer Name SEQUENCE @42+53 (constructed): (3 elem)
+      RelativeDistinguishedName SET @44+11 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @46+9 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @48+3: 2.5.4.6|countryName|X.520 DN component
+          value AttributeValue [?] PrintableString @53+2: IT
+      RelativeDistinguishedName SET @57+15 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @59+13 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @61+3: 2.5.4.7|localityName|X.520 DN component
+          value AttributeValue [?] UTF8String @66+6: Milano
+      RelativeDistinguishedName SET @74+21 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @76+19 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @78+3: 2.5.4.3|commonName|X.520 DN component
+          value AttributeValue [?] UTF8String @83+12: Test ed25519
+    validity Validity SEQUENCE @97+30 (constructed): (2 elem)
+      utcTime Time UTCTime @99+13: 2020-09-02 13:25:26 UTC
+      utcTime Time UTCTime @114+13: 2030-09-02 13:25:26 UTC
+    subject Name SEQUENCE @129+53 (constructed): (3 elem)
+      RelativeDistinguishedName SET @131+11 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @133+9 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @135+3: 2.5.4.6|countryName|X.520 DN component
+          value AttributeValue [?] PrintableString @140+2: IT
+      RelativeDistinguishedName SET @144+15 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @146+13 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @148+3: 2.5.4.7|localityName|X.520 DN component
+          value AttributeValue [?] UTF8String @153+6: Milano
+      RelativeDistinguishedName SET @161+21 (constructed): (1 elem)
+        AttributeTypeAndValue SEQUENCE @163+19 (constructed): (2 elem)
+          type AttributeType OBJECT_IDENTIFIER @165+3: 2.5.4.3|commonName|X.520 DN component
+          value AttributeValue [?] UTF8String @170+12: Test ed25519
+    subjectPublicKeyInfo SubjectPublicKeyInfo SEQUENCE @184+42 (constructed): (2 elem)
+      algorithm AlgorithmIdentifier SEQUENCE @186+5 (constructed): (1 elem)
+        algorithm OBJECT_IDENTIFIER @188+3: 1.3.101.112|curveEd25519|EdDSA 25519 signature algorithm
+      subjectPublicKey BIT_STRING @193+33: (256 bit)|0011101110101001001011111111110111001011000101110110011011011110010000001010001010010010111101111001001111011110001100001111100000001010001000111010100000110001001000010101110111010000000001111101100001100011001001000010111011111111011010000010000110000101
+    extensions [3] @228+83 (constructed): (1 elem)
+      Extensions SEQUENCE @230+81 (constructed): (3 elem)
+        Extension SEQUENCE @232+29 (constructed): (2 elem)
+          extnID OBJECT_IDENTIFIER @234+3: 2.5.29.14|subjectKeyIdentifier|X.509 extension
+          extnValue OCTET_STRING @239+22 (encapsulates): (22 byte)|04146BA5BDCF9DFA235978126417AE1E72D89A804AE8
+            OCTET_STRING @241+20: (20 byte)|6BA5BDCF9DFA235978126417AE1E72D89A804AE8
+        Extension SEQUENCE @263+31 (constructed): (2 elem)
+          extnID OBJECT_IDENTIFIER @265+3: 2.5.29.35|authorityKeyIdentifier|X.509 extension
+          extnValue OCTET_STRING @270+24 (encapsulates): (24 byte)|301680146BA5BDCF9DFA235978126417AE1E72D89A804AE8
+            SEQUENCE @272+22 (constructed): (1 elem)
+              [0] @274+20: (20 byte)|6BA5BDCF9DFA235978126417AE1E72D89A804AE8
+        Extension SEQUENCE @296+15 (constructed): (3 elem)
+          extnID OBJECT_IDENTIFIER @298+3: 2.5.29.19|basicConstraints|X.509 extension
+          critical BOOLEAN @303+1: true
+          extnValue OCTET_STRING @306+5 (encapsulates): (5 byte)|30030101FF
+            SEQUENCE @308+3 (constructed): (1 elem)
+              BOOLEAN @310+1: true
+  signatureAlgorithm AlgorithmIdentifier SEQUENCE @313+5 (constructed): (1 elem)
+    algorithm OBJECT_IDENTIFIER @315+3: 1.3.101.112|curveEd25519|EdDSA 25519 signature algorithm
+  signature BIT_STRING @320+65: (512 bit)|01101111011100110111011110111110001010001001011001011010001100110011011011010111111001010011010011111101100100001111001111111101010000000111111100011111000000101111100100000000010101111111001000010110000011110001011001101011000001001011111101100101100001001011011010011000110100101101000011010010101111110100110011010110011011110000111010110110111000101110100010011101000001001010001111100000100110010101000011111001110000100110110111011110011100111010110100011101001101010101011110000101011001011000011000000110
