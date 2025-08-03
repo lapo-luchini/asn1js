@@ -105,4 +105,5 @@ links
 - [dedicated domain](https://asn1js.eu/)
 - [InDefero tracker](http://idf.lapo.it/p/asn1js/)
 - [GitHub mirror](https://github.com/lapo-luchini/asn1js)
+- [ChangeLog on GitHub](https://github.com/lapo-luchini/asn1js/blob/trunk/CHANGELOG.md)
 - [Ohloh code stats](https://www.openhub.net/p/asn1js)

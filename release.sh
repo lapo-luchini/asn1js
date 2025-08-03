@@ -5,7 +5,7 @@ FILES="
   rfcdef.js test.js tags.js
   index.html index.css index.js index-local.html
   favicon.svg tree-icon-light.svg tree-icon-dark.svg
-  README.md LICENSE
+  README.md LICENSE CHANGELOG.md
   updateOID.sh check.sh
   examples
 "
