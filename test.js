@@ -21,6 +21,7 @@ const stats = {
 function diff(str1, str2) {
     let s = createPatch('test', str1, str2, null, null, { context: 2 });
     s = s.slice(s.indexOf('@@'), -1);
+    s = s.replace(/^@@.*/mg, '\x1B[34m$&\x1B[39m');
     s = s.replace(/^-.*/mg, '\x1B[31m$&\x1B[39m');
     s = s.replace(/^\+.*/mg, '\x1B[32m$&\x1B[39m');
     return s;
