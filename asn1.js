@@ -461,9 +461,9 @@ export class ASN1 {
         }
         if (len === 0) {
             switch (this.tag.tagNumber) {
-                case 1:
-                case 2:
-                case 6:
+                case 0x01: // BOOLEAN
+                case 0x02: // INTEGER
+                case 0x06: // OBJECT_IDENTIFIER
 	                return "invalid length 0";
             }
         }
