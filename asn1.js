@@ -459,6 +459,14 @@ export class ASN1 {
             let d1 = this.stream.parseOctetString(content, content + len, maxLength);
             return '(' + d1.size + ' byte)\n' + d1.str;
         }
+        if (len === 0) {
+            switch (this.tag.tagNumber) {
+                case 1:
+                case 2:
+                case 6:
+	                return "invalid length 0";
+            }
+        }
         switch (this.tag.tagNumber) {
         case 0x01: // BOOLEAN
             return (this.stream.get(content) === 0) ? 'false' : 'true';
