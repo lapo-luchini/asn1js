@@ -459,24 +459,19 @@ export class ASN1 {
             let d1 = this.stream.parseOctetString(content, content + len, maxLength);
             return '(' + d1.size + ' byte)\n' + d1.str;
         }
-        if (len === 0) {
-            switch (this.tag.tagNumber) {
-                case 0x01: // BOOLEAN
-                case 0x02: // INTEGER
-                case 0x06: // OBJECT_IDENTIFIER
-	                return "invalid length 0";
-            }
-        }
         switch (this.tag.tagNumber) {
         case 0x01: // BOOLEAN
+            if (len === 0) return 'invalid length 0';
             return (this.stream.get(content) === 0) ? 'false' : 'true';
         case 0x02: // INTEGER
+            if (len === 0) return 'invalid length 0';
             return this.stream.parseInteger(content, content + len);
         case 0x03: { // BIT_STRING
             let d = recurse(this, 'parseBitString', maxLength);
             return '(' + d.size + ' bit)\n' + d.str;
         }
         case 0x04: { // OCTET_STRING
+            if (len === 0) return 'invalid length 0';
             let d = recurse(this, 'parseOctetString', maxLength);
             return '(' + d.size + ' byte)\n' + d.str;
         }
