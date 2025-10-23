@@ -461,6 +461,7 @@ export class ASN1 {
         }
         switch (this.tag.tagNumber) {
         case 0x01: // BOOLEAN
+            if (len != 1) throw new Error('BOOLEAN with invalid length ' + len + ' at position ' + this.stream.pos);
             return (this.stream.get(content) === 0) ? 'false' : 'true';
         case 0x02: // INTEGER
             return this.stream.parseInteger(content, content + len);
