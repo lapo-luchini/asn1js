@@ -471,12 +471,12 @@ export class ASN1 {
             return '(' + d.size + ' bit)\n' + d.str;
         }
         case 0x04: { // OCTET_STRING
-            if (len < 1) return 'invalid length ' + len; // pgut001's dumpasn1.c enforces a minimum lenght of 3
             let d = recurse(this, 'parseOctetString', maxLength);
             return '(' + d.size + ' byte)\n' + d.str;
         }
         //case 0x05: // NULL
         case 0x06: // OBJECT_IDENTIFIER
+            if (len < 1) return 'invalid length ' + len; // pgut001's dumpasn1.c enforces a minimum lenght of 3
             return this.stream.parseOID(content, content + len, maxLength);
         //case 0x07: // ObjectDescriptor
         //case 0x08: // EXTERNAL

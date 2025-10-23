@@ -78,12 +78,15 @@ class Tests {
      */
     checkResult(result, expected, comment) {
         ++stats.run;
-        if (!result || result == expected) {
+        if ((typeof expected != 'string' && !result) || result == expected) {
             if (all) console.log('\x1B[1m\x1B[32mOK \x1B[39m\x1B[22m ' + comment);
         } else {
             ++stats.error;
             console.log('\x1B[1m\x1B[31mERR\x1B[39m\x1B[22m ' + comment);
-            if (result.length > 100) {
+            if (!result) result = '(empty)';
+            if (typeof expected != 'string') {
+                console.log('  ' + result);
+            } else if (result.length > 100) {
                 console.log('  \x1B[1m\x1B[34mDIF\x1B[39m\x1B[22m ' + diff(result, expected.toString()).replace(/\n/g, '\n      '));
             } else {
                 console.log('  \x1B[1m\x1B[34mEXP\x1B[39m\x1B[22m ' + expected.toString().replace(/\n/g, '\n      '));
