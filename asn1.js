@@ -467,11 +467,11 @@ export class ASN1 {
             if (len < 1) return 'invalid length ' + len;
             return this.stream.parseInteger(content, content + len);
         case 0x03: { // BIT_STRING
-            if (len < 1) return 'invalid length ' + len; // pgut001's dumpasn1.c enforces a minimum lenght of 3
             let d = recurse(this, 'parseBitString', maxLength);
             return '(' + d.size + ' bit)\n' + d.str;
         }
         case 0x04: { // OCTET_STRING
+            if (len < 1) return 'invalid length ' + len; // pgut001's dumpasn1.c enforces a minimum lenght of 3
             let d = recurse(this, 'parseOctetString', maxLength);
             return '(' + d.size + ' byte)\n' + d.str;
         }
