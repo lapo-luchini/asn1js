@@ -101,9 +101,10 @@ credits
 links
 -----
 
-- [official website](https://lapo.it/asn1js/)
-- [dedicated domain](https://asn1js.eu/)
-- [InDefero tracker](http://idf.lapo.it/p/asn1js/)
+- [official website](https://asn1js.eu/)
+- [alternate website](https://lapo.it/asn1js/)
+- [single-file version working locally](https://asn1js.eu/index-local.html) (just save this link)
+- [InDefero tracker](http://idf.lapo.it/p/asn1js/) (currently offline)
 - [GitHub mirror](https://github.com/lapo-luchini/asn1js)
 - [ChangeLog on GitHub](https://github.com/lapo-luchini/asn1js/blob/trunk/CHANGELOG.md)
 - [Ohloh code stats](https://www.openhub.net/p/asn1js)
