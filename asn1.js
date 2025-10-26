@@ -120,9 +120,9 @@ export class Stream {
      * @param {number} end ending position (excluded)
      * @param {string} type 'url' (default, section 5 without padding) or 'std' (section 4 with padding) */
     b64Dump(start, end, type = 'url') {
-        const b64 = type === 'url' ? b64URL : b64Std;
-        let extra = (end - start) % 3,
-            s = '',
+        const b64 = type === 'url' ? b64URL : b64Std,
+            extra = (end - start) % 3;
+        let s = '',
             i, c;
         for (i = start; i + 2 < end; i += 3) {
             c = this.get(i) << 16 | this.get(i + 1) << 8 | this.get(i + 2);
@@ -158,8 +158,8 @@ export class Stream {
     parseStringT61(start, end, maxLength) {
         // warning: this code is not very well tested so far
         function merge(c, d) {
-            let t = tableT61[c - 0xC0];
-            let i = t[0].indexOf(String.fromCharCode(d));
+            const t = tableT61[c - 0xC0];
+            const i = t[0].indexOf(String.fromCharCode(d));
             return (i < 0) ? '\0' : t[1].charAt(i);
         }
         let s = '', c;
@@ -191,7 +191,7 @@ export class Stream {
         }
         let s = '';
         for (let i = start; i < end; ) {
-            let c = this.get(i++);
+            const c = this.get(i++);
             if (c < 0x80) // 0xxxxxxx (7 bit)
                 s += String.fromCharCode(c);
             else if (c < 0xC0)
@@ -245,25 +245,24 @@ export class Stream {
     }
     parseInteger(start, end) {
         let v = this.get(start),
-            neg = (v > 127),
-            pad = neg ? 255 : 0,
-            len,
             s = '';
+        const neg = (v > 127),
+            pad = neg ? 255 : 0;
         // skip unuseful bits (not allowed in DER)
         while (v == pad && ++start < end)
             v = this.get(start);
-        len = end - start;
+        const len = end - start;
         if (len === 0)
             return neg ? '-1' : '0';
         // show bit length of huge integers
         if (len > 4) {
-            s = v;
-            len <<= 3;
-            while (((s ^ pad) & 0x80) == 0) {
-                s <<= 1;
-                --len;
+            let v2 = v,
+                lenBit = len << 3;
+            while (((v2 ^ pad) & 0x80) == 0) {
+                v2 <<= 1;
+                --lenBit;
             }
-            s = '(' + len + ' bit)\n';
+            s = '(' + lenBit + ' bit)\n';
         }
         // decode the integer
         if (neg) v = v - 256;
@@ -273,11 +272,11 @@ export class Stream {
         return s + n.toString();
     }
     parseBitString(start, end, maxLength) {
-        let unusedBits = this.get(start);
+        const unusedBits = this.get(start);
         if (unusedBits > 7)
             throw new Error('Invalid BitString with unusedBits=' + unusedBits);
-        let lenBit = ((end - start - 1) << 3) - unusedBits,
-            s = '';
+        const lenBit = ((end - start - 1) << 3) - unusedBits;
+        let s = '';
         for (let i = start + 1; i < end; ++i) {
             let b = this.get(i),
                 skip = (i == end - 1) ? unusedBits : 0;
@@ -289,8 +288,8 @@ export class Stream {
         return { size: lenBit, str: s };
     }
     parseOctetString(start, end, maxLength) {
-        let len = end - start,
-            s;
+        const len = end - start;
+        let s;
         try {
             s = this.parseStringUTF(start, end, maxLength);
             checkPrintable(s.str);
@@ -451,7 +450,7 @@ export class ASN1 {
             return null;
         if (maxLength === undefined)
             maxLength = Infinity;
-        let content = this.posContent(),
+        const content = this.posContent(),
             len = Math.abs(this.length);
         if (!this.tag.isUniversal()) {
             if (this.sub !== null)
@@ -571,7 +570,7 @@ export class ASN1 {
         return this.stream.b64Dump(this.posStart(), this.posEnd(), type);
     }
     static decodeLength(stream) {
-        let buf = stream.get(),
+        const buf = stream.get(),
             len = buf & 0x7F;
         if (len == buf) // first bit was 0, short form
             return len;
@@ -579,10 +578,10 @@ export class ASN1 {
             return null; // undefined length
         if (len > 6) // no reason to use Int10, as it would be a huge buffer anyways
             throw new Error('Length over 48 bits not supported at position ' + (stream.pos - 1));
-        buf = 0;
+        let value = 0;
         for (let i = 0; i < len; ++i)
-            buf = (buf * 256) + stream.get();
-        return buf;
+            value = (value * 256) + stream.get();
+        return value;
     }
     static decode(stream, offset, type = ASN1) {
         if (!(type == ASN1 || type.prototype instanceof ASN1))
