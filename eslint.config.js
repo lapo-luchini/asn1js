@@ -10,7 +10,7 @@ export default [
                 ...globals.node,
                 Uint8Array: 'readonly',
             },
-            ecmaVersion: 2015,
+            ecmaVersion: 2020,
         },
         rules: {
             indent: ['error', 4],
@@ -26,12 +26,6 @@ export default [
             'no-unused-vars': ['error', {
                 caughtErrorsIgnorePattern: 'ignore',
             }],
-        },
-    },
-    {
-        files: ['defs.js'],
-        languageOptions: {
-            ecmaVersion: 2020, // by use of optional chaining operator (?.) and null coalesching operator (??)
         },
     },
     {

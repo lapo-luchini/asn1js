@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 FILES="
-  asn1.js oids.js defs.js base64.js hex.js int10.js dom.js context.js theme.js
+  asn1.js oids.js defs.js base64.js hex.js dom.js context.js theme.js
   rfcdef.js test.js tags.js
   index.html index.css index.js index-local.html
   favicon.svg tree-icon-light.svg tree-icon-dark.svg

@@ -5,7 +5,6 @@ import { ASN1, Stream } from './asn1.js';
 import { Defs } from './defs.js';
 import { Hex } from './hex.js';
 import { Base64 } from './base64.js';
-import { Int10 } from './int10.js';
 import { createPatch } from 'diff';
 
 const all = (process.argv[2] == 'all');
@@ -251,27 +250,6 @@ tests.push(new Tests('Base64', function (t) {
     'ABCDEFE=',
     'ABCDEFGH',
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQR\nSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456w==',
-]));
-
-tests.push(new Tests('Int10', function (t) {
-    this.row = (0|this.row) + 1;
-    this.num = this.num || new Int10();
-    this.num.mulAdd(t[0], t[1]);
-    this.checkResult(this.num.toString(), t[2], 'Int10 row ' + this.row);
-}, [
-    [0, 1000000000, '1000000000'],
-    [256, 23, '256000000023'],
-    [256, 23, '65536000005911'],
-    [256, 23, '16777216001513239'],
-    [256, 23, '4294967296387389207'],
-    [256, 23, '1099511627875171637015'],
-    [256, 23, '281474976736043939075863'],
-    [253, 1, '71213169114219116586193340'],
-    [253, 1, '18016931785897436496306915021'],
-    [253, 1, '4558283741832051433565649500314'],
-    [253, 1, '1153245786683509012692109323579443'],
-    [253, 1, '291771184030927780211103658865599080'],
-    [1, 0, '291771184030927780211103658865599080'],
 ]));
 
 for (const t of tests)

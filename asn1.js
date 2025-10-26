@@ -13,7 +13,6 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import { Int10 } from './int10.js';
 import { oids } from './oids.js';
 
 const
@@ -266,10 +265,10 @@ export class Stream {
         }
         // decode the integer
         if (neg) v = v - 256;
-        let n = new Int10(v);
+        let n = BigInt(v);
         for (let i = start + 1; i < end; ++i)
-            n.mulAdd(256, this.get(i));
-        return s + n.toString();
+            n = (n << 8n) | BigInt(this.get(i));
+        return s + n;
     }
     parseBitString(start, end, maxLength) {
         const unusedBits = this.get(start);
@@ -309,29 +308,25 @@ export class Stream {
     }
     parseOID(start, end, maxLength, isRelative) {
         let s = '',
-            n = new Int10(),
+            n = 0n,
             bits = 0;
         for (let i = start; i < end; ++i) {
             let v = this.get(i);
-            n.mulAdd(128, v & 0x7F);
+            n = (n << 7n) | BigInt(v & 0x7F);
             bits += 7;
             if (!(v & 0x80)) { // finished
                 if (s === '') {
-                    n = n.simplify();
                     if (isRelative) {
-                        s = (n instanceof Int10) ? n.toString() : '' + n;
-                    } else if (n instanceof Int10) {
-                        n.sub(80);
-                        s = '2.' + n.toString();
+                        s = n.toString();
                     } else {
-                        let m = n < 80 ? n < 40 ? 0 : 1 : 2;
-                        s = m + '.' + (n - m * 40);
+                        let m = n < 80 ? n < 40 ? 0n : 1n : 2n;
+                        s = m + '.' + (n - m * 40n);
                     }
                 } else
-                    s += '.' + n.toString();
+                    s += '.' + n;
                 if (s.length > maxLength)
                     return stringCut(s, maxLength);
-                n = new Int10();
+                n = 0n;
                 bits = 0;
             }
         }
@@ -379,12 +374,12 @@ class ASN1Tag {
         this.tagConstructed = ((buf & 0x20) !== 0);
         this.tagNumber = buf & 0x1F;
         if (this.tagNumber == 0x1F) { // long tag
-            let n = new Int10();
+            let n = 0n;
             do {
                 buf = stream.get();
-                n.mulAdd(128, buf & 0x7F);
+                n = (n << 7n) | BigInt(buf & 0x7F);
             } while (buf & 0x80);
-            this.tagNumber = n.simplify();
+            this.tagNumber = n <= Number.MAX_SAFE_INTEGER ? Number(n) : n;
         }
     }
     isUniversal() {
@@ -576,11 +571,11 @@ export class ASN1 {
             return len;
         if (len === 0) // long form with length 0 is a special case
             return null; // undefined length
-        if (len > 6) // no reason to use Int10, as it would be a huge buffer anyways
+        if (len > 6) // no reason to use BigInt, as it would be a huge buffer anyways
             throw new Error('Length over 48 bits not supported at position ' + (stream.pos - 1));
         let value = 0;
         for (let i = 0; i < len; ++i)
-            value = (value * 256) + stream.get();
+            value = (value << 8) | stream.get();
         return value;
     }
     static decode(stream, offset, type = ASN1) {
