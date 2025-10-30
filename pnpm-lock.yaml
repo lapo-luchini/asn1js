@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 overrides:
   rollup: npm:@rollup/wasm-node
-  esbuild@<=0.24.2: '>=0.25.0'
 
 specifiers:
   '@eslint/eslintrc': ^3.3.1
@@ -12,7 +11,7 @@ specifiers:
   eslint: ^9.38.0
   globals: ^16.4.0
   htmlparser2: ^9.1.0
-  vite: ^5.4.21
+  vite: ^7.1.12
   vite-plugin-dom: ^1.0.5
   vite-plugin-singlefile: ^2.3.0
 
@@ -24,9 +23,9 @@ devDependencies:
   eslint: 9.38.0
   globals: 16.4.0
   htmlparser2: 9.1.0
-  vite: 5.4.21
-  vite-plugin-dom: 1.0.5_vite@5.4.21
-  vite-plugin-singlefile: 2.3.0_vite@5.4.21
+  vite: 7.1.12
+  vite-plugin-dom: 1.0.5_vite@7.1.12
+  vite-plugin-singlefile: 2.3.0_vite@7.1.12
 
 packages:
 
@@ -290,15 +289,22 @@ packages:
       - supports-color
     dev: true
 
-  /@eslint/config-helpers/0.4.1:
-    resolution: {integrity: sha512-csZAzkNhsgwb0I/UAV6/RGFTbiakPCf0ZrGmrIxQpYvGZ00PhTkSnyKNolphgIvmnJeGw6rcGVEXfTzUnFuEvw==}
+  /@eslint/config-helpers/0.4.2:
+    resolution: {integrity: sha512-gBrxN88gOIf3R7ja5K9slwNayVcZgK6SOUORm2uBzTeIEfeVaIhOpCtTox3P6R7o2jLFwLFTLnC7kU/RGcYEgw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
-      '@eslint/core': 0.16.0
+      '@eslint/core': 0.17.0
     dev: true
 
   /@eslint/core/0.16.0:
     resolution: {integrity: sha512-nmC8/totwobIiFcGkDza3GIKfAw1+hLiYVrh3I1nIomQ8PEr5cxg34jnkmGawul/ep52wGRAcyeDCNtWKSOj4Q==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    dependencies:
+      '@types/json-schema': 7.0.15
+    dev: true
+
+  /@eslint/core/0.17.0:
+    resolution: {integrity: sha512-yL/sLrpmtDaFEiUj1osRP4TI2MDz1AddJL+jZ7KSqvBuliN4xqYY54IfdN8qD8Toa6g1iloph1fxQNkjOxrrpQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
       '@types/json-schema': 7.0.15
@@ -331,11 +337,11 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dev: true
 
-  /@eslint/plugin-kit/0.4.0:
-    resolution: {integrity: sha512-sB5uyeq+dwCWyPi31B2gQlVlo+j5brPlWx4yZBrEaRo/nhdDE8Xke1gsGgtiBdaBTxuTkceLVuVt/pclrasb0A==}
+  /@eslint/plugin-kit/0.4.1:
+    resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
-      '@eslint/core': 0.16.0
+      '@eslint/core': 0.17.0
       levn: 0.4.1
     dev: true
 
@@ -597,11 +603,11 @@ packages:
       '@eslint-community/eslint-utils': 4.9.0_eslint@9.38.0
       '@eslint-community/regexpp': 4.12.2
       '@eslint/config-array': 0.21.1
-      '@eslint/config-helpers': 0.4.1
+      '@eslint/config-helpers': 0.4.2
       '@eslint/core': 0.16.0
       '@eslint/eslintrc': 3.3.1
       '@eslint/js': 9.38.0
-      '@eslint/plugin-kit': 0.4.0
+      '@eslint/plugin-kit': 0.4.1
       '@humanfs/node': 0.16.7
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.3
@@ -675,6 +681,18 @@ packages:
 
   /fast-levenshtein/2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
+    dev: true
+
+  /fdir/6.5.0_picomatch@4.0.3:
+    resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
+    dependencies:
+      picomatch: 4.0.3
     dev: true
 
   /file-entry-cache/8.0.0:
@@ -922,6 +940,11 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
+  /picomatch/4.0.3:
+    resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
+    engines: {node: '>=12'}
+    dev: true
+
   /postcss/8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -975,6 +998,14 @@ packages:
       has-flag: 4.0.0
     dev: true
 
+  /tinyglobby/0.2.15:
+    resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      fdir: 6.5.0_picomatch@4.0.3
+      picomatch: 4.0.3
+    dev: true
+
   /to-regex-range/5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
@@ -995,16 +1026,16 @@ packages:
       punycode: 2.3.1
     dev: true
 
-  /vite-plugin-dom/1.0.5_vite@5.4.21:
+  /vite-plugin-dom/1.0.5_vite@7.1.12:
     resolution: {integrity: sha512-G3MbuH30FpBD800I26xlB6lUiDm7sCxvQkHPt9OAJyUEbyiO9UWrKADxVUhWbO65WqL/TGtH1OEez+w++TlfMw==}
     peerDependencies:
       vite: '>=4.0.0'
     dependencies:
       htmlparser2: 10.0.0
-      vite: 5.4.21
+      vite: 7.1.12
     dev: true
 
-  /vite-plugin-singlefile/2.3.0_vite@5.4.21:
+  /vite-plugin-singlefile/2.3.0_vite@7.1.12:
     resolution: {integrity: sha512-DAcHzYypM0CasNLSz/WG0VdKOCxGHErfrjOoyIPiNxTPTGmO6rRD/te93n1YL/s+miXq66ipF1brMBikf99c6A==}
     engines: {node: '>18.0.0'}
     peerDependencies:
@@ -1012,24 +1043,29 @@ packages:
       vite: ^5.4.11 || ^6.0.0 || ^7.0.0
     dependencies:
       micromatch: 4.0.8
-      vite: 5.4.21
+      vite: 7.1.12
     dev: true
 
-  /vite/5.4.21:
-    resolution: {integrity: sha512-o5a9xKjbtuhY6Bi5S3+HvbRERmouabWbyUcpXXUA1u+GNUKoROi9byOJ8M0nHbHYHkYICiMlqxkg1KkYmm25Sw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
+  /vite/7.1.12:
+    resolution: {integrity: sha512-ZWyE8YXEXqJrrSLvYgrRP7p62OziLW7xI5HYGWFzOvupfAlrLvURSzv/FyGyy0eidogEM3ujU+kUG1zuHgb6Ug==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
+      '@types/node': ^20.19.0 || >=22.12.0
+      jiti: '>=1.21.0'
+      less: ^4.0.0
       lightningcss: ^1.21.0
-      sass: '*'
-      sass-embedded: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
+      sass: ^1.70.0
+      sass-embedded: ^1.70.0
+      stylus: '>=0.54.8'
+      sugarss: ^5.0.0
+      terser: ^5.16.0
+      tsx: ^4.8.1
+      yaml: ^2.4.2
     peerDependenciesMeta:
       '@types/node':
+        optional: true
+      jiti:
         optional: true
       less:
         optional: true
@@ -1045,10 +1081,17 @@ packages:
         optional: true
       terser:
         optional: true
+      tsx:
+        optional: true
+      yaml:
+        optional: true
     dependencies:
       esbuild: 0.25.11
+      fdir: 6.5.0_picomatch@4.0.3
+      picomatch: 4.0.3
       postcss: 8.5.6
       rollup: /@rollup/wasm-node/4.52.5
+      tinyglobby: 0.2.15
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
