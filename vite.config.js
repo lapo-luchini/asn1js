@@ -16,6 +16,12 @@ const preventSVGEmit = () => {
     };
 };
 
+function massageSVG(str) {
+    return str.replace(/["<>#]/g, (c) => {
+        return '%' + c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0');
+    });
+}
+
 export default defineConfig({
     plugins: [
         preventSVGEmit(),
@@ -25,7 +31,7 @@ export default defineConfig({
                 if (removeNodes.includes(node.attribs.id))
                     DomUtils.removeElement(node);
                 else if (node.name == 'link' && node.attribs.rel == 'icon')
-                    node.attribs.href = 'data:image/svg+xml;base64,' + btoa(fs.readFileSync('favicon.svg', 'ascii').replace(/^([^<]+|<[^s]|<s[^v]|<sv[^g])+/, '').trim());
+                    node.attribs.href = 'data:image/svg+xml,' + massageSVG(fs.readFileSync('favicon.svg', 'ascii').replace(/^([^<]+|<[^s]|<s[^v]|<sv[^g])+/, '').trim());
             },
         }),
         viteSingleFile(),
