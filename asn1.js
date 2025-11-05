@@ -41,12 +41,23 @@ const
         ['CDELNRSTZcdelnrstz', 'ČĎĚĽŇŘŠŤŽčďěľňřšťž'], // Caron
     ];
 
+/**
+ * Truncates a string to a specified length and adds an ellipsis if needed.
+ * @param {string} str - The input string to truncate
+ * @param {number} len - The maximum length of the string
+ * @returns {string} The truncated string
+ */
 function stringCut(str, len) {
     if (str.length > len)
         str = str.substring(0, len) + ellipsis;
     return str;
 }
 
+/**
+ * Checks if a string contains only printable characters (ASCII 32-126, plus tab, newline, carriage return)
+ * @param {string} s - The string to check
+ * @throws {Error} If an unprintable character is found
+ */
 function checkPrintable(s) {
     let i, v;
     for (i = 0; i < s.length; ++i) {
@@ -56,11 +67,14 @@ function checkPrintable(s) {
     }
 }
 
-/** Class to manage a stream of bytes, with a zero-copy approach.
- * It uses an existing array or binary string and advances a position index. */
+/**
+ * Class to manage a stream of bytes, with a zero-copy approach.
+ * It uses an existing array or binary string and advances a position index.
+ */
 export class Stream {
 
     /**
+     * Creates a new Stream object.
      * @param {Stream|array|string} enc data (will not be copied)
      * @param {?number} pos starting position (mandatory when `end` is not a Stream)
      */
@@ -74,6 +88,7 @@ export class Stream {
         }
         if (typeof this.pos != 'number')
             throw new Error('"pos" must be a numeric value');
+        // Set up the raw byte access function based on the type of data
         if (typeof this.enc == 'string')
             this.getRaw = pos => this.enc.charCodeAt(pos);
         else if (typeof this.enc[0] == 'number')
@@ -81,8 +96,12 @@ export class Stream {
         else
             throw new Error('"enc" must be a numeric array or a string');
     }
-    /** Get the byte at current position (and increment it) or at a specified position (and avoid moving current position).
-     * @param {?number} pos read position if specified, else current position (and increment it) */
+
+    /**
+     * Get the byte at current position (and increment it) or at a specified position (and avoid moving current position).
+     * @param {?number} pos read position if specified, else current position (and increment it)
+     * @returns {number} The byte value at the specified position
+     */
     get(pos) {
         if (pos === undefined)
             pos = this.pos++;
@@ -90,15 +109,23 @@ export class Stream {
             throw new Error('Requesting byte offset ' + pos + ' on a stream of length ' + this.enc.length);
         return this.getRaw(pos);
     }
-    /** Convert a single byte to an hexadcimal string (of length 2).
-     * @param {number} b */
+
+    /**
+     * Convert a single byte to a hexadecimal string (of length 2).
+     * @param {number} b - The byte to convert
+     * @returns {string} Hexadecimal representation of the byte
+     */
     static hexByte(b) {
         return hexDigits.charAt((b >> 4) & 0xF) + hexDigits.charAt(b & 0xF);
     }
-    /** Hexadecimal dump of a specified region of the stream.
-     * @param {number} start starting position (included)
-     * @param {number} end ending position (excluded)
-     * @param {string} type 'raw', 'byte' or 'dump' (default) */
+
+    /**
+     * Hexadecimal dump of a specified region of the stream.
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {string} type - 'raw', 'byte' or 'dump' (default)
+     * @returns {string} Hexadecimal representation of the data
+     */
     hexDump(start, end, type = 'dump') {
         let s = '';
         for (let i = start; i < end; ++i) {
@@ -114,10 +141,14 @@ export class Stream {
         }
         return s;
     }
-    /** Base64url dump of a specified region of the stream (according to RFC 4648 section 5).
-     * @param {number} start starting position (included)
-     * @param {number} end ending position (excluded)
-     * @param {string} type 'url' (default, section 5 without padding) or 'std' (section 4 with padding) */
+
+    /**
+     * Base64url dump of a specified region of the stream (according to RFC 4648 section 5).
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {string} type - 'url' (default, section 5 without padding) or 'std' (section 4 with padding)
+     * @returns {string} Base64 encoded representation of the data
+     */
     b64Dump(start, end, type = 'url') {
         const b64 = type === 'url' ? b64URL : b64Std,
             extra = (end - start) % 3;
@@ -140,6 +171,13 @@ export class Stream {
         }
         return s;
     }
+
+    /**
+     * Check if a region of the stream contains only ASCII characters (32-176)
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @returns {boolean} True if all characters are ASCII, false otherwise
+     */
     isASCII(start, end) {
         for (let i = start; i < end; ++i) {
             let c = this.get(i);
@@ -148,12 +186,28 @@ export class Stream {
         }
         return true;
     }
+
+    /**
+     * Parse a region of the stream as an ISO string
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {Object} Object with size and str properties
+     */
     parseStringISO(start, end, maxLength) {
         let s = '';
         for (let i = start; i < end; ++i)
             s += String.fromCharCode(this.get(i));
         return { size: s.length, str: stringCut(s, maxLength) };
     }
+
+    /**
+     * Parse a region of the stream as a T.61 string
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {Object} Object with size and str properties
+     */
     parseStringT61(start, end, maxLength) {
         // warning: this code is not very well tested so far
         function merge(c, d) {
@@ -175,12 +229,30 @@ export class Stream {
         }
         return { size: s.length, str: stringCut(s, maxLength) };
     }
+
+    /**
+     * Parse a region of the stream as a UTF-8 string
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {Object} Object with size and str properties
+     */
     parseStringUTF(start, end, maxLength) {
+        /**
+         * Helper function to process UTF-8 continuation bytes
+         * @param {number} c - The continuation byte
+         * @returns {number} The extracted data bits
+         */
         function ex(c) { // must be 10xxxxxx
             if ((c < 0x80) || (c >= 0xC0))
                 throw new Error('Invalid UTF-8 continuation byte: ' + c);
             return (c & 0x3F);
         }
+        /**
+         * Helper function to convert a code point to a surrogate pair
+         * @param {number} cp - The code point to convert
+         * @returns {string} The surrogate pair as a string
+         */
         function surrogate(cp) {
             if (cp < 0x10000)
                 throw new Error('UTF-8 overlong encoding, codepoint encoded in 4 bytes: ' + cp);
@@ -206,6 +278,14 @@ export class Stream {
         }
         return { size: s.length, str: stringCut(s, maxLength) };
     }
+
+    /**
+     * Parse a region of the stream as a BMP (Basic Multilingual Plane) string
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {Object} Object with size and str properties
+     */
     parseStringBMP(start, end, maxLength) {
         let s = '', hi, lo;
         for (let i = start; i < end; ) {
@@ -215,6 +295,14 @@ export class Stream {
         }
         return { size: s.length, str: stringCut(s, maxLength) };
     }
+
+    /**
+     * Parse a region of the stream as a time string
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {boolean} shortYear - Whether to parse as short year (2-digit)
+     * @returns {string} Formatted time string
+     */
     parseTime(start, end, shortYear) {
         let s = this.parseStringISO(start, end).str,
             m = (shortYear ? reTimeS : reTimeL).exec(s);
@@ -242,6 +330,13 @@ export class Stream {
         }
         return s;
     }
+
+    /**
+     * Parse a region of the stream as an integer
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @returns {string} Formatted integer string
+     */
     parseInteger(start, end) {
         let v = this.get(start),
             s = '';
@@ -270,6 +365,14 @@ export class Stream {
             n = (n << 8n) | BigInt(this.get(i));
         return s + n;
     }
+
+    /**
+     * Parse a region of the stream as a bit string.
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {Object} Object with size and str properties
+     */
     parseBitString(start, end, maxLength) {
         const unusedBits = this.get(start);
         if (unusedBits > 7)
@@ -286,35 +389,54 @@ export class Stream {
         }
         return { size: lenBit, str: s };
     }
+
+    /**
+     * Parse a region of the stream as an octet string.
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {Object} Object with size and str properties
+     */
     parseOctetString(start, end, maxLength) {
-        const len = end - start;
-        let s;
         try {
-            s = this.parseStringUTF(start, end, maxLength);
+            let s = this.parseStringUTF(start, end, maxLength);
             checkPrintable(s.str);
             return { size: end - start, str: s.str };
         } catch (ignore) {
-            // ignore
+            // If UTF-8 parsing fails, fall back to hexadecimal dump
         }
+        const len = end - start;
         maxLength /= 2; // we work in bytes
         if (len > maxLength)
             end = start + maxLength;
-        s = '';
+        let s = '';
         for (let i = start; i < end; ++i)
             s += Stream.hexByte(this.get(i));
         if (len > maxLength)
             s += ellipsis;
         return { size: len, str: s };
     }
+
+    /**
+     * Parse a region of the stream as an OID (Object Identifier).
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @param {boolean} isRelative - Whether the OID is relative
+     * @returns {string} Formatted OID string
+     */
     parseOID(start, end, maxLength, isRelative) {
         let s = '',
             n = 0n,
             bits = 0;
         for (let i = start; i < end; ++i) {
             let v = this.get(i);
+            // Shift bits and add the lower 7 bits of the byte
             n = (n << 7n) | BigInt(v & 0x7F);
             bits += 7;
+            // If the most significant bit is 0, this is the last byte of the OID component
             if (!(v & 0x80)) { // finished
+                // If this is the first component, handle it specially
                 if (s === '') {
                     if (isRelative) {
                         s = n.toString();
@@ -332,6 +454,7 @@ export class Stream {
         }
         if (bits > 0)
             s += '.incomplete';
+        // If OIDs mapping is available and the OID is absolute, try to resolve it
         if (typeof oids === 'object' && !isRelative) {
             let oid = oids[s];
             if (oid) {
@@ -342,6 +465,14 @@ export class Stream {
         }
         return s;
     }
+
+    /**
+     * Parse a region of the stream as a relative OID (Object Identifier).
+     * @param {number} start - starting position (included)
+     * @param {number} end - ending position (excluded)
+     * @param {number} maxLength - maximum length of the output string
+     * @returns {string} Formatted relative OID string
+     */
     parseRelativeOID(start, end, maxLength) {
         return this.parseOID(start, end, maxLength, true);
     }
