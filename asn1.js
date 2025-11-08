@@ -521,7 +521,20 @@ class ASN1Tag {
     }
 }
 
+/**
+ * ASN1 class for parsing ASN.1 encoded data.
+ * Instances of this class represent an ASN.1 element and provides methods to parse and display its content.
+ */
 export class ASN1 {
+    /**
+     * Creates an ASN1 parser object.
+     * @param {Stream} stream - The stream containing the ASN.1 data.
+     * @param {number} header - The header length.
+     * @param {number} length - The length of the data.
+     * @param {ASN1Tag} tag - The ASN.1 tag.
+     * @param {number} tagLen - The length of the tag.
+     * @param {Array} sub - The sub-elements.
+     */
     constructor(stream, header, length, tag, tagLen, sub) {
         if (!(tag instanceof ASN1Tag)) throw new Error('Invalid tag value.');
         this.stream = stream;
@@ -531,6 +544,11 @@ export class ASN1 {
         this.tagLen = tagLen;
         this.sub = sub;
     }
+
+    /**
+     * Get the type name of the ASN.1 element.
+     * @returns {string} The type name.
+     */
     typeName() {
         switch (this.tag.tagClass) {
         case 0: // universal
@@ -570,7 +588,12 @@ export class ASN1 {
         case 3: return 'Private_' + this.tag.tagNumber.toString();
         }
     }
-    /** A string preview of the content (intended for humans). */
+
+    /**
+     * Get a string preview of the content (intended for humans).
+     * @param {number} maxLength - The maximum length of the content.
+     * @returns {string|null} The content preview or null if not supported.
+     */
     content(maxLength) {
         if (this.tag === undefined)
             return null;
@@ -638,9 +661,20 @@ export class ASN1 {
         }
         return null;
     }
+
+    /**
+     * Get a string representation of the ASN.1 element.
+     * @returns {string} The string representation.
+     */
     toString() {
         return this.typeName() + '@' + this.stream.pos + '[header:' + this.header + ',length:' + this.length + ',sub:' + ((this.sub === null) ? 'null' : this.sub.length) + ']';
     }
+
+    /**
+     * Get a pretty string representation of the ASN.1 element.
+     * @param {string} indent - The indentation string.
+     * @returns {string} The pretty string representation.
+     */
     toPrettyString(indent) {
         if (indent === undefined) indent = '';
         let s = indent;
@@ -671,30 +705,63 @@ export class ASN1 {
         }
         return s;
     }
+
+    /**
+     * Get the starting position of the element in the stream.
+     * @returns {number} The starting position.
+     */
     posStart() {
         return this.stream.pos;
     }
+
+    /**
+     * Get the position of the content in the stream.
+     * @returns {number} The content position.
+     */
     posContent() {
         return this.stream.pos + this.header;
     }
+
+    /**
+     * Get the ending position of the element in the stream.
+     * @returns {number} The ending position.
+     */
     posEnd() {
         return this.stream.pos + this.header + Math.abs(this.length);
     }
-    /** Position of the length. */
+
+    /**
+     * Get the position of the length in the stream.
+     * @returns {number} The length position.
+     */
     posLen() {
         return this.stream.pos + this.tagLen;
     }
-    /** Hexadecimal dump of the node.
-     * @param type 'raw', 'byte' or 'dump' */
+
+    /**
+     * Get a hexadecimal dump of the node.
+     * @param {string} [type='raw'] - The dump type: 'raw', 'byte', or 'dump'.
+     * @returns {string} The hexadecimal dump.
+     */
     toHexString(type = 'raw') {
         return this.stream.hexDump(this.posStart(), this.posEnd(), type);
     }
-    /** Base64url dump of the node (according to RFC 4648 section 5).
-     * @param {string} type 'url' (default, section 5 without padding) or 'std' (section 4 with padding)
-    */
+
+    /**
+     * Get a base64url dump of the node (according to RFC 4648 section 5).
+     * @param {string} [type='url'] - The dump type: 'url' (section 5 without padding) or 'std' (section 4 with padding).
+     * @returns {string} The base64 encoded representation.
+     */
     toB64String(type = 'url') {
         return this.stream.b64Dump(this.posStart(), this.posEnd(), type);
     }
+
+    /**
+     * Decode the length field of an ASN.1 element.
+     * @param {Stream} stream - The stream to read from.
+     * @returns {number|null} The decoded length, or null for indefinite length.
+     * @throws {Error} If the length is invalid or exceeds 48 bits.
+     */
     static decodeLength(stream) {
         const buf = stream.get(),
             len = buf & 0x7F;
@@ -709,6 +776,15 @@ export class ASN1 {
             value = (value << 8) | stream.get();
         return value;
     }
+
+    /**
+     * Decode an ASN.1 element from a stream.
+     * @param {Stream|array|string} stream - The input data.
+     * @param {number} [offset=0] - The offset to start decoding from.
+     * @param {Function} [type=ASN1] - The class to instantiate.
+     * @returns {ASN1} The decoded ASN.1 element.
+     * @throws {Error} If the decoding fails.
+     */
     static decode(stream, offset, type = ASN1) {
         if (!(type == ASN1 || type.prototype instanceof ASN1))
             throw new Error('Must pass a class that extends ASN1');
