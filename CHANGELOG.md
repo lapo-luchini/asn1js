@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 2.1.2 - 2026-03-02
+
+### Changed
+
+- properly support GeneralTime with any number of decimals
+- use native `BigInt` instead of old `int10.js`
+- fix SVG images in single-file version
+
 ## 2.1.1 - 2025-10-24
 
 ### Changed
