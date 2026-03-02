@@ -207,6 +207,9 @@ tests.push(new Tests('ASN.1', function (t) {
     ['181331393835313130363231303632372E332B3134', '1985-11-06 21:06:27.3 UTC+14:00', 'UTC offset +13 and +14'], // GitHub issue #54
     ['032100171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', n => { if (n.sub != null) return 'Should not decode content: ' + n.sub[0].content(); }, 'Key that resembles an UTCTime'], // GitHub issue #79
     ['171E83C1B251803F86DD01E9CFA886BE89A7316D8372649AC2231EC669F81A84', /^Exception:\nError: Unrecognized time: /, 'Invalid UTCTime'], // GitHub issue #79
+    ['180E3230303031323135313233343536', '2000-12-15 12:34:56', 'Generalized time with seconds'], // GitHub issue #107
+    ['181232303030313231353132333435362E313233', '2000-12-15 12:34:56.123', 'Generalized time with milliseconds'], // GitHub issue #107
+    ['181832303030313231353132333435362E313233343536373839', '2000-12-15 12:34:56.123456789', 'Generalized time with nanoseconds'], // GitHub issue #107
 ]));
 
 tests.push(new Tests('Dump of examples', function () {
