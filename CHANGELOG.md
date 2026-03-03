@@ -4,7 +4,7 @@
 
 ### Changed
 
-- properly support GeneralTime with any number of decimals
+- properly support `GeneralizedTime` with any number of decimals
 - use native `BigInt` instead of old `int10.js`
 - fix SVG images in single-file version
 
