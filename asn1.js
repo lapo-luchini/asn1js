@@ -76,7 +76,7 @@ export class Stream {
     /**
      * Creates a new Stream object.
      * @param {Stream|array|string} enc data (will not be copied)
-     * @param {?number} pos starting position (mandatory when `end` is not a Stream)
+     * @param {?number} pos starting position (mandatory when `enc` is not a Stream)
      */
     constructor(enc, pos) {
         if (enc instanceof Stream) {
@@ -773,7 +773,7 @@ export class ASN1 {
             throw new Error('Length over 48 bits not supported at position ' + (stream.pos - 1));
         let value = 0;
         for (let i = 0; i < len; ++i)
-            value = (value << 8) | stream.get();
+            value = (value * 256) + stream.get();
         return value;
     }
 
