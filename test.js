@@ -212,6 +212,29 @@ tests.push(new Tests('ASN.1', function (t) {
     ['181832303030313231353132333435362E313233343536373839', '2000-12-15 12:34:56.123456789', 'Generalized time with nanoseconds'], // GitHub issue #107
 ]));
 
+tests.push(new Tests('Length', function (t) {
+    const input = t[0],
+        expected = '' + t[1],
+        comment = t[2];
+    let result;
+    try {
+        result = '' + ASN1.decodeLength(new Stream(Hex.decode(input), 0));
+    } catch (e) {
+        result = 'Exception:\n' + e;
+    }
+    this.checkResult(result, expected, comment);
+}, [
+    ['00', 0, 'Short form length 0'],
+    ['01', 1, 'Short form length 1'],
+    ['7F', 127, 'Short form length 127'],
+    ['80', null, 'Undefined length'],
+    ['8103', 3, 'Long form length 3'],
+    ['82FFFF', 0xFFFF, 'Long form length 65535'],
+    ['83123456', 0x123456, 'Long form length 1193046'],
+    ['84FFFFFFFF', 0xFFFFFFFF, 'Long form length 2^32-1'],
+    ['87FFFFFFFFFFFFFF', 'Exception:\nError: Length over 48 bits not supported at position 0', 'Long form length > 2^48'],
+]));
+
 tests.push(new Tests('Dump of examples', function () {
     const examples = fs.readdirSync('examples/').filter(f => f.endsWith('.dump'));
     for (const example of examples) {
