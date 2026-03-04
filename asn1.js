@@ -795,15 +795,13 @@ export class ASN1 {
             tagLen = stream.pos - streamStart.pos,
             len = ASN1.decodeLength(stream),
             start = stream.pos,
+            end = (len !== null) ? (start + len) : null,
             header = start - streamStart.pos,
             sub = null,
             getSub = function () {
                 sub = [];
                 if (len !== null) {
                     // definite length
-                    let end = start + len;
-                    if (end > stream.enc.length)
-                        throw new Error('Container at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream');
                     while (stream.pos < end)
                         sub[sub.length] = type.decode(stream);
                     if (stream.pos != end)
@@ -823,6 +821,8 @@ export class ASN1 {
                     }
                 }
             };
+        if (end !== null && end > stream.enc.length)
+            throw new Error('Element at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream');
         if (tag.tagConstructed) {
             // must have valid content
             getSub();

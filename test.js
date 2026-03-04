@@ -210,6 +210,7 @@ tests.push(new Tests('ASN.1', function (t) {
     ['180E3230303031323135313233343536', '2000-12-15 12:34:56', 'Generalized time with seconds'], // GitHub issue #107
     ['181232303030313231353132333435362E313233', '2000-12-15 12:34:56.123', 'Generalized time with milliseconds'], // GitHub issue #107
     ['181832303030313231353132333435362E313233343536373839', '2000-12-15 12:34:56.123456789', 'Generalized time with nanoseconds'], // GitHub issue #107
+    ['0484FFFFFFFF222222', 'Exception:\nError: Element at offset 6 has a length of 4294967295, which is past the end of the stream', 'Excessive length'], // GitHub issue #108
 ]));
 
 tests.push(new Tests('Length', function (t) {
