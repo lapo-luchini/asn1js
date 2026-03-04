@@ -3,8 +3,10 @@
 // usage:
 // ./dumpASN1.js filename
 // ./dumpASN1.js data:base64,MDMCAQFjLgQACgEACgEAAgEAAgEAAQEAoA+jDQQFTnRWZXIEBAEAAAAwCgQITmV0bG9nb24===
+// cat file.der | ./dumpASN1.js -
 
 import * as fs from 'node:fs';
+import { text as streamAsString } from 'node:stream/consumers';
 import { Base64 } from './base64.js';
 import { ASN1 } from './asn1.js';
 import { Defs } from './defs.js';
@@ -46,10 +48,14 @@ function print(value, indent) {
 }
 
 const filename = process.argv[2];
+let content;
 const match = reDataURI.exec(filename);
-let content = match
-    ? Buffer.from(match[1])
-    : fs.readFileSync(filename);
+if (match)
+    content = Buffer.from(match[1]);
+else if (filename == '-') // stdin
+    content = await streamAsString(process.stdin);
+else
+    content = fs.readFileSync(filename);
 try { // try PEM first
     content = Base64.unarmor(content);
 } catch (ignore) { // try DER/BER then
