@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 2.1.3 - 2026-03-06
+
+### Changed
+
+- fixed a length decoding but introduced in 2.1.2 (length bigger than 2^31-1 were reported as negative)
+- improved lengh decoding and lenght error reporting
+
 ## 2.1.2 - 2026-03-02
 
 ### Changed
