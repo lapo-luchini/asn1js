@@ -232,6 +232,7 @@ tests.push(new Tests('Length', function (t) {
     ['8103', 3, 'Long form length 3'],
     ['82FFFF', 0xFFFF, 'Long form length 65535'],
     ['83123456', 0x123456, 'Long form length 1193046'],
+    ['847FFFFFFF', 0x7FFFFFFF, 'Long form length 2^31-1'],
     ['84FFFFFFFF', 0xFFFFFFFF, 'Long form length 2^32-1'],
     ['87FFFFFFFFFFFFFF', 'Exception:\nError: Length over 48 bits not supported at position 0', 'Long form length > 2^48'],
 ]));
