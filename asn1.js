@@ -787,57 +787,77 @@ export class ASN1 {
      * @returns {ASN1} The decoded ASN.1 element.
      * @throws {Error} If the decoding fails.
      */
-    static decode(stream, offset, type = ASN1, options = {}, depth = 0) {
+    static decode(stream, offset = 0, type = ASN1, options = {}, depth = 0) {
+        if (typeof options != 'object')
+            options = {};
+        if (typeof depth != 'number')
+            depth = 0;
         if (!(type == ASN1 || type.prototype instanceof ASN1))
-            throw new Error('Must pass a class that extends ASN1');
+            throw new Error('type must be a class that extends ASN1');
+        if (typeof(options.maxDepth) != 'number')
+            options.maxDepth = 100;
+        options.type = type;
         if (!(stream instanceof Stream))
             stream = new Stream(stream, offset || 0);
-        const maxDepth = typeof(options.maxDepth) == 'number' ? options.maxDepth : 100;
-        if (depth > maxDepth)
-            throw new Error(`ASN.1 structure nesting exceeds maximum depth of ${maxDepth}`);
-        let streamStart = new Stream(stream),
-            tag = new ASN1Tag(stream),
-            tagLen = stream.pos - streamStart.pos,
-            len = ASN1.decodeLength(stream),
-            start = stream.pos,
-            end = (len !== null) ? (start + len) : null,
-            header = start - streamStart.pos,
-            sub = null,
-            getSub = function () {
-                sub = [];
-                if (len !== null) {
-                    // definite length
-                    while (stream.pos < end)
-                        sub[sub.length] = type.decode(stream, null, type, options, depth + 1);
-                    if (stream.pos != end)
-                        throw new Error('Content size is not correct for container at offset ' + start);
-                } else {
-                    // undefined length
-                    try {
-                        for (;;) {
-                            let s = type.decode(stream, null, type, options, depth + 1);
-                            if (s.tag.isEOC())
-                                break;
-                            sub[sub.length] = s;
-                        }
-                        len = start - stream.pos; // undefined lengths are represented as negative values
-                    } catch (e) {
-                        throw new Error('Exception while decoding undefined length content at offset ' + start + ': ' + e);
+        return ASN1.decodeInternal(stream, options, depth);
+    }
+
+    /**
+     * Internal recursive helper for decoding ASN.1 elements.
+     * Avoid checking inputs on each recursion.
+     * @param {Stream} stream - The stream to decode from.
+     * @param {Object} options - Decoding options (e.g. type, maxDepth).
+     * @param {number} depth - Current nesting depth.
+     * @returns {ASN1} The decoded ASN1 instance.
+     * @private
+     */
+    static decodeInternal(stream, options, depth) {
+        const type = options.type || ASN1;
+        if (depth > options.maxDepth)
+            throw new Error(`ASN.1 structure nesting exceeds maximum depth of ${options.maxDepth}`);
+        const streamStart = new Stream(stream); // snapshot
+        const tag = new ASN1Tag(stream);
+        const tagLen = stream.pos - streamStart.pos;
+        let len = ASN1.decodeLength(stream);
+        const start = stream.pos;
+        const end = (len !== null) ? (start + len) : null;
+        const header = start - streamStart.pos;
+        let sub = null;
+        let processSub = () => {
+            sub = [];
+            if (len !== null) {
+                // definite length
+                while (stream.pos < end)
+                    sub.push(type.decodeInternal(stream, options, depth + 1));
+                if (stream.pos != end)
+                    throw new Error('Content size is not correct for container at offset ' + start);
+            } else {
+                // undefined length
+                try {
+                    for (;;) {
+                        const s = type.decodeInternal(stream, options, depth + 1);
+                        if (s.tag.isEOC())
+                            break;
+                        sub.push(s);
                     }
+                    len = start - stream.pos; // undefined lengths are represented as negative values
+                } catch (e) {
+                    throw new Error('Exception while decoding undefined length content at offset ' + start + ': ' + e);
                 }
-            };
+            }
+        };
         if (end !== null && end > stream.enc.length)
-            throw new Error('Element at offset ' + start +  ' has a length of ' + len + ', which is past the end of the stream');
+            throw new Error('Element at offset ' + start + ' has a length of ' + len + ', which is past the end of the stream');
         if (tag.tagConstructed) {
-            // must have valid content
-            getSub();
+            // Constructed tags must have valid content
+            processSub();
         } else if (tag.isUniversal() && ((tag.tagNumber == 0x03) || (tag.tagNumber == 0x04))) {
             // sometimes BitString and OctetString are used to encapsulate ASN.1
+            // try to parse encapsulated content; but silently ignore if it fails
             try {
-                if (tag.tagNumber == 0x03)
-                    if (stream.get() != 0)
-                        throw new Error('BIT STRINGs with unused bits cannot encapsulate.');
-                getSub();
+                if (tag.tagNumber == 0x03 && stream.get() != 0)
+                    throw new Error('BIT STRINGs with unused bits cannot encapsulate.');
+                processSub();
                 for (let s of sub) {
                     if (s.tag.isEOC())
                         throw new Error('EOC is not supposed to be actual content.');
@@ -848,7 +868,6 @@ export class ASN1 {
                     }
                 }
             } catch (ignore) {
-                // but silently ignore when they don't
                 sub = null;
                 //DEBUG console.log('Could not decode structure at ' + start + ':', e);
             }
