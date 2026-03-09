@@ -782,14 +782,19 @@ export class ASN1 {
      * @param {Stream|array|string} stream - The input data.
      * @param {number} [offset=0] - The offset to start decoding from.
      * @param {Function} [type=ASN1] - The class to instantiate.
+     * @param {Object} [options={maxDepth:100}] - Optional settings for decoding.
+     * @param {number} [depth=0] - The annidiation depth.
      * @returns {ASN1} The decoded ASN.1 element.
      * @throws {Error} If the decoding fails.
      */
-    static decode(stream, offset, type = ASN1) {
+    static decode(stream, offset, type = ASN1, options = {}, depth = 0) {
         if (!(type == ASN1 || type.prototype instanceof ASN1))
             throw new Error('Must pass a class that extends ASN1');
         if (!(stream instanceof Stream))
             stream = new Stream(stream, offset || 0);
+        const maxDepth = typeof(options.maxDepth) == 'number' ? options.maxDepth : 100;
+        if (depth > maxDepth)
+            throw new Error(`ASN.1 structure nesting exceeds maximum depth of ${maxDepth}`);
         let streamStart = new Stream(stream),
             tag = new ASN1Tag(stream),
             tagLen = stream.pos - streamStart.pos,
@@ -803,14 +808,14 @@ export class ASN1 {
                 if (len !== null) {
                     // definite length
                     while (stream.pos < end)
-                        sub[sub.length] = type.decode(stream);
+                        sub[sub.length] = type.decode(stream, null, type, options, depth + 1);
                     if (stream.pos != end)
                         throw new Error('Content size is not correct for container at offset ' + start);
                 } else {
                     // undefined length
                     try {
                         for (;;) {
-                            let s = type.decode(stream);
+                            let s = type.decode(stream, null, type, options, depth + 1);
                             if (s.tag.isEOC())
                                 break;
                             sub[sub.length] = s;
