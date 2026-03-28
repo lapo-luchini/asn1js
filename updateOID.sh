@@ -1,5 +1,5 @@
 #/bin/sh
-URL='https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg'
+URL='https://raw.githubusercontent.com/cryptlib/dumpasn1/refs/heads/main/dumpasn1.cfg'
 if [ -x /usr/bin/fetch ]; then
     /usr/bin/fetch -m --no-verify-peer $URL
 elif [ -x /usr/bin/wget ]; then
