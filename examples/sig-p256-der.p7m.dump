@@ -5,7 +5,7 @@ ContentInfo SEQUENCE @0+10868 (constructed): (2 elem)
       version CMSVersion INTEGER @23+1: 1
       digestAlgorithms DigestAlgorithmIdentifiers SET @26+15 (constructed): (1 elem)
         DigestAlgorithmIdentifier SEQUENCE @28+13 (constructed): (2 elem)
-          algorithm OBJECT_IDENTIFIER @30+9: 2.16.840.1.101.3.4.2.1|sha-256|NIST Algorithm
+          algorithm OBJECT_IDENTIFIER @30+9: 2.16.840.1.101.3.4.2.1|sha-256|NIST Hash Algorithm
           parameters ANY NULL @41+0
       encapContentInfo EncapsulatedContentInfo SEQUENCE @43+10053 (constructed): (2 elem)
         eContentType ContentType OBJECT_IDENTIFIER @47+9: 1.2.840.113549.1.7.1|data|PKCS #7
@@ -70,7 +70,7 @@ ContentInfo SEQUENCE @0+10868 (constructed): (2 elem)
                   value AttributeValue [?] UTF8String @10498+4: Test
             serialNumber CertificateSerialNumber INTEGER @10504+16: (127 bit)|128087855099855233032551836648087377254
           digestAlgorithm DigestAlgorithmIdentifier SEQUENCE @10522+13 (constructed): (2 elem)
-            algorithm OBJECT_IDENTIFIER @10524+9: 2.16.840.1.101.3.4.2.1|sha-256|NIST Algorithm
+            algorithm OBJECT_IDENTIFIER @10524+9: 2.16.840.1.101.3.4.2.1|sha-256|NIST Hash Algorithm
             parameters ANY NULL @10535+0
           SignedAttributes [?] [0] @10537+247 (constructed): (5 elem)
             Attribute SEQUENCE @10540+24 (constructed): (2 elem)
@@ -86,7 +86,7 @@ ContentInfo SEQUENCE @0+10868 (constructed): (2 elem)
               values SET @10609+29 (constructed): (1 elem)
                 AttributeValue [?] SEQUENCE @10611+27 (constructed): (2 elem)
                   SEQUENCE @10613+13 (constructed): (2 elem)
-                    OBJECT_IDENTIFIER @10615+9: 2.16.840.1.101.3.4.2.1|sha-256|NIST Algorithm
+                    OBJECT_IDENTIFIER @10615+9: 2.16.840.1.101.3.4.2.1|sha-256|NIST Hash Algorithm
                     NULL @10626+0
                   [1] @10628+10 (constructed): (1 elem)
                     OBJECT_IDENTIFIER @10630+8: 1.2.840.10045.4.3.2|ecdsaWithSHA256|ANSI X9.62 ECDSA algorithm with SHA256
