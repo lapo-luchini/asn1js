@@ -90,7 +90,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 credits
 -------
 
-- OBJECT IDENTIFIER values are recognized using data taken from Peter Gutmann's [dumpasn1](https://www.cs.auckland.ac.nz/~pgut001/#standards) program.
+- OBJECT IDENTIFIER values are recognized using data taken from Peter Gutmann's [dumpasn1](https://github.com/cryptlib/dumpasn1) program.
 - BMPString support added by [Felipe Gasper](https://github.com/FGasper)
 - extended tag support added by [Péter Budai](https://www.peterbudai.eu/)
 - patches by [Gergely Nagy](https://github.com/ngg)
