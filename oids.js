@@ -1,7 +1,8 @@
 // Converted from: https://raw.githubusercontent.com/cryptlib/dumpasn1/refs/heads/main/dumpasn1.cfg
 // which is made by Peter Gutmann and whose license states:
-//   You can use this code in whatever way you want,
-//   as long as you don't try to claim you wrote it.
+//   treat it as either GPL, BSD, or CC BY
+//   licensed depending on which one you prefer.
+// Send requests here: https://github.com/cryptlib/dumpasn1/pulls
 export const oids = {
 "0.2.262.1.10": { "d": "Telesec", "c": "Deutsche Telekom" },
 "0.2.262.1.10.0": { "d": "extension", "c": "Telesec" },

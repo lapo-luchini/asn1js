@@ -22,8 +22,9 @@ awk -v apos="'" -v q='"' -v url="$URL" '
         clean();
         print "// Converted from: " url;
         print "// which is made by Peter Gutmann and whose license states:";
-        print "//   You can use this code in whatever way you want,";
-        print "//   as long as you don" apos "t try to claim you wrote it.";
+        print "//   treat it as either GPL, BSD, or CC BY";
+        print "//   licensed depending on which one you prefer.";
+        print "// Send requests here: https://github.com/cryptlib/dumpasn1/pulls";
         print "export const oids = {";
     }
     /^OID/         { oid = $2; }
