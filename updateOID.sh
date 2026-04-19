@@ -1,9 +1,9 @@
 #/bin/sh
 URL='https://raw.githubusercontent.com/cryptlib/dumpasn1/refs/heads/main/dumpasn1.cfg'
-if [ -x /usr/bin/fetch ]; then
-    /usr/bin/fetch -m --no-verify-peer $URL
-elif [ -x /usr/bin/wget ]; then
-    /usr/bin/wget -N --no-check-certificate $URL
+if command -v fetch >/dev/null 2>&1; then
+    fetch -m --no-verify-peer $URL
+elif command -v wget >/dev/null 2>&1; then
+    wget -N --no-check-certificate $URL
 elif [ ! -r dumpasn1.cfg ]; then
     echo Please download $URL in this directory.
     exit 1
